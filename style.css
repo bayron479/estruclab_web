@@ -2,6 +2,14 @@
   font-family: Helvetica;
 }
 
+header {
+  height: 120px;
+}
+
+.titulo {
+  position: absolute;
+}
+
 h1 {  
   text-align: center; 
   font-size: 50px;
