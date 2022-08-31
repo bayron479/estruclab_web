@@ -1,5 +1,5 @@
 *{
-  font-family: Helvetica;
+  font-family: Helvetica, sans-serif;
 }
 
 header {
@@ -80,21 +80,48 @@ ol {
   width: 100%;
 }
 
-.contenedor-ensayos {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  width: 100%;  
-}
-
-.ensayos {
-  width: 90%;
-  height: 250px;
+.contenedor-ppal {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  width: 100%;
+  background-color: rgb(44, 54, 69);   
+}
+
+.contenedor-ensayos {
+  height: 400px;
+  background-color: rgb(61, 73, 91);
   border-radius: 15%;
-  background-color: rgba(44, 54, 69, 0.8);
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly; 
+}
+
+.imagen-ensayo {
+  /* width: 533.33px;
+  height: 300px; */
+  width: 35%;
+  height: 95%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+   
+}
+
+.imagen-ensayo img {
+  width: 100%;
+  border-radius: 10%;
+}
+
+.descripcion-ensayo {
+  width: 60%;
+  height: 95%;   
+}
+
+.contenedor-botones {
+  width: 60%;
+  height: 15%;
 }
 
 
