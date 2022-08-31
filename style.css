@@ -33,6 +33,12 @@ h3 {
   text-rendering: optimizeLegibility; 
 }
 
+h4 {
+  font-size: 20px;
+  color: white;
+  text-rendering: optimizeLegibility; 
+}
+
 p,
 ul,
 ol {
@@ -73,6 +79,25 @@ ol {
   border-radius: 10%;
   width: 100%;
 }
+
+.contenedor-ensayos {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 100%;  
+}
+
+.ensayos {
+  width: 90%;
+  height: 250px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  border-radius: 15%;
+  background-color: rgba(44, 54, 69, 0.8);
+}
+
+
 
 
 
