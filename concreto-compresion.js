@@ -1,0 +1,282 @@
+/* var cilindro = {  
+
+  resistenciaNominal : parseInt(document.getElementById("resistenciaNominal").value),
+
+  resistenciaObtenida : resistenciaNominal + this.resistenciaNominal*Math.random()*0.15 - this.resistenciaNominal*Math.random()*0.15,
+
+  diametro : 150 + Math.random() - Math.random(), // en mm
+
+  altura : 300 + Math.random() - Math.random(), // en mm
+
+  areaSeccionTransversal : Math.PI*(this.diametro/2)**2,
+
+  cargaMaxima : (this.resistenciaObtenida * this.areaSeccionTransversal) / 1000,	// en kN
+
+  grafica: function() {
+       
+    let data = [];					
+	  let deformacion;	
+	  let carga;
+	  let e;
+    const precision = 0.05; 									
+	  const FC = this.resistenciaObtenida*1000/7; // FC es f'c en psi
+	  const n = 0.8 + (FC/2500);
+	  const Ec = 57000*Math.sqrt(FC);
+	  const e0 = (FC/Ec)*(n/(n-1));					
+    
+	  for (e = 0.00000; e <= 0.00300; e += 0.00001) {
+    
+	  	let coef = e/e0;
+
+	  	let k = (coef <= 1) ? 1 : 0.67 + (FC / 9000);								
+    
+	  	let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
+    
+	  	carga = (((fc * this.areaSeccionTransversal) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3); 
+    
+	  	deformacion = (this.altura * e).toFixed(3);											
+    
+	  	data.push({x: deformacion, y: carga});
+    } 
+
+    tippy('[data-tippy-content]');
+    const totalDuration = data.length*100;
+    const delayBetweenPoints = totalDuration / data.length;	
+    const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+
+    const animation = {
+      x: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: NaN, // the point is initially skipped
+        delay(ctx) {
+        if (ctx.type !== 'data' || ctx.xStarted) {
+          return 0;
+        }
+        ctx.xStarted = true;
+        return ctx.index * delayBetweenPoints;
+        }
+      },
+    
+      y: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+      
+        from: previousY,
+        delay(ctx) {
+          if (ctx.type !== 'data' || ctx.yStarted) {
+            return 0;
+          }
+          ctx.yStarted = true;
+          return ctx.index * delayBetweenPoints;
+        }
+      }
+    };
+
+    const config = {
+      type: 'line',
+      data: {
+        datasets: [{   
+          borderColor: 'rgb(200, 50, 50)',     
+          borderWidth: 1.5,
+          radius: 0,
+          data: data,
+        }],
+      },
+    
+      options: {
+        animation,
+        interaction: {
+          intersect: false
+        },
+        plugins: {
+          legend: false,
+          title: {
+              display: true,
+              text: 'Concreto a compresión'				
+            }
+        },
+      
+        scales:{
+          x: {          
+            type: 'linear',
+            title: {
+              display: true,
+              text: 'Deformación (mm)'
+            },
+          },
+        
+          y: {
+            type: 'linear',
+            title: {
+              display: true,
+              text: 'Carga aplicada (kN)'
+            }
+          }
+        }
+      }
+    };
+    
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+
+    return myChart;
+    
+	}
+
+};  */
+
+
+function graficaCargaDeformacion() { 
+  // Se lee el valor ingresado por el usuario
+  const resistenciaNominal = parseInt(document.getElementById("resistenciaNominal").value); 
+
+  let resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
+
+  // Dimensiones del cilindro de concreto en mm
+  let diametroCilindro = 150 + Math.random() - Math.random();
+  let longitudCilindro = 300 + Math.random() - Math.random(); 
+  let areaCilindro = Math.PI*(diametroCilindro/2)**2;
+  let cargaMaxima = (resistenciaObtenida * areaCilindro) / 1000;	// en kN 
+    
+    // Velocidad de carga en MPa/s. Rango aceptable: 0.15 a 0.35 MPa/s (ASTM C-39)
+    // Valor recomendado por NTC-673: 0.25 MPa/s  
+    
+    //const velocidadCarga = 0.25;
+    //Precisión aceptable: +- 0.05 MPa/s (NTC-673)
+    const precision = 0.05;		
+    
+    // Para calcular los valores de esfuerzo y deformación se usa la ecuación de Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, "Reinforced concrete mechanics and design, 2016"
+    // Para concretos con f'c entre 15 y 125 MPa
+    
+    let data = [];					
+	  let deformacion;
+    let datosCarga = [];
+    let datosDeformacion = [];	
+	  let carga;
+	  let e;									
+	  const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
+	  const n = 0.8 + (FC/2500);
+	  const Ec = 57000*Math.sqrt(FC);
+	  const e0 = (FC/Ec)*(n/(n-1));					
+    
+	  for (e = 0.00000; e <= 0.00300; e += 0.00001) {
+    
+	  	let coef = e/e0;
+
+	  	let k = (coef <= 1) ? 1 : 0.67 + (FC / 9000);								
+    
+	  	let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
+    
+	  	carga = (((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3); 
+    
+	  	deformacion = (longitudCilindro * e).toFixed(3);
+      
+      datosCarga.push(carga);
+
+      datosDeformacion.push(deformacion);
+    
+	  	data.push({x: deformacion, y: carga});
+    
+	  }	  
+
+    // Se grafica la curva carga-deformación
+    tippy('[data-tippy-content]');
+    const totalDuration = data.length*100;
+    const delayBetweenPoints = totalDuration / data.length;	
+    const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+
+    const animation = {
+      x: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: NaN, // the point is initially skipped
+        delay(ctx) {
+        if (ctx.type !== 'data' || ctx.xStarted) {
+          return 0;
+        }
+        ctx.xStarted = true;
+        return ctx.index * delayBetweenPoints;
+        }
+      },
+    
+      y: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+      
+        from: previousY,
+        delay(ctx) {
+          if (ctx.type !== 'data' || ctx.yStarted) {
+            return 0;
+          }
+          ctx.yStarted = true;
+          return ctx.index * delayBetweenPoints;
+        }
+      }
+    };
+
+    const config = {
+      type: 'line',
+      data: {
+        datasets: [{   
+          borderColor: 'rgb(200, 50, 50)',     
+          borderWidth: 1.5,
+          radius: 0,
+          data: data,
+        }],
+      },
+    
+      options: {
+        animation,
+        interaction: {
+          intersect: false
+        },
+        plugins: {
+          legend: false,
+          title: {
+              display: true,
+              text: 'Concreto a compresión'				
+            }
+        },
+      
+        scales:{
+          x: {          
+            type: 'linear',
+            title: {
+              display: true,
+              text: 'Deformación (mm)'
+            },
+          },
+        
+          y: {
+            type: 'linear',
+            title: {
+              display: true,
+              text: 'Carga aplicada (kN)'
+            }
+          }
+        }
+      }
+    };
+    
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+
+  return myChart;
+
+}
+ 
+
+
+
+  
+
+    

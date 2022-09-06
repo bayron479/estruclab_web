@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+	<meta charset="utf-8">
+
+	<title>Resistencia del concreto a compresión</title>	
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+		crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+		integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+		crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/1.35.0/iconfont/tabler-icons.min.css"
+		integrity="sha512-tpsEzNMLQS7w9imFSjbEOHdZav3/aObSESAL1y5jyJDoICFF2YwEdAHOPdOr1t+h8hTzar0flphxR76pd0V1zQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+	<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>	
+	
+	<script src="https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/loaders/GLTFLoader.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>	
+
+	<script src="https://cdn.sheetjs.com/xlsx-0.18.10/package/dist/xlsx.full.min.js"></script>
+	<!-- <script src="concreto-compresion.js"></script> -->
+
+</head>
+
+<body>
+	<main>
+
+		<header>
+			<div class="position-fixed w-100 p-3 border-bottom" style="z-index: 100000;background-color: #ffffff;">
+				<div class="row">
+					<div class="col-md-3">
+						<a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+							<img src="logo.png" style="height: 30px;">
+							<span class="fs-8">LABORATORIOS VIRTUALES</span>
+						</a>
+					</div>
+
+					<!-- Título del ensayo y manual en pdf -->
+					<div class="col-md-9" style="display: flex;	flex-direction: row; justify-content: space-around;">						
+						<label style="text-align:center;">Resistencia del concreto a compresión</label>						
+						<div>						
+							<a  class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank" href="manual_concreto_compresion.pdf">Manual</a>
+						</div>
+					</div>
+				</div>
+			</div>		
+
+		</header>	
+
+	<div style="width: 100%; height: 100%; display: flex; flex-direction: row; background-color: rgb(14, 66, 112);"> 
+		<!-- Panel izquierdo -->
+		<div class="position-fixed" style="width: 400px; background-color: #ffffff;padding: 90px 5px; height: 100%;">
+
+			<!-- Formulario para ingresar valor de resistencia nominal -->
+			<div class="card mt-2" style="width: 100%; display: flex;	justify-content: center;	align-items: center;" >
+				<div class="card-body" style="text-align: center;" >
+					<form class="row g-2" name="formulario">
+						<div class="col-auto" style="width:250px;" title="Resistencia a compresión que debería tener el cilindro de concreto">							
+							<label class="form-label" style="font-size:16px;">
+
+								<strong>								
+									Resistencia nominal (MPa)									
+								</strong>
+
+							  <input type="number" value="" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
+								id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" required> 
+
+								<div style="text-align: center; padding: 0.25rem;">		
+									<button type="button" id="start" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
+								</div> 
+
+              </label>
+            </div>					
+					</form>				
+				</div>
+			</div>
+			
+			<!-- Gráfica carga vs deformación-->
+			<div class="card mb-2" style="width: 100%;">
+				<div class="card-body">
+					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
+						<script>
+							// var iniciar = false;
+
+							// Se lee el valor ingresado por el usuario
+							// document.getElementById("start").onclick = () => {
+
+							// 	var iniciar = true;
+							//  	var resistenciaNominal = parseInt(document.getElementById("resistenciaNominal").value);
+							//  	return iniciar, resistenciaNominal;
+							// }							
+							
+								var resistenciaNominal = 35;
+								let resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
+
+							// Dimensiones del cilindro de concreto en mm
+								let diametroCilindro = 150 + Math.random() - Math.random();
+								let longitudCilindro = 300 + Math.random() - Math.random(); 
+								let areaCilindro = Math.PI*(diametroCilindro/2)**2;
+								let cargaMaxima = (resistenciaObtenida * areaCilindro) / 1000;	// en kN 
+	
+							// Velocidad de carga en MPa/s. Rango aceptable: 0.15 a 0.35 MPa/s (ASTM C-39)
+							// Valor recomendado por NTC-673: 0.25 MPa/s  
+												
+							//const velocidadCarga = 0.25;
+							//Precisión aceptable: +- 0.05 MPa/s (NTC-673)
+							const precision = 0.05;		
+	
+							// Para calcular los valores de esfuerzo y deformación se usa la ecuación de Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, "Reinforced concrete mechanics and design, 2016"
+							// Para concretos con f'c entre 15 y 125 MPa
+
+							let data = [];					
+							let deformacion;
+							let datosCarga = [];
+							let datosDeformacion = [];	
+							let carga;
+							let e;									
+							const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
+							const n = 0.8 + (FC/2500);
+							const Ec = 57000*Math.sqrt(FC);
+							const e0 = (FC/Ec)*(n/(n-1));					
+
+							for (e = 0.00000; e <= 0.00300; e += 0.00001) {
+							
+								let coef = e/e0;
+
+								let k = (coef <= 1) ? 1 : 0.67 + (FC / 9000);								
+							
+								let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
+							
+								carga = (((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3); 
+							
+								deformacion = (longitudCilindro * e).toFixed(3);
+
+								datosCarga.push(carga);
+							
+								datosDeformacion.push(deformacion);
+							
+								data.push({x: deformacion, y: carga});
+							
+							}	 
+							
+							// Se grafica la curva carga-deformación
+							tippy('[data-tippy-content]');
+							const totalDuration = data.length*100;
+							const delayBetweenPoints = totalDuration / data.length;	
+							const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+						
+							const animation = {
+								x: {
+									type: 'number',
+									easing: 'linear',
+									duration: delayBetweenPoints,
+									from: NaN, // the point is initially skipped
+									delay(ctx) {
+									if (ctx.type !== 'data' || ctx.xStarted) {
+										return 0;
+									}
+									ctx.xStarted = true;
+									return ctx.index * delayBetweenPoints;
+									}
+								},
+							
+								y: {
+									type: 'number',
+									easing: 'linear',
+									duration: delayBetweenPoints,
+								
+									from: previousY,
+									delay(ctx) {
+										if (ctx.type !== 'data' || ctx.yStarted) {
+											return 0;
+										}
+										ctx.yStarted = true;
+										return ctx.index * delayBetweenPoints;
+									}
+								}
+							};
+						
+							const config = {
+								type: 'line',
+								data: {
+									datasets: [{   
+										borderColor: 'rgb(200, 50, 50)',     
+										borderWidth: 1.5,
+										radius: 0,
+										data: data,
+									}],
+								},
+							
+								options: {
+									animation,
+									interaction: {
+										intersect: false
+									},
+									plugins: {
+										legend: false,
+										title: {
+												display: true,
+												text: 'Concreto a compresión'				
+											}
+									},
+								
+									scales:{
+										x: {          
+											type: 'linear',
+											title: {
+												display: true,
+												text: 'Deformación (mm)'
+											},
+										},
+									
+										y: {
+											type: 'linear',
+											title: {
+												display: true,
+												text: 'Carga aplicada (kN)'
+											}
+										}
+									}
+								}
+							};
+
+							if (iniciar = true) {
+							 const myChart = new Chart(
+									document.getElementById('myChart'),
+									config
+								);							 
+							}
+							//}  																		
+						
+						</script>
+					
+				</div>
+			</div>			
+							 
+				<!-- Reporte -->
+				<div class="card mt-2" style="width: 100%;">
+					<div class="card-body" style="height: 100%;">								
+						<div><script>document.write("Diámetro: " + diametroCilindro.toFixed(2) + " mm" + "\n");</script></div>
+						<div><script>document.write("Longitud: " + longitudCilindro.toFixed(2) + " mm" + "\n");</script></div>	
+						<div><script>
+								// Se obtiene la carga máxima aplicada
+								function getMaxOfArray(datosCarga) {
+									return Math.max.apply(null, datosCarga);
+								}
+								document.write("Carga máxima: " + getMaxOfArray(datosCarga) + " kN");
+							</script>
+						</div>											
+					</div>
+				</div>			
+
+				<!-- Boton descargar datos -->
+				<div class="card">
+					<div class="card-body" style="width: 100%; display: flex; justify-content: center;	align-items: center;">
+																		
+							<button type="button" button id="download-data" class="btn btn-success">Descargar datos (.xlsx)</button>					
+						
+					</div>
+				</div>
+
+				<!-- Convertir datos en hoja de cálculo .xlsx -->
+				<script>				
+
+					var wb = XLSX.utils.book_new();					
+					wb.SheetNames.push("Test Sheet");
+					var ws_data = [datosDeformacion, datosCarga];
+					var ws = XLSX.utils.aoa_to_sheet(ws_data);
+					wb.Sheets["Test Sheet"] = ws;				 
+					document.getElementById("download-data").onclick = () => {
+						XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
+					};
+
+					/* 
+
+					// Librería SheetJS
+					function crearExcelDatos() {
+						var wb = XLSX.utils.book_new();					
+						wb.SheetNames.push("Test Sheet");
+						var ws_data = [datosDeformacion, datosCarga];
+						var ws = XLSX.utils.aoa_to_sheet(ws_data);
+						wb.Sheets["Test Sheet"] = ws;
+						return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
+					}
+
+					botonExcel.addEventListener('click', crearExcelDatos); */			 	 		
+				
+				</script>
+
+		</div>
+
+		<!-- Animación gltf -->
+		<div class="position-fixed" style="width: 70%; background-color: gray;">
+
+		</div>
+
+	</div>
+	</main>
+</body>
+</html>
