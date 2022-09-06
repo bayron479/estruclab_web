@@ -38,7 +38,7 @@ h3 {
 h4 {
   font-size: 22px;
   font-weight: 500;
-  color: white;
+  color:rgb(64, 63, 63);
   text-rendering: optimizeLegibility;
   margin: 15px;  
 }
@@ -51,6 +51,7 @@ ol {
   text-align: justify;
   line-height: 1.5;
   margin: 0px;
+  
 }
 
 .fondo-modulos {
@@ -98,12 +99,12 @@ ol {
   justify-content: flex-end;
   align-items: center;
   width: 100%;
-  background-color: rgb(44, 54, 69);   
+  background-color: lightgray;   
 }
 
 .contenedor-ensayos {
   height: 300px;
-  background-color: rgb(61, 73, 91);
+  background-color: rgb(49, 65, 82); 
   border-radius: 30px;  
   border-style: solid;
   border-color: gray;
