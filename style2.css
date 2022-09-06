@@ -16,7 +16,7 @@ header {
 
 h1 {  
   text-align: center; 
-  font-size: 60px;
+  font-size: 45px;
   color: rgba(50, 50, 50, 0.5); 
 }
 
@@ -55,7 +55,7 @@ ol {
 
 .fondo-modulos {
   /* background-color: rgb(44, 54, 69); */
-  background-image: url("background.jpg");
+  background-image: url("./imagenes/background.jpg");
   display: flex;
   flex-direction: row;  
   justify-content: space-evenly;
