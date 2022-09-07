@@ -10,10 +10,6 @@ header {
   width: 100%;  
 }
 
-.titulo {
-  position: static;
-}
-
 h1 {  
   text-align: center; 
   font-size: 45px;
