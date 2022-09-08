@@ -120,7 +120,8 @@
 							// Para calcular los valores de esfuerzo y deformación se usa la ecuación de Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, "Reinforced concrete mechanics and design, 2016"
 							// Para concretos con f'c entre 15 y 125 MPa
 
-							let data = [];					
+							let data = [];
+							let datosExcel = [];					
 							let deformacion;
 							let datosCarga = [];
 							let datosDeformacion = [];	
@@ -142,10 +143,12 @@
 								carga = (((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3); 
 							
 								deformacion = (longitudCilindro * e).toFixed(3);
-
+								
+								datosExcel.push([carga, deformacion]);					
+								
 								datosCarga.push(carga);
 							
-								datosDeformacion.push(deformacion);
+								//datosDeformacion.push(deformacion);
 							
 								data.push({x: deformacion, y: carga});
 							
@@ -274,8 +277,8 @@
 				<script>				
 
 					var wb = XLSX.utils.book_new();					
-					wb.SheetNames.push("Test Sheet");
-					var ws_data = [datosDeformacion, datosCarga];
+					wb.SheetNames.push("Test Sheet");					
+					var ws_data = datosExcel;
 					var ws = XLSX.utils.aoa_to_sheet(ws_data);
 					wb.Sheets["Test Sheet"] = ws;				 
 					document.getElementById("download-data").onclick = () => {
