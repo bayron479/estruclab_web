@@ -253,7 +253,8 @@
 					<div class="card-body" style="height: 100%;">								
 						<div><script>document.write("Diámetro: " + diametroCilindro.toFixed(2) + " mm" + "\n");</script></div>
 						<div><script>document.write("Longitud: " + longitudCilindro.toFixed(2) + " mm" + "\n");</script></div>	
-						<div><script>
+						<div>
+							<script>
 								// Se obtiene la carga máxima aplicada
 								function getMaxOfArray(datosCarga) {
 									return Math.max.apply(null, datosCarga);
@@ -280,24 +281,12 @@
 					wb.SheetNames.push("Test Sheet");					
 					var ws_data = datosExcel;
 					var ws = XLSX.utils.aoa_to_sheet(ws_data);
-					wb.Sheets["Test Sheet"] = ws;				 
+					wb.Sheets["Test Sheet"] = ws;
+					XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"]], { origin: "A1" });				 
+					ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
 					document.getElementById("download-data").onclick = () => {
 						XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
-					};
-
-					/* 
-
-					// Librería SheetJS
-					function crearExcelDatos() {
-						var wb = XLSX.utils.book_new();					
-						wb.SheetNames.push("Test Sheet");
-						var ws_data = [datosDeformacion, datosCarga];
-						var ws = XLSX.utils.aoa_to_sheet(ws_data);
-						wb.Sheets["Test Sheet"] = ws;
-						return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
-					}
-
-					botonExcel.addEventListener('click', crearExcelDatos); */			 	 		
+					};					 	 		
 				
 				</script>
 
