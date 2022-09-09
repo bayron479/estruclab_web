@@ -58,14 +58,14 @@
 
 		</header>	
 
-	<div style="width: 100%; height: 100%; display: flex; flex-direction: row; background-color: rgb(14, 66, 112);"> 
+
 		<!-- Panel izquierdo -->
 		<div class="position-fixed" style="width: 400px; background-color: #ffffff;padding: 90px 5px; height: 100%;">
 
 			<!-- Formulario para ingresar valor de resistencia nominal -->
 			<div class="card mt-2" style="width: 100%; display: flex;	justify-content: center;	align-items: center;" >
 				<div class="card-body" style="text-align: center;" >
-					<form class="row g-2" name="formulario">
+					<form class="row g-2" name="formulario" id="formulario">
 						<div class="col-auto" style="width:250px;" title="Resistencia a compresión que debería tener el cilindro de concreto">							
 							<label class="form-label" style="font-size:16px;">
 
@@ -73,11 +73,11 @@
 									Resistencia nominal (MPa)									
 								</strong>
 
-							  <input type="number" value="" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
-								id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" required> 
+							  <input type="number" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
+								id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" form="formulario"> 
 
 								<div style="text-align: center; padding: 0.25rem;">		
-									<button type="button" id="start" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
+									<button type="submit" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
 								</div> 
 
               </label>
@@ -100,15 +100,15 @@
 							//  	var resistenciaNominal = parseInt(document.getElementById("resistenciaNominal").value);
 							//  	return iniciar, resistenciaNominal;
 							// }							
-							
-								var resistenciaNominal = 35;
+								const resistenciaNominal = 35;
+								// const resistenciaNominal = document.formulario;
 								let resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
 
 							// Dimensiones del cilindro de concreto en mm
 								let diametroCilindro = 150 + Math.random() - Math.random();
 								let longitudCilindro = 300 + Math.random() - Math.random(); 
 								let areaCilindro = Math.PI*(diametroCilindro/2)**2;
-								let cargaMaxima = (resistenciaObtenida * areaCilindro) / 1000;	// en kN 
+								// let cargaMaxima = (resistenciaObtenida * areaCilindro) / 1000;	// en kN 
 	
 							// Velocidad de carga en MPa/s. Rango aceptable: 0.15 a 0.35 MPa/s (ASTM C-39)
 							// Valor recomendado por NTC-673: 0.25 MPa/s  
@@ -124,7 +124,7 @@
 							let datosExcel = [];					
 							let deformacion;
 							let datosCarga = [];
-							let datosDeformacion = [];	
+							//	let datosDeformacion = [];	
 							let carga;
 							let e;									
 							const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
@@ -280,7 +280,7 @@
 					var wb = XLSX.utils.book_new();					
 					wb.SheetNames.push("Test Sheet");					
 					var ws_data = datosExcel;
-					var ws = XLSX.utils.aoa_to_sheet(ws_data);
+					var ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
 					wb.Sheets["Test Sheet"] = ws;
 					XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"]], { origin: "A1" });				 
 					ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
@@ -293,11 +293,9 @@
 		</div>
 
 		<!-- Animación gltf -->
-		<div class="position-fixed" style="width: 70%; background-color: gray;">
+		
 
-		</div>
-
-	</div>
+	
 	</main>
 </body>
 </html>
