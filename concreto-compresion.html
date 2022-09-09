@@ -33,6 +33,18 @@
 	<script src="https://cdn.sheetjs.com/xlsx-0.18.10/package/dist/xlsx.full.min.js"></script>
 	<!-- <script src="concreto-compresion.js"></script> -->
 
+	<script defer>
+		
+		function leerEntrada() {				
+								
+			return parseInt(document.getElementById("resistenciaNominal").value);
+
+		}	
+		
+		var resistenciaNominal = leerEntrada();
+
+	</script>
+
 </head>
 
 <body>
@@ -69,7 +81,7 @@
 				<div class="card-body" style="text-align: center;" >
 					<form class="row g-2" name="formulario" id="formulario">
 						<div class="col-auto" style="width:250px;" title="Resistencia a compresión que debería tener el cilindro de concreto">							
-							<label class="form-label" style="font-size:16px;">
+							<label class="form-label" for="resistenciaNominal" style="font-size:16px;">
 
 								<strong>								
 									Resistencia nominal (MPa)									
@@ -77,9 +89,10 @@
 
 							  <input type="number" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
 								id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" form="formulario"> 
-
+								
 								<div style="text-align: center; padding: 0.25rem;">		
-									<button type="submit" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
+									<button type="button" style="text-align: center;" class="btn btn-primary" 
+									onclick="leerEntrada()">Iniciar ensayo</button>											
 								</div> 
 
               </label>
@@ -94,18 +107,14 @@
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 						<script>
 							// var iniciar = false;
-
-							// Se lee el valor ingresado por el usuario
-							// document.getElementById("start").onclick = () => {
-
-							// 	var iniciar = true;
-							//  	var resistenciaNominal = parseInt(document.getElementById("resistenciaNominal").value);
-							//  	return iniciar, resistenciaNominal;
-							// }							
-								const resistenciaNominal = 35;
-								// const resistenciaNominal = document.formulario;
+							// Se lee el valor ingresado por el usuario				
+							
+							
+														
+								// const resistenciaNominal = 35;
+								
 								let resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
-
+								//console.log(resistenciaObtenida);
 							// Dimensiones del cilindro de concreto en mm
 								let diametroCilindro = 150 + Math.random() - Math.random();
 								let longitudCilindro = 300 + Math.random() - Math.random(); 
