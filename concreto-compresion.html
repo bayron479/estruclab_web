@@ -33,7 +33,7 @@
 	<script src="https://cdn.sheetjs.com/xlsx-0.18.10/package/dist/xlsx.full.min.js"></script>
 	<!-- <script src="concreto-compresion.js"></script> -->
 
-	<script defer>
+	<!-- <script defer>
 		
 		function leerEntrada() {				
 								
@@ -41,9 +41,9 @@
 
 		}	
 		
-		var resistenciaNominal = leerEntrada();
+		let resistenciaNominal = leerEntrada();
 
-	</script>
+	</script> -->
 
 </head>
 
@@ -106,12 +106,12 @@
 				<div class="card-body">
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 						<script>
-							// var iniciar = false;
+							// let iniciar = false;
 							// Se lee el valor ingresado por el usuario				
 							
 							
 														
-								// const resistenciaNominal = 35;
+								const resistenciaNominal = 35;
 								
 								let resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
 								//console.log(resistenciaObtenida);
@@ -288,10 +288,10 @@
 				<!-- Convertir datos en hoja de cálculo .xlsx -->
 				<script>				
 
-					var wb = XLSX.utils.book_new();					
+					let wb = XLSX.utils.book_new();					
 					wb.SheetNames.push("Test Sheet");					
-					var ws_data = datosExcel;
-					var ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
+					let ws_data = datosExcel;
+					let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
 					wb.Sheets["Test Sheet"] = ws;
 					XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"]], { origin: "A1" });				 
 					ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
