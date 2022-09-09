@@ -50,8 +50,7 @@ ol {
   
 }
 
-.fondo-modulos {
-  /* background-color: rgb(44, 54, 69); */
+.fondo-modulos {  
   background-image: url("./imagenes/background.jpg");
   display: flex;
   flex-direction: row;  
@@ -189,10 +188,12 @@ div > img > a {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  text-align: center;  
 }
 
-
+.footer > div > a > img {
+  height: 80px;
+}
 
 
 
