@@ -98,7 +98,7 @@
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 						
 						<script>						
-								
+								let resistenciaNominal = 50;
 								let resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
 								//console.log(resistenciaObtenida);
 							// Dimensiones del cilindro de concreto en mm
@@ -232,13 +232,13 @@
 								}
 							};
 
-							if (iniciar = true) {
+							
 							 const myChart = new Chart(
 									document.getElementById('myChart'),
 									config
 								);							 
-							}
-							//}  																		
+							
+							 																		
 						
 						</script>
 					
