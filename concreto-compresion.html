@@ -33,18 +33,6 @@
 	<script src="https://cdn.sheetjs.com/xlsx-0.18.10/package/dist/xlsx.full.min.js"></script>
 	<!-- <script src="concreto-compresion.js"></script> -->
 
-	<!-- <script defer>
-		
-		function leerEntrada() {				
-								
-			return parseInt(document.getElementById("resistenciaNominal").value);
-
-		}	
-		
-		let resistenciaNominal = leerEntrada();
-
-	</script> -->
-
 </head>
 
 <body>
@@ -87,12 +75,15 @@
 									Resistencia nominal (MPa)									
 								</strong>
 
-							  <input type="number" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
-								id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" form="formulario"> 
+							  <!-- <input type="number" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
+								id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" form="formulario">  -->
+
+								<input type="text" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" class="form-control form-control-sm" name="resistenciaNominal"
+								id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" form="formulario">
 								
 								<div style="text-align: center; padding: 0.25rem;">		
 									<button type="button" style="text-align: center;" class="btn btn-primary" 
-									onclick="leerEntrada()">Iniciar ensayo</button>											
+									onclick="iniciarCarga(), grafica()">Iniciar ensayo</button>											
 								</div> 
 
               </label>
@@ -105,13 +96,8 @@
 			<div class="card mb-2" style="width: 100%;">
 				<div class="card-body">
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
-						<script>
-							// let iniciar = false;
-							// Se lee el valor ingresado por el usuario				
-							
-							
-														
-								const resistenciaNominal = 35;
+						
+						<script>						
 								
 								let resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
 								//console.log(resistenciaObtenida);
