@@ -138,7 +138,7 @@ function grafica() {
 			config
 		);
 
-	return myChart;
+	return myChart, datosExcel;
 }
 
 // Se obtiene la carga máxima aplicada
@@ -146,12 +146,20 @@ function getMaxOfArray(datosCarga) {
 	return Math.max.apply(null, datosCarga);
 }
 
-let cargaMaxima = (getMaxOfArray(datosCarga)).tofixed(3);
+let cargaMaxima = getMaxOfArray(datosCarga);
 
 // Datos en Excel
-//function datosEnsayo() {
-		
-//}
+function datosEnsayo() {
+	let wb = XLSX.utils.book_new();					
+	wb.SheetNames.push("Test Sheet");					
+	let ws_data = datosExcel;
+	let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
+	wb.Sheets["Test Sheet"] = ws;
+	XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"]], { origin: "A1" });				 
+	ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
+
+	return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");	
+}
 	
 
 					
