@@ -22,7 +22,7 @@ let carga;
 let e;
 
 function grafica() {
-	resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
+  resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
 	resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
 	diametroCilindro = 150 + Math.random() - Math.random(); 
 	longitudCilindro = 300 + Math.random() - Math.random(); 
