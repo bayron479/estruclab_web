@@ -150,11 +150,6 @@ function grafica() {
 	return myChart, datosCarga, cargaMaxima, diametroCilindro, longitudCilindro, datosExcel;
 }
 
-// Se obtiene la carga máxima aplicada
-// function getMaxOfArray(datosCarga) {
-// 	return Math.max.apply(null, datosCarga);
-// }
-
 let cargaMaxima = Math.max.apply(null, datosCarga);
 
 // Datos en Excel
