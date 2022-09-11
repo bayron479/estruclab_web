@@ -46,9 +46,18 @@ function grafica() {
 								
 		datosExcel.push([carga, deformacion]);					
 								
-		datosCarga.push(carga);		
-							
-		data.push({x: deformacion, y: carga});
+		datosCarga.push(carga);
+
+		let cargaMaxima = Math.max.apply(null, datosCarga);
+
+		data.push({x: deformacion, y: carga});		
+		
+			if (carga < 0.95 * cargaMaxima) {
+				break;
+				}
+				else {
+				continue;
+			}	
 							
 	}	 
 
@@ -138,15 +147,15 @@ function grafica() {
 			config
 		);
 
-	return myChart, datosExcel;
+	return myChart, datosCarga, cargaMaxima, diametroCilindro, longitudCilindro, datosExcel;
 }
 
 // Se obtiene la carga máxima aplicada
-function getMaxOfArray(datosCarga) {
-	return Math.max.apply(null, datosCarga);
-}
+// function getMaxOfArray(datosCarga) {
+// 	return Math.max.apply(null, datosCarga);
+// }
 
-let cargaMaxima = getMaxOfArray(datosCarga);
+let cargaMaxima = Math.max.apply(null, datosCarga);
 
 // Datos en Excel
 function datosEnsayo() {
