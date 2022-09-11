@@ -40,9 +40,9 @@ function grafica() {
 							
 		let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
 							
-		carga = (((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3); 
+		carga = parseFloat((((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3)); 
 							
-		deformacion = (longitudCilindro * e).toFixed(3);
+		deformacion = parseFloat((longitudCilindro * e).toFixed(3));
 								
 		datosExcel.push([carga, deformacion]);					
 								
