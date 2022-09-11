@@ -1,32 +1,36 @@
-  let resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
-		
-	// Dimensiones del cilindro de concreto en mm
-	let diametroCilindro = 150 + Math.random() - Math.random();
-	let longitudCilindro = 300 + Math.random() - Math.random(); 
-	let areaCilindro = Math.PI*(diametroCilindro/2)**2;
-  
-	// let cargaMaxima = (resistenciaObtenida * areaCilindro) / 1000;	// en
-	// Velocidad de carga en MPa/s. Rango aceptable: 0.15 a 0.35 MPa/s (ASTM C-39)
-	// Valor recomendado por NTC-673: 0.25 MPa/s  
-						
-	//const velocidadCarga = 0.25;
-	//Precisión aceptable: +- 0.05 MPa/s (NTC-673)
-	const precision = 0.05;		
-	
-	// Para calcular los valores de esfuerzo y deformación se usa la ecuación de Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, "Reinforced concrete mechanics and design, 2016"
-	// Para concretos con f'c entre 15 y 125 MPa
+let resistenciaNominal;
+let resistenciaObtenida;
+let diametroCilindro; // en mm
+let longitudCilindro; // en mm
+let areaCilindro;
+// Velocidad de carga en MPa/s. Rango aceptable: 0.15 a 0.35 MPa/s (ASTM C-39)
+// Valor recomendado por NTC-673: 0.25 MPa/s						
+//const velocidadCarga = 0.25;
+//Precisión aceptable: +- 0.05 MPa/s (NTC-673)
+const precision = 0.05; 
 
-	let data = [];
-	let datosExcel = [];					
-	let deformacion;
-	let datosCarga = [];
-	//	let datosDeformacion = [];	
-	let carga;
-	let e;									
+// Para calcular los valores de esfuerzo y deformación se usa la ecuación de 
+// Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, 
+// "Reinforced concrete mechanics and design, 2016"
+// Para concretos con f'c entre 15 y 125 MPa
+
+let data = [];
+let datosExcel = [];
+let datosCarga = [];					
+let deformacion;	
+let carga;
+let e;
+
+function grafica() {
+	resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
+	resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
+	diametroCilindro = 150 + Math.random() - Math.random(); 
+	longitudCilindro = 300 + Math.random() - Math.random(); 
+	areaCilindro = Math.PI*(diametroCilindro/2)**2;
 	const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
 	const n = 0.8 + (FC/2500);
 	const Ec = 57000*Math.sqrt(FC);
-	const e0 = (FC/Ec)*(n/(n-1));					
+	const e0 = (FC/Ec)*(n/(n-1));	
 
 	for (e = 0.00000; e <= 0.00300; e += 0.00001) {
 							
@@ -42,15 +46,13 @@
 								
 		datosExcel.push([carga, deformacion]);					
 								
-		datosCarga.push(carga);
-							
-		//datosDeformacion.push(deformacion);
+		datosCarga.push(carga);		
 							
 		data.push({x: deformacion, y: carga});
 							
 	}	 
-							
-	// Se grafica la curva carga-deformación
+
+	// Configuración de la animación de la gráfica
 	tippy('[data-tippy-content]');
 	const totalDuration = data.length*100;
 	const delayBetweenPoints = totalDuration / data.length;	
@@ -134,5 +136,27 @@
 		const myChart = new Chart(
 			document.getElementById('myChart'),
 			config
-		);							 
+		);
+
+	return myChart;
+}
+
+// Se obtiene la carga máxima aplicada
+function getMaxOfArray(datosCarga) {
+	return Math.max.apply(null, datosCarga);
+}
+
+let cargaMaxima = (getMaxOfArray(datosCarga)).tofixed(3);
+
+// Datos en Excel
+//function datosEnsayo() {
+		
+//}
+	
+
+					
+
+	
+							
+								 
 	
