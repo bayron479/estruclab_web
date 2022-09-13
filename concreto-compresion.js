@@ -1,8 +1,8 @@
 let resistenciaNominal;
 let resistenciaObtenida;
-let diametroCilindro; // en mm
-let longitudCilindro; // en mm
-let areaCilindro;
+diametroCilindro = 150 + Math.random() - Math.random(); // en mm 
+longitudCilindro = 300 + Math.random() - Math.random(); // en mm 
+areaCilindro = Math.PI*(diametroCilindro/2)**2;
 // Velocidad de carga en MPa/s. Rango aceptable: 0.15 a 0.35 MPa/s (ASTM C-39)
 // Valor recomendado por NTC-673: 0.25 MPa/s						
 //const velocidadCarga = 0.25;
@@ -19,14 +19,12 @@ let datosExcel = [];
 let datosCarga = [];					
 let deformacion;	
 let carga;
+let cargaMaxima;
 let e;
 
 function grafica() {
   resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
 	resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
-	diametroCilindro = 150 + Math.random() - Math.random(); 
-	longitudCilindro = 300 + Math.random() - Math.random(); 
-	areaCilindro = Math.PI*(diametroCilindro/2)**2;
 	const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
 	const n = 0.8 + (FC/2500);
 	const Ec = 57000*Math.sqrt(FC);
@@ -40,15 +38,15 @@ function grafica() {
 							
 		let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
 							
-		carga = parseFloat((((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3)); 
+		carga = (((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3); 
 							
-		deformacion = parseFloat((longitudCilindro * e).toFixed(3));
+		deformacion = (longitudCilindro * e).toFixed(3);
 								
 		datosExcel.push([carga, deformacion]);					
 								
 		datosCarga.push(carga);
 
-		let cargaMaxima = Math.max.apply(null, datosCarga);
+		cargaMaxima = Math.max.apply(null, datosCarga);
 
 		data.push({x: deformacion, y: carga});		
 		
@@ -147,10 +145,21 @@ function grafica() {
 			config
 		);
 
-	return myChart, datosCarga, cargaMaxima, diametroCilindro, longitudCilindro, datosExcel;
+	return myChart, datosCarga, cargaMaxima, datosExcel;
 }
 
-let cargaMaxima = Math.max.apply(null, datosCarga);
+//let cargaMaxima = Math.max.apply(null, datosCarga);
+function diamCil() {	
+	document.write("Diámetro: " + parseFloat(diametroCilindro).toFixed(2) + " mm" + "\n");
+} 
+
+function longCil() {
+	document.write("Longitud: " + parseFloat(longitudCilindro).toFixed(2) + " mm" + "\n");	
+}
+
+function maxLoad() {
+  document.write("Carga máxima: " + parseFloat(cargaMaxima).toFixed(3) + " kN" + "\n");	
+}
 
 // Datos en Excel
 function datosEnsayo() {
