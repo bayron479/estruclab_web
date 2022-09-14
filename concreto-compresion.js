@@ -43,7 +43,7 @@ function grafica() {
 							
 		deformacion = (longitudCilindro * e).toFixed(3);
 								
-		datosExcel.push([carga, deformacion]);					
+		datosExcel.push([Number(carga), Number(deformacion)]);					
 								
 		datosCarga.push(carga);
 
