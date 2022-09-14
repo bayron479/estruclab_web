@@ -1,8 +1,8 @@
 let resistenciaNominal;
 let resistenciaObtenida;
-diametroCilindro = 150 + Math.random() - Math.random(); // en mm 
-longitudCilindro = 300 + Math.random() - Math.random(); // en mm 
-areaCilindro = Math.PI*(diametroCilindro/2)**2;
+const diametroCilindro = 150 + Math.random() - Math.random(); // en mm 
+const longitudCilindro = 300 + Math.random() - Math.random(); // en mm 
+const areaCilindro = Math.PI*(diametroCilindro/2)**2;
 // Velocidad de carga en MPa/s. Rango aceptable: 0.15 a 0.35 MPa/s (ASTM C-39)
 // Valor recomendado por NTC-673: 0.25 MPa/s						
 //const velocidadCarga = 0.25;
@@ -21,6 +21,7 @@ let deformacion;
 let carga;
 let cargaMaxima;
 let e;
+
 
 function grafica() {
   resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
@@ -50,12 +51,12 @@ function grafica() {
 
 		data.push({x: deformacion, y: carga});		
 		
-			if (carga < 0.95 * cargaMaxima) {
-				break;
-				}
-				else {
-				continue;
-			}	
+		if (carga < 0.95 * cargaMaxima) {			
+			break;
+		}
+		else {
+			continue;
+		}	
 							
 	}	 
 
