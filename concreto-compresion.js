@@ -3,21 +3,20 @@ let resistenciaObtenida;
 const diametroCilindro = 150 + Math.random() - Math.random(); // en mm 
 const longitudCilindro = 300 + Math.random() - Math.random(); // en mm 
 const areaCilindro = Math.PI*(diametroCilindro/2)**2;
-// Velocidad de carga en MPa/s. Rango aceptable: 0.15 a 0.35 MPa/s (ASTM C-39)
-// Valor recomendado por NTC-673: 0.25 MPa/s						
-//const velocidadCarga = 0.25;
-//Precisión aceptable: +- 0.05 MPa/s (NTC-673)
-const precision = 0.05; 
+const precision = Number(0.05); 
+// Velocidad de carga = 1 mm / min
+const velocidadCarga = 1/60; // en mm/s 
 
 // Para calcular los valores de esfuerzo y deformación se usa la ecuación de 
 // Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, 
-// "Reinforced concrete mechanics and design, 2016"
-// Para concretos con f'c entre 15 y 125 MPa
+// "Reinforced concrete mechanics and design, 7ed, 2016"
+// Ecuación 3-23 p-91 Para concretos con f'c entre 15 y 125 MPa
 
 let data = [];
 let datosExcel = [];
 let datosCarga = [];					
-let deformacion;	
+let deformacion;
+const  pasoDeformacion = velocidadCarga / (longitudCilindro - velocidadCarga );	
 let carga;
 let cargaMaxima;
 let e;
@@ -31,7 +30,7 @@ function grafica() {
 	const Ec = 57000*Math.sqrt(FC);
 	const e0 = (FC/Ec)*(n/(n-1));	
 
-	for (e = 0.00000; e <= 0.00300; e += 0.00001) {
+	for (e = 0.00000; e <= 0.00300; e += pasoDeformacion) {
 							
 		let coef = e/e0;
 
@@ -39,13 +38,13 @@ function grafica() {
 							
 		let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
 							
-		carga = (((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3); 
+		carga = ((fc  + Math.random()*precision - Math.random()*precision) * areaCilindro  / 1000).toFixed(3); // en kN 
 							
-		deformacion = (longitudCilindro * e).toFixed(3);
+		deformacion = (longitudCilindro * e / (1 + e)).toFixed(3); // en mm
 								
 		datosExcel.push([Number(carga), Number(deformacion)]);					
 								
-		datosCarga.push(carga);
+		datosCarga.push(Number(carga));
 
 		cargaMaxima = Math.max.apply(null, datosCarga);
 
@@ -62,7 +61,7 @@ function grafica() {
 
 	// Configuración de la animación de la gráfica
 	tippy('[data-tippy-content]');
-	const totalDuration = data.length*100;
+	const totalDuration = data.length*1000;
 	const delayBetweenPoints = totalDuration / data.length;	
 	const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
 						
