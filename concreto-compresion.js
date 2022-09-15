@@ -5,7 +5,7 @@ const longitudCilindro = 300 + Math.random() - Math.random(); // en mm
 const areaCilindro = Math.PI*(diametroCilindro/2)**2;
 const precision = Number(0.05); 
 // Velocidad de carga = 1 mm / min
-const velocidadCarga = 1/60; // en mm/s 
+const velocidadCarga = Number(1/60); // en mm/s 
 
 // Para calcular los valores de esfuerzo y deformación se usa la ecuación de 
 // Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, 
@@ -174,6 +174,34 @@ function datosEnsayo() {
 	return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");	
 }
 	
+// Animación 3d-gltf
+
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
+var cilindroConcreto; var maquinaCarga;
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+clock = new THREE.Clock();
+scene = new THREE.Scene();
+scene.background = new THREE.Color(0xa0a0a0);
+scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+hemiLight.position.set(0, 20, 0);
+scene.add(hemiLight);
+const dirLight = new THREE.DirectionalLight(0xffffff);
+dirLight.position.set(- 3, 10, - 10);
+dirLight.castShadow = true;
+dirLight.shadow.camera.top = 2;
+dirLight.shadow.camera.bottom = - 2;
+dirLight.shadow.camera.left = - 2;
+dirLight.shadow.camera.right = 2;
+dirLight.shadow.camera.near = 0.1;
+dirLight.shadow.camera.far = 40;
+scene.add(dirLight);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+camera.position.set(10, 4.5, 15); // posicion de la camara (0, 5, 5)
+controls.update();
+renderer.render(scene, camera); 
 
 					
 

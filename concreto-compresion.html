@@ -64,7 +64,7 @@
   
   							  <strong>Resistencia nominal (MPa)</strong>
   
-  							  <input type="number" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
+  							  <input type="number" required value="21" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
   							  id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" form="formulario" title="Resistencia a compresión que debería tener el cilindro de concreto">
   															
   							  <div style="text-align: center; padding: 0.25rem;">		
@@ -112,7 +112,10 @@
       </div>
   
   	  <!-- Animación gltf -->
-  		
+  		<div class="card-body">
+				<canvas id="animacion-gltf"></canvas>						
+				<script></script>					
+			</div>
   
   	
     </main>
