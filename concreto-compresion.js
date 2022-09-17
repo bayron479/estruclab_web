@@ -15,11 +15,11 @@ const velocidadCarga = Number(1/60); // en mm/s
 let data = [];
 let datosExcel = [];
 let datosCarga = [];					
-let deformacion;
+let deformacion = 0;
 const  pasoDeformacion = velocidadCarga / (longitudCilindro - velocidadCarga );	
-let carga;
-let cargaMaxima;
-let e;
+let carga = 0;
+let cargaMaxima = 0;
+let e = 0;
 
 
 function grafica() {
@@ -148,17 +148,18 @@ function grafica() {
 	return myChart, datosCarga, cargaMaxima, datosExcel;
 }
 
-//let cargaMaxima = Math.max.apply(null, datosCarga);
-function diamCil() {	
-	document.write("Diámetro: " + parseFloat(diametroCilindro).toFixed(2) + " mm" + "\n");
+
+function reporteDiametro() {
+	document.getElementById("reporte-diametro").innerHTML = "Diámetro: " + parseFloat(diametroCilindro).toFixed(2) + " mm" + "\n";
+	// + "Carga máxima: " + parseFloat(cargaMaxima).toFixed(3) + " kN" + "\n"
 } 
 
-function longCil() {
-	document.write("Longitud: " + parseFloat(longitudCilindro).toFixed(2) + " mm" + "\n");	
+function reporteLongitud() {
+	document.getElementById("reporte-longitud").innerHTML = "Longitud: " + parseFloat(longitudCilindro).toFixed(2) + " mm" + "\n";
 }
 
-function maxLoad() {
-  document.write("Carga máxima: " + parseFloat(cargaMaxima).toFixed(3) + " kN" + "\n");	
+function reporteCargaMaxima() {
+	document.getElementById("reporte-carga").innerHTML = "Carga Máxima: " + parseFloat(cargaMaxima).toFixed(2) + " kN" + "\n";
 }
 
 // Datos en Excel
