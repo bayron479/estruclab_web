@@ -83,14 +83,14 @@
   				  <div class="col-auto" style="width:250px;">							
   					  <label class="form-label" for="resistenciaNominal" style="font-size:16px;">
   
-  						  <strong>Resistencia nominal (MPa)</strong>
+  						  <strong>Resistencia de diseño (MPa)</strong>
   
   						  <input type="number" required value="21" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
   						  id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" form="formulario" title="Resistencia a compresión que debería tener el cilindro de concreto">
   															
   						  <div style="text-align: center; padding: 0.25rem;">		
   							  <button type="button" style="text-align: center;" class="btn btn-primary" 
-  							  onclick="grafica()">Iniciar ensayo</button>											
+  							  onclick="grafica(),mensajeCargaMaxima()">Iniciar ensayo</button>											
   						  </div> 
   
               </label>
@@ -112,7 +112,7 @@
   		 <div class="card-body" style="height: 100%;">								
   			 <p id="reporte-diametro"><script>reporteDiametro()</script></p>
 				 <p id="reporte-longitud"><script>reporteLongitud()</script></p>
-				 <p id="reporte-carga"><script>reporteCargaMaxima()</script></p>			 
+				 <p id="reporte-carga"><script></script></p>			 
   		 </div>
   	 </div>			
   

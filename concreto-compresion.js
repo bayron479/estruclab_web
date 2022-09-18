@@ -27,7 +27,7 @@ function grafica() {
 	resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
 	const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
 	const n = 0.8 + (FC/2500);
-	const Ec = 57000*Math.sqrt(FC);
+	const Ec = 57000*Math.sqrt(FC); // en psi
 	const e0 = (FC/Ec)*(n/(n-1));	
 
 	for (e = 0.00000; e <= 0.00300; e += pasoDeformacion) {
@@ -151,15 +151,22 @@ function grafica() {
 
 function reporteDiametro() {
 	document.getElementById("reporte-diametro").innerHTML = "Diámetro: " + parseFloat(diametroCilindro).toFixed(2) + " mm" + "\n";
-	// + "Carga máxima: " + parseFloat(cargaMaxima).toFixed(3) + " kN" + "\n"
 } 
 
 function reporteLongitud() {
-	document.getElementById("reporte-longitud").innerHTML = "Longitud: " + parseFloat(longitudCilindro).toFixed(2) + " mm" + "\n";
+	document.getElementById("reporte-longitud").innerHTML = "Longitud inicial: " + parseFloat(longitudCilindro).toFixed(2) + " mm" + "\n";
 }
 
-function reporteCargaMaxima() {
-	document.getElementById("reporte-carga").innerHTML = "Carga Máxima: " + parseFloat(cargaMaxima).toFixed(2) + " kN" + "\n";
+var tiempoFalla;
+
+var finEnsayo = datosExcel.length*1000;
+
+function mensajeCargaMaxima() {
+	tiempoFalla = setTimeout("datoCargaMaxima()", finEnsayo);
+}
+
+function datoCargaMaxima() {
+	document.getElementById("reporte-carga").innerHTML = "Carga Máxima: " + parseFloat(cargaMaxima).toFixed(3) + " kN" + "\n";
 }
 
 // Datos en Excel
@@ -174,8 +181,6 @@ function datosEnsayo() {
 
 	return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");	
 }
-
-
 	
 // Animación 3d-gltf
 
