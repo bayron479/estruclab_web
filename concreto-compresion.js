@@ -192,7 +192,7 @@ function datosEnsayo() {
 //  const loader = new GLTFLoader();
 //  var obj;
 //  //loader.load('concreto-compresion.gltf', function (gltf) {
-//  loader.load('concreto-compresion.glb', function (gltf) {
+//  loader.load('concreto-compresion.gltf', function (gltf) {
 //  obj = gltf.scene;
 //  scene.add(gltf.scene);
 //    }, undefined, function (error) {
