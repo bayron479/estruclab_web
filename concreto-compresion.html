@@ -132,13 +132,13 @@
 			<script type="module">			
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
       const renderer = new THREE.WebGLRenderer();
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
 			scene.background = new THREE.Color(0xa0a0a0);
-		  scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
+		  //scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
   
 		  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
 		  hemiLight.position.set(0, 20, 0);
@@ -153,9 +153,11 @@
 		  dirLight.shadow.camera.right = 2;
 		  dirLight.shadow.camera.near = 0.1;
 		  dirLight.shadow.camera.far = 40;
-			scene.add(dirLight);			
-      
-			//var loader = new THREE.GLTFLoader();
+			scene.add(dirLight);	
+			const controls = new THREE.OrbitControls(camera, renderer.domElement);
+		  camera.position.set(5, 5, 0); // posicion de la camara (0, 5, 5)
+		  controls.update();
+		  renderer.render(scene, camera);		
 
       const loader = new THREE.GLTFLoader();
       
@@ -168,7 +170,8 @@
       	console.error(error);
       
       });
-      
+
+			     
       function animate() {
       	requestAnimationFrame( animate );
       	renderer.render( scene, camera );
