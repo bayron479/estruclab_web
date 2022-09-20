@@ -360,7 +360,7 @@
                 16
             ],
             "mesh" : 16,
-            "name" : "MaquinaCarga",
+            "name" : "maquinaCarga",
             "scale" : [
                 0.6276271343231201,
                 1,
