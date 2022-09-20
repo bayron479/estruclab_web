@@ -184,40 +184,7 @@ function datosEnsayo() {
 	
 // Animación 3d-gltf
  
-// const scene = new THREE.Scene();
-// const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 1000);
-// const renderer = new THREE.WebGLRenderer();
-// renderer.setSize(window.innerWidth, window.innerHeight);
-// document.body.appendChild(renderer.domElement);
 
-// const loader = new GLTFLoader();
-
-// loader.load('concreto-compresion.gltf', function(gltf) {
-
-// 	scene.add(gltf.scene);
-
-// }, undefined, function (error) {
-
-// 	console.error(error);
-
-// });
-
-// function animate() {
-// 	requestAnimationFrame( animate );
-// 	renderer.render( scene, camera );
-// }
-// animate();
-
-//  var cilindroConcreto; var maquinaCarga;
-//  const loader = new GLTFLoader();
-//  var obj;
-//  //loader.load('concreto-compresion.gltf', function (gltf) {
-//  loader.load('concreto-compresion.gltf', function (gltf) {
-//  obj = gltf.scene;
-//  scene.add(gltf.scene);
-//    }, undefined, function (error) {
-//  	console.error( error );
-//  });	
   
 
 	
