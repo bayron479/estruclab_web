@@ -131,10 +131,10 @@
 
         const scene = new THREE.Scene();     
         
-        // const axesHelper = new THREE.AxesHelper(2);			
-			  // scene.add(axesHelper);
+        const axesHelper = new THREE.AxesHelper(1);			
+			  scene.add(axesHelper);
   
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
       
 			  const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -143,39 +143,44 @@
 				scene.background = new THREE.Color(0xa0a0a0);
 			  
 		    scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
-    
-		    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
-		    hemiLight.position.set(0, 20, 0);			  
+        
+				// 															Iluminación                            // 
+				//______________________________ * * * * ______________________________//
+		    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
+		    hemiLight.position.set(1, 10, 0);			  
 			  scene.add(hemiLight);
 			  
-			  const light = new THREE.AmbientLight( 0xffffff ); // soft white light
-        scene.add( light );
+			  const light = new THREE.AmbientLight(0xffffff, 1); // soft white light
+        scene.add(light);
     
-		    const dirLight = new THREE.DirectionalLight(0xffffff);
-		    dirLight.position.set(- 3, 10, - 10);
-		    dirLight.castShadow = true;
+		    const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+		    dirLight.position.set(1, 10, 0);				
 		    dirLight.shadow.camera.top = 2;
-		    dirLight.shadow.camera.bottom = - 2;
-		    dirLight.shadow.camera.left = - 2;
+		    dirLight.shadow.camera.bottom = -2;
+		    dirLight.shadow.camera.left = -2;
 		    dirLight.shadow.camera.right = 2;
-		    dirLight.shadow.camera.near = 0.1;
+		    dirLight.shadow.camera.near = 0.1; //0.1
 		    dirLight.shadow.camera.far = 40;
+				dirLight.target = new THREE.Object3D(1, 1.5, 0.5);
 			  scene.add(dirLight);
+				scene.add( dirLight.target );
+				//______________________________ * * * * ______________________________//
   
 			  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
 				controls.panSpeed = 1;
-				controls.rotateSpeed = 1;			
-			  
-			  camera.position.set(5, 5, 1); 				
-  
-			  controls.update();		  		    		
-		    
+				controls.rotateSpeed = 1;				  
+			  camera.position.set(2, 3, 0.5);  
+			  controls.update();			
+				controls.target = new THREE.Vector3(1, 1.5, 0.5);		    
 		    renderer.render(scene, camera);	
   
-        const loader = new THREE.GLTFLoader();
         
-        loader.load('concreto-compresion.gltf', function(gltf) {
+				//                 Cargador del modelo 3D en formato glTF              //
+				//______________________________ * * * * ______________________________//
+
+				const loader = new THREE.GLTFLoader();
+        
+        loader.load('concreto-compresion2.gltf', function(gltf) {
         
         	scene.add(gltf.scene);							
         
@@ -185,6 +190,7 @@
         
         });
 
+        //______________________________ * * * * ______________________________//
 				
 			       
         function animate() {

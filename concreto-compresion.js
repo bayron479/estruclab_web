@@ -182,7 +182,7 @@ function datosEnsayo() {
 	return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");	
 }
 	
-// Animación 3d-gltf
+
  
 
   
