@@ -157,10 +157,6 @@ function reporteLongitud() {
 	document.getElementById("reporte-longitud").innerHTML = "Longitud inicial: " + parseFloat(longitudCilindro).toFixed(2) + " mm" + "\n";
 }
 
-var tiempoFalla;
-
-//var finEnsayo = datosExcel.length*1000;
-
 function mensajeCargaMaxima() {
 	tiempoFalla = setTimeout("datoCargaMaxima()", 50000);
 }
