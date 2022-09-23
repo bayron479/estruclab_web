@@ -131,8 +131,8 @@
 
         const scene = new THREE.Scene();     
         
-        const axesHelper = new THREE.AxesHelper(1);			
-			  scene.add(axesHelper);
+        // const axesHelper = new THREE.AxesHelper(1);			
+			  // scene.add(axesHelper);
   
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
       
@@ -177,8 +177,7 @@
 		    dirLight.shadow.camera.left = -2;
 		    dirLight.shadow.camera.right = 2;
 		    dirLight.shadow.camera.near = 0.1; //0.1
-		    dirLight.shadow.camera.far = 40;
-				
+		    dirLight.shadow.camera.far = 40;			
 			  
 				//______________________________ * * * * ______________________________//
   
@@ -190,23 +189,29 @@
 				controls.target = new THREE.Vector3(0, 1.25, 0);		    
 		    renderer.render(scene, camera);	
   
-        
-				//                 Cargador del modelo 3D en formato glTF              //
-				//______________________________ * * * * ______________________________//
-
-				const loader = new THREE.GLTFLoader();
-        
-        loader.load('/blend/escenario.gltf', function(gltf) {
-        
-        	scene.add(gltf.scene);							
-        
-        }, undefined, function (error) {
-        
-        	console.error(error);
-        
+        // Cargar escenario
+				const loaderEscenario = new THREE.GLTFLoader();        
+        loaderEscenario.load('/blend/escenario.gltf', function(gltf) {        
+        	scene.add(gltf.scene);       
+        }, undefined, function (error) {        
+        	console.error(error);        
         });
 
-        //______________________________ * * * * ______________________________//
+				// Cargar cilindro
+				const loaderCilindro = new THREE.GLTFLoader();        
+        loaderCilindro.load('/blend/cilindro-normal.gltf', function(gltf) {        
+        	scene.add(gltf.scene);       
+        }, undefined, function (error) {        
+        	console.error(error);        
+        });
+
+				// Cargar mecanismo de carga de la máquina
+        const loaderCargaMaquina = new THREE.GLTFLoader();        
+        loaderCargaMaquina.load('/blend/carga-maquina.gltf', function(gltf) {        
+        	scene.add(gltf.scene);       
+        }, undefined, function (error) {        
+        	console.error(error);        
+        });        
 				
 			       
         function animate() {
