@@ -1,34 +1,28 @@
-let resistenciaNominal;
-let resistenciaObtenida;
-const diametroCilindro = 150 + Math.random() - Math.random(); // en mm 
-const longitudCilindro = 300 + Math.random() - Math.random(); // en mm 
-const areaCilindro = Math.PI*(diametroCilindro/2)**2;
-const precision = Number(0.05); 
-// Velocidad de carga = 1 mm / min
-const velocidadCarga = Number(1/60); // en mm/s 
-
 // Para calcular los valores de esfuerzo y deformación se usa la ecuación de 
 // Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, 
 // "Reinforced concrete mechanics and design, 7ed, 2016"
 // Ecuación 3-23 p-91 Para concretos con f'c entre 15 y 125 MPa
 
-let data = [];
+const diametroCilindro = 150 + Math.random() - Math.random(); // en mm 
+const longitudCilindro = 300 + Math.random() - Math.random(); // en mm
 let datosExcel = [];
-let datosCarga = [];					
-let deformacion = 0;
-const  pasoDeformacion = velocidadCarga / (longitudCilindro - velocidadCarga );	
-let carga = 0;
-let cargaMaxima = 0;
-let e = 0;
+let cargaMaxima;
 
-
-function grafica() {
-  resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
-	resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
+function grafica() {   
+  const areaCilindro = Math.PI*(diametroCilindro/2)**2;
+  const precision = Number(0.05); 
+  // Velocidad de carga = 1 mm / min
+  const velocidadCarga = Number(1/60); // en mm/s
+	const pasoDeformacion = velocidadCarga / (longitudCilindro - velocidadCarga );
+  const resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
+	const resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
 	const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
 	const n = 0.8 + (FC/2500);
 	const Ec = 57000*Math.sqrt(FC); // en psi
 	const e0 = (FC/Ec)*(n/(n-1));	
+	let data = [];  
+  let datosCarga = [];
+	let e;
 
 	for (e = 0.00000; e <= 0.00300; e += pasoDeformacion) {
 							
@@ -38,9 +32,9 @@ function grafica() {
 							
 		let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
 							
-		carga = ((fc  + Math.random()*precision - Math.random()*precision) * areaCilindro  / 1000).toFixed(3); // en kN 
+		let carga = ((fc  + Math.random()*precision - Math.random()*precision) * areaCilindro  / 1000).toFixed(3); // en kN 
 							
-		deformacion = (longitudCilindro * e / (1 + e)).toFixed(3); // en mm
+		let deformacion = (longitudCilindro * e / (1 + e)).toFixed(3); // en mm
 								
 		datosExcel.push([Number(carga), Number(deformacion)]);					
 								
