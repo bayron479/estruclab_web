@@ -139,8 +139,7 @@
 				scene.background = new THREE.Color(0xa0a0a0);			  
 		    scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
         
-				// 															Iluminación                            // 
-				//______________________________ * * * * ______________________________//
+				// Iluminación
 		    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820);
 		    hemiLight.position.set(0, 3, 0);			  
 			  scene.add(hemiLight);
@@ -160,10 +159,9 @@
 		    dirLight.shadow.camera.left = -2;
 		    dirLight.shadow.camera.right = 2;
 		    dirLight.shadow.camera.near = 0.1; //0.1
-		    dirLight.shadow.camera.far = 40;			
+		    dirLight.shadow.camera.far = 40;
 			  
-				//______________________________ * * * * ______________________________//
-  
+        // Navegar por el modelo 3d con el mouse
 			  const controls = new THREE.OrbitControls(camera, renderer.domElement);
 				controls.panSpeed = 1;
 				controls.rotateSpeed = 1;				  
@@ -180,14 +178,24 @@
         	console.error(error);        
         });
 
-				// Cargar cilindro
-				const loaderCilindro = new THREE.GLTFLoader();        
-        loaderCilindro.load('cilindro-normal.gltf', function(gltf) {        
-        	scene.add(gltf.scene);       
+				// Cargar cilindro 
+				var loaderCilindro = new THREE.GLTFLoader();				        
+				var cilindroGLTF = 'cilindro-normal.gltf';
+				
+				const cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla);
+
+				function fracturaCilindro() {	 	
+				  var cilindroGLTF = 'cilindro-cone.gltf';
+				}
+
+        loaderCilindro.load(cilindroGLTF, function(gltf) {        
+        	cilindro = gltf.scene;					
+					scene.add(cilindro);       
         }, undefined, function (error) {        
         	console.error(error);        
         });
 					
+				// Animación inicial de la máquina haciendo contacto con el cilindro
 				function animacionCarga() {
 					let movimiento = setInterval(movimientoMaquina, 100);					
 					
@@ -195,9 +203,7 @@
 						cargaMaquina.position.y -= 0.00100;
 						setTimeout(() => { clearInterval(movimiento); }, 20600);											  
 					}
-				}	      
-				
-				
+				}					
 
 				// Cargar mecanismo de carga de la máquina
         const loaderCargaMaquina = new THREE.GLTFLoader();        
@@ -207,20 +213,14 @@
 					    
         }, undefined, function (error) {        
         	console.error(error);        
-        });
-				
-
-				
-				
+        });			
 			       
         function animate() {
         	requestAnimationFrame( animate );
         	renderer.render( scene, camera );
 			  	controls.update();  
         }
-        animate();
-
-			
+        animate();		
 
 		  </script>		
 		

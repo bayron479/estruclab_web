@@ -7,6 +7,8 @@ const diametroCilindro = 150 + Math.random() - Math.random(); // en mm
 const longitudCilindro = 300 + Math.random() - Math.random(); // en mm
 let datosExcel = [];
 let cargaMaxima;
+let falla, finEnsayo = false;
+let tiempoFalla;
 
 function grafica() {   
   const areaCilindro = Math.PI*(diametroCilindro/2)**2;
@@ -44,9 +46,16 @@ function grafica() {
 
 		data.push({x: deformacion, y: carga});		
 		
-		if (carga < 0.95 * cargaMaxima) {			
-			break;
+		if (carga < cargaMaxima)  {
+			falla = true;
+			tiempoFalla = carga.length*1000;
 		}
+
+		else if (carga < 0.95 * cargaMaxima) {			
+			break;
+			finEnsayo = true;
+		}
+
 		else {
 			continue;
 		}	
@@ -139,7 +148,7 @@ function grafica() {
 			config
 		);
 
-	return myChart, datosCarga, cargaMaxima, datosExcel;
+	return myChart, datosCarga, falla, parseInt(tiempoFalla), cargaMaxima, datosExcel;
 }
 
 function verGrafica() {
