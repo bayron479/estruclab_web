@@ -142,6 +142,9 @@ function grafica() {
 	return myChart, datosCarga, cargaMaxima, datosExcel;
 }
 
+function verGrafica() {
+	graficaCargaDesplazamiento = setTimeout("grafica()", 20600);
+}
 
 function reporteDiametro() {
 	document.getElementById("reporte-diametro").innerHTML = "Diámetro: " + parseFloat(diametroCilindro).toFixed(2) + " mm" + "\n";

@@ -89,7 +89,7 @@
   															
   						  <div style="text-align: center; padding: 0.25rem;">		
   							  <button type="button" style="text-align: center;" class="btn btn-primary" 
-  							  onclick="grafica(),mensajeCargaMaxima(),animacionCarga()">Iniciar ensayo</button>											
+  							  onclick="verGrafica(),mensajeCargaMaxima(),animacionCarga()">Iniciar ensayo</button>											
   						  </div> 
   
               </label>
@@ -189,15 +189,11 @@
         });
 					
 				function animacionCarga() {
-					const movimiento = setInterval(movimientoMaquina, 100);					
-						
+					let movimiento = setInterval(movimientoMaquina, 100);					
+					
 					function movimientoMaquina() {
-						if (cargaMaquina.position.y == -0.190) {
-						  clearInterval(movimiento); 
-						}	
-						else {
-							cargaMaquina.position.y -= 0.00100;
-						}						  
+						cargaMaquina.position.y -= 0.00100;
+						setTimeout(() => { clearInterval(movimiento); }, 20600);											  
 					}
 				}	      
 				
