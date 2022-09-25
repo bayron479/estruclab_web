@@ -89,7 +89,7 @@
   															
   						  <div style="text-align: center; padding: 0.25rem;">		
   							  <button type="button" style="text-align: center;" class="btn btn-primary" 
-  							  onclick="grafica(),mensajeCargaMaxima()">Iniciar ensayo</button>											
+  							  onclick="grafica(),mensajeCargaMaxima(),animacionCarga()">Iniciar ensayo</button>											
   						  </div> 
   
               </label>
@@ -129,19 +129,14 @@
 
 			<script>			
 
-        const scene = new THREE.Scene();     
-        
+        const scene = new THREE.Scene();        
         // const axesHelper = new THREE.AxesHelper(1);			
-			  // scene.add(axesHelper);
-  
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      
+			  // scene.add(axesHelper); 
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);      
 			  const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
-
-				scene.background = new THREE.Color(0xa0a0a0);
-			  
+				scene.background = new THREE.Color(0xa0a0a0);			  
 		    scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
         
 				// 															Iluminación                            // 
@@ -157,19 +152,7 @@
 				dirLight.position.set(2.5, 2.5, 0);
         dirLight.target = new THREE.Object3D(0.25, 1.25, 0);
 				scene.add(dirLight);
-				scene.add(dirLight.target);
-
-				// const dirLight2 = new THREE.DirectionalLight(0xffffff);
-				// dirLight2.position.set(0, 2.5, -2);
-				// dirLight2.target = new THREE.Object3D(0, 1.25, -0.5);
-				// scene.add(dirLight2);
-				// scene.add(dirLight2.target);
-
-				// const dirLight3 = new THREE.DirectionalLight(0xffffff,1.5);			
-				// dirLight3.position.set(3, 2.5, 0);				
-				// dirLight3.target = new THREE.Object3D(0, 1.25, 0);
-				// scene.add(dirLight3);
-				// scene.add(dirLight3.target);
+				scene.add(dirLight.target);			
 
 			  dirLight.castShadow = true;					
 		    dirLight.shadow.camera.top = 2;			
@@ -205,13 +188,32 @@
         	console.error(error);        
         });
 
+				function movimientoMaquina() {
+					cargaMaquina.position.y -= 0.01
+				}
+				
+				function animacionCarga() {	
+					mov = setInterval(movimientoMaquina, 1000);								
+					clearInterval(intervalID=19000);
+				}	
+					
+				
+
+				
+				
+
 				// Cargar mecanismo de carga de la máquina
         const loaderCargaMaquina = new THREE.GLTFLoader();        
         loaderCargaMaquina.load('/blend/carga-maquina.gltf', function(gltf) {        
-        	scene.add(gltf.scene);       
+        	cargaMaquina = gltf.scene;
+					scene.add(cargaMaquina);  
+					    
         }, undefined, function (error) {        
         	console.error(error);        
-        });        
+        });
+				
+
+				
 				
 			       
         function animate() {
