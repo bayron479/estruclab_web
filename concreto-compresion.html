@@ -187,18 +187,19 @@
         }, undefined, function (error) {        
         	console.error(error);        
         });
-
-				function movimientoMaquina() {
-					cargaMaquina.position.y -= 0.01
-				}
-				
-				function animacionCarga() {	
-					mov = setInterval(movimientoMaquina, 1000);								
-					clearInterval(intervalID=19000);
-				}	
 					
-				
-
+				function animacionCarga() {
+					const movimiento = setInterval(movimientoMaquina, 100);					
+						
+					function movimientoMaquina() {
+						if (cargaMaquina.position.y == -0.190) {
+						  clearInterval(movimiento); 
+						}	
+						else {
+							cargaMaquina.position.y -= 0.00100;
+						}						  
+					}
+				}	      
 				
 				
 

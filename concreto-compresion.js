@@ -32,7 +32,7 @@ function grafica() {
 							
 		let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
 							
-		let carga = ((fc  + Math.random()*precision - Math.random()*precision) * areaCilindro  / 1000).toFixed(3); // en kN 
+		let carga = ((fc  + Math.random()*precision) * areaCilindro  / 1000).toFixed(3); // en kN 
 							
 		let deformacion = (longitudCilindro * e / (1 + e)).toFixed(3); // en mm
 								
