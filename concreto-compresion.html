@@ -174,7 +174,7 @@
   
         // Cargar escenario
 				const loaderEscenario = new THREE.GLTFLoader();        
-        loaderEscenario.load('/blend/escenario.gltf', function(gltf) {        
+        loaderEscenario.load('escenario.gltf', function(gltf) {        
         	scene.add(gltf.scene);       
         }, undefined, function (error) {        
         	console.error(error);        
@@ -182,7 +182,7 @@
 
 				// Cargar cilindro
 				const loaderCilindro = new THREE.GLTFLoader();        
-        loaderCilindro.load('/blend/cilindro-normal.gltf', function(gltf) {        
+        loaderCilindro.load('cilindro-normal.gltf', function(gltf) {        
         	scene.add(gltf.scene);       
         }, undefined, function (error) {        
         	console.error(error);        
@@ -201,7 +201,7 @@
 
 				// Cargar mecanismo de carga de la máquina
         const loaderCargaMaquina = new THREE.GLTFLoader();        
-        loaderCargaMaquina.load('/blend/carga-maquina.gltf', function(gltf) {        
+        loaderCargaMaquina.load('carga-maquina.gltf', function(gltf) {        
         	cargaMaquina = gltf.scene;
 					scene.add(cargaMaquina);  
 					    
