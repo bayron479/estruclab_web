@@ -76,7 +76,7 @@
 								id="resistenciaCompresionMpa" placeholder="Entre 15 y 125 MPa" required> 
 
 								<div style="text-align: center; padding: 0.25rem;">		
-									<button type="button" id="start" onclick="cargaVSTiempo()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
+									<button type="button" id="start" onclick="cargaVSDeflexion()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
 								</div> 
 
               </label>
@@ -91,7 +91,7 @@
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 						<script>
 
-							function cargaVSTiempo() {
+							function cargaVSDeflexion() {
 
               // Dimensiones de la viga en mm
               const anchoVigaInicial = 150 + Math.random() - Math.random();
@@ -102,8 +102,8 @@
 							const longitudVano = longitudViga - 50 + Math.random() - Math.random(); 
               
 							// Módulo de rotura (+-0.05 MPa de precision)
-              const resistenciaCompresion = parseInt(document.getElementById("resistenciaCompresionMpa").value);              
-              const frTeorico = (7.5 * Math.sqrt(resistenciaCompresion*1000/7)) * 7 / 1000; // en MPa
+              const resistenciaCompresion = parseInt(document.getElementById("resistenciaCompresionMpa").value); // en MPa              
+              const frTeorico = (7.5 * Math.sqrt(resistenciaCompresion*1000/6.89)) * 6.89 / 1000; // en MPa
               const frObtenido = frTeorico + frTeorico*Math.random()*0.10 - frTeorico*Math.random()*0.10;
 							const cargaUltima = frObtenido * anchoVigaFinal * alturaVigaFinal**2 / longitudVano;
               
@@ -116,17 +116,22 @@
 							let datosExcel = [];							
 							let datosCarga = [];								
 							let carga;
-							let tiempo = 0;											
+							let tiempo = 0;
+							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // MPa
+							const inerciaViga = (anchoVigaInicial * alturaVigaInicial**3) / 12 ;	// mm^4	
+							let deflexionCentroViga;									
 
-							for (carga = 0; carga <= cargaUltima; carga += cargaAplicada) {								 
+							for (carga = 0; carga <= cargaUltima; carga += cargaAplicada.toFixed(3)) {								 
 							
 								tiempo ++;
+
+								deflexionCentroViga = (carga * (longitudVano/3) * (3*longitudVano**2 - 4*(longitudVano/3)**2) / (24*moduloElasticidadConcreto*inerciaViga)).toFixed(2);
 								
-								datosExcel.push([carga, tiempo]);					
+								datosExcel.push([carga, deflexionCentroViga]);					
 								
 								datosCarga.push(carga);								
 							
-								data.push({x: tiempo, y: carga});
+								data.push({x:deflexionCentroViga, y: carga});
 							
 							}	 
 							
@@ -195,7 +200,7 @@
 											type: 'linear',
 											title: {
 												display: true,
-												text: 'Tiempo (s)'
+												text: 'Deflexión en el punto medio (mm)'
 											},
 										},
 									
@@ -234,16 +239,16 @@
 					  </p>
 						<p id="reporte-altura">
 							<script>
-							  document.getElementById("reporte-altura").innerHTML = "Ancho final: " + parseFloat(anchoVigaFinal).toFixed(2) + " mm" + "\n";
+							  document.getElementById("reporte-altura").innerHTML = "Ancho final: " + parseFloat(alturaVigaFinal).toFixed(2) + " mm" + "\n";
 						  </script>
 						</p>
-						<p>
+						<p id="carga-maxima">
 							<script>
 								// Se obtiene la carga máxima aplicada
 								function getMaxOfArray(datosCarga) {
 									return Math.max.apply(null, datosCarga);
 								}
-								document.getElementById("reporte-altura").innerHTML = "Carga máxima: " + getMaxOfArray(datosCarga) + " N";
+								document.getElementById("carga-maxima").innerHTML = "Carga máxima: " + getMaxOfArray(datosCarga) + " N";
               </script>
 						</p>
 							
@@ -256,24 +261,24 @@
 				<div class="card">
 					<div class="card-body" style="width: 100%; display: flex; justify-content: center;	align-items: center;">
 																		
-							<button type="button" button id="descargar-datos" class="btn btn-success">Descargar datos (.xlsx)</button>					
+							<button type="button" button id="descargar-datos" onclick="datosEnsayoFlexion()" class="btn btn-success">Descargar datos (.xlsx)</button>					
 						
 					</div>
 				</div>
 
 				<!-- Descargar datos .xlsx -->
-				<script>				
+				<script>
+				  function datosEnsayoFlexion() {
+            let wb = XLSX.utils.book_new();					
+					  wb.SheetNames.push("Concreto a flexión");					
+					  let ws_data = datosExcel;
+					  let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
+						wb.Sheets["Concreto a flexión"] = ws;
+						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (N)", "Deformación (mm)"]], { origin: "A1" });
+					  ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
 
-					var wb = XLSX.utils.book_new();					
-					wb.SheetNames.push("Test Sheet");					
-					var ws_data = datosExcel;
-					var ws = XLSX.utils.aoa_to_sheet(ws_data);
-					wb.Sheets["Test Sheet"] = ws;
-					XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (N)", "Tiempo (s)"]], { origin: "A1" });				 
-					ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
-					document.getElementById("descargar-datos").onclick = () => {
-						XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
-					};					 	 		
+						return XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
+					}									 	 		
 				
 				</script>
 

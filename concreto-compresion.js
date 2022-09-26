@@ -18,7 +18,8 @@ function grafica() {
 	const pasoDeformacion = velocidadCarga / (longitudCilindro - velocidadCarga );
   const resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
 	const resistenciaObtenida = resistenciaNominal + resistenciaNominal*Math.random()*0.15 - resistenciaNominal*Math.random()*0.15;
-	const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
+	// 1 psi = 6894.76 Pa
+	const FC = resistenciaObtenida*1000/6.89; // FC es f'c en psi
 	const n = 0.8 + (FC/2500);
 	const Ec = 57000*Math.sqrt(FC); // en psi
 	const e0 = (FC/Ec)*(n/(n-1));	
@@ -32,7 +33,7 @@ function grafica() {
 
 		let k = (coef <= 1) ? 1 : 0.67 + (FC / 9000);								
 							
-		let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
+		let fc = (6.89/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
 							
 		let carga = ((fc  + Math.random()*precision) * areaCilindro  / 1000).toFixed(3); // en kN 
 							
@@ -174,10 +175,10 @@ function datoCargaMaxima() {
 // Datos en Excel
 function datosEnsayo() {
 	let wb = XLSX.utils.book_new();					
-	wb.SheetNames.push("Test Sheet");					
+	wb.SheetNames.push("Concreto a compresión");					
 	let ws_data = datosExcel;
 	let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
-	wb.Sheets["Test Sheet"] = ws;
+	wb.Sheets["Concreto a compresión"] = ws;
 	XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"]], { origin: "A1" });				 
 	ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
 
