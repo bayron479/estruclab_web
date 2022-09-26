@@ -28,8 +28,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/loaders/GLTFLoader.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>	
 
-	<script src="https://cdn.sheetjs.com/xlsx-0.18.10/package/dist/xlsx.full.min.js"></script>
-	<!-- <script src="concreto-compresion.js"></script> -->
+	<script src="https://cdn.sheetjs.com/xlsx-0.18.10/package/dist/xlsx.full.min.js"></script>	
 
 </head>
 
@@ -70,14 +69,14 @@
 							<label class="form-label" style="font-size:16px;">
 
 								<strong>								
-									Resistencia nominal (MPa)									
+									Resistencia nominal a compresión (MPa)									
 								</strong>
 
 							  <input type="number" value="" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
-								id="resistenciaNominal" placeholder="Entre 15 y 125 MPa" required> 
+								id="resistenciaCompresionMpa" placeholder="Entre 15 y 125 MPa" required> 
 
 								<div style="text-align: center; padding: 0.25rem;">		
-									<button type="button" id="start" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
+									<button type="button" id="start" onclick="cargaVSTiempo()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
 								</div> 
 
               </label>
@@ -86,69 +85,54 @@
 				</div>
 			</div>
 			
-			<!-- Gráfica carga vs deformación-->
+			<!-- Gráfica carga aplicada vs tiempo -->
 			<div class="card mb-2" style="width: 100%;">
 				<div class="card-body">
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 						<script>
 
-              // Dimensiones de la viga en pulgadas
-              // const ancho = 6;  
-              // const altura = 6; 
-              // const longitud = 30; 
+							function cargaVSTiempo() {
+
+              // Dimensiones de la viga en mm
+              const anchoVigaInicial = 150 + Math.random() - Math.random();
+							const anchoVigaFinal = anchoVigaInicial + Math.random() - Math.random();   
+              const alturaVigaInicial = 150 + Math.random() - Math.random();
+							const alturaVigaFinal = alturaVigaInicial + Math.random() - Math.random(); 
+              const longitudViga = 450 + Math.random() - Math.random();
+							const longitudVano = longitudViga - 50 + Math.random() - Math.random(); 
               
 							// Módulo de rotura (+-0.05 MPa de precision)
-              // let resistenciaCompresionMpa = document.getElementById("resistenciaCompresionMpa").value;
-              // let fr = ( 6 * Momento ) / ( ancho * altura**2 ); 
-              // let frTeorico = 7.5 * Math.sqrt(resistenciaCompresionPsi);
-              // let frObtenido = frTeorico + frTeorico*Math.random()*0.10 - frTeorico*Math.random()*0.10
+              const resistenciaCompresion = parseInt(document.getElementById("resistenciaCompresionMpa").value);              
+              const frTeorico = (7.5 * Math.sqrt(resistenciaCompresion*1000/7)) * 7 / 1000; // en MPa
+              const frObtenido = frTeorico + frTeorico*Math.random()*0.10 - frTeorico*Math.random()*0.10;
+							const cargaUltima = frObtenido * anchoVigaFinal * alturaVigaFinal**2 / longitudVano;
               
-              // carga aplicada en MN / min
-              // const cargaFibraExterior = 1.0; // Mpa / min. (rango de 0.86 a 1.21 Wight, 2016)
-              // let carga = ( cargaFibraExterior * ancho * altura**2 ) / L ;							
+              // Carga en Mpa/min. (rango de 0.86 a 1.21 Wight, 2016)
+              const cargaFibraExterior = 1.0 / 60; // Mpa/s 
+              const velocidadCarga = ( cargaFibraExterior * anchoVigaInicial * alturaVigaInicial**2 ) / longitudVano ; // en MN/s
+							let cargaAplicada = velocidadCarga + Math.random() - Math.random() ; // en N/s							
 	
-              // let anchoFractura = ;
-              // let alturaFractura = ;
-              // let cargaMaxima = ; // En Newtons
-
-						  let data = [];
-							let datosExcel = [];					
-							let deformacion;
-							let datosCarga = [];
-							let datosDeformacion = [];	
+              let data = [];
+							let datosExcel = [];							
+							let datosCarga = [];								
 							let carga;
-							let e;									
-							const FC = resistenciaObtenida*1000/7; // FC es f'c en psi
-							const n = 0.8 + (FC/2500);
-							const Ec = 57000*Math.sqrt(FC);
-							const e0 = (FC/Ec)*(n/(n-1));					
+							let tiempo = 0;											
 
-							for (e = 0.00000; e <= 0.00300; e += 0.00001) {
+							for (carga = 0; carga <= cargaUltima; carga += cargaAplicada) {								 
 							
-								let coef = e/e0;
-
-								let k = (coef <= 1) ? 1 : 0.67 + (FC / 9000);								
-							
-								let fc = (7/1000) * ( n * FC * coef ) / ( n - 1 + coef**(n*k));
-							
-								carga = (((fc * areaCilindro) + Math.random()*precision - Math.random()*precision)  / 1000).toFixed(3); 
-							
-								deformacion = (longitudCilindro * e).toFixed(3);
+								tiempo ++;
 								
-								datosExcel.push([carga, deformacion]);					
+								datosExcel.push([carga, tiempo]);					
 								
-								datosCarga.push(carga);
+								datosCarga.push(carga);								
 							
-								//datosDeformacion.push(deformacion);
-							
-								data.push({x: deformacion, y: carga});
+								data.push({x: tiempo, y: carga});
 							
 							}	 
 							
-							// Se grafica la curva carga-deformación
 							tippy('[data-tippy-content]');
-							const totalDuration = data.length*100;
-							const delayBetweenPoints = totalDuration / data.length;	
+							const totalDuration = data.length*1000;
+							const delayBetweenPoints = 1000;	
 							const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
 						
 							const animation = {
@@ -202,7 +186,7 @@
 										legend: false,
 										title: {
 												display: true,
-												text: 'Concreto a compresión'				
+												text: 'Concreto a flexión'				
 											}
 									},
 								
@@ -211,7 +195,7 @@
 											type: 'linear',
 											title: {
 												display: true,
-												text: 'Deformación (mm)'
+												text: 'Tiempo (s)'
 											},
 										},
 									
@@ -219,20 +203,21 @@
 											type: 'linear',
 											title: {
 												display: true,
-												text: 'Carga aplicada (kN)'
+												text: 'Carga aplicada (N)'
 											}
 										}
 									}
 								}
 							};
+							
+							const myChart = new Chart(
+								document.getElementById('myChart'),
+								config
+							);
+							
+							return myChart, datosExcel, datosCarga, cargaUltima, anchoVigaFinal, alturaVigaFinal;
 
-							if (iniciar = true) {
-							 const myChart = new Chart(
-									document.getElementById('myChart'),
-									config
-								);							 
-							}
-							 																		
+						}							 																		
 						
 						</script>
 					
@@ -241,19 +226,30 @@
 							 
 				<!-- Reporte -->
 				<div class="card mt-2" style="width: 100%;">
-					<!-- <div class="card-body" style="height: 100%;">								
-						<div><script>document.write("Diámetro: " + diametroCilindro.toFixed(2) + " mm" + "\n");</script></div>
-						<div><script>document.write("Longitud: " + longitudCilindro.toFixed(2) + " mm" + "\n");</script></div>	
-						<div>
+					<div class="card-body" style="height: 100%;">								
+						<p id="reporte-ancho">
+							<script>
+							  document.getElementById("reporte-ancho").innerHTML = "Ancho final: " + parseFloat(anchoVigaFinal).toFixed(2) + " mm" + "\n";
+						  </script>
+					  </p>
+						<p id="reporte-altura">
+							<script>
+							  document.getElementById("reporte-altura").innerHTML = "Ancho final: " + parseFloat(anchoVigaFinal).toFixed(2) + " mm" + "\n";
+						  </script>
+						</p>
+						<p>
 							<script>
 								// Se obtiene la carga máxima aplicada
 								function getMaxOfArray(datosCarga) {
 									return Math.max.apply(null, datosCarga);
 								}
-								document.write("Carga máxima: " + getMaxOfArray(datosCarga) + " kN");
-							</script>
+								document.getElementById("reporte-altura").innerHTML = "Carga máxima: " + getMaxOfArray(datosCarga) + " N";
+              </script>
+						</p>
+							
+							
 						</div>											
-					</div> -->
+					</div>
 				</div>			
 
 				<!-- Boton descargar datos -->
@@ -266,20 +262,20 @@
 				</div>
 
 				<!-- Descargar datos .xlsx -->
-				<!-- <script>				
+				<script>				
 
 					var wb = XLSX.utils.book_new();					
 					wb.SheetNames.push("Test Sheet");					
 					var ws_data = datosExcel;
 					var ws = XLSX.utils.aoa_to_sheet(ws_data);
 					wb.Sheets["Test Sheet"] = ws;
-					XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"]], { origin: "A1" });				 
+					XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (N)", "Tiempo (s)"]], { origin: "A1" });				 
 					ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
-					document.getElementById("download-data").onclick = () => {
-						XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
+					document.getElementById("descargar-datos").onclick = () => {
+						XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
 					};					 	 		
 				
-				</script> -->
+				</script>
 
 		</div>
 
