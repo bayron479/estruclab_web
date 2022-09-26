@@ -47,7 +47,7 @@
 
 					<!-- Título del ensayo y manual en pdf -->
 					<div class="col-md-9" style="display: flex;	flex-direction: row; justify-content: space-around;">						
-						<label style="text-align:center;">Resistencia del concreto a compresión</label>						
+						<label style="text-align:center;">Resistencia del concreto a flexión</label>						
 						<div>						
 							<a  class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank" href="manual-concreto-compresion.pdf">Manual</a>
 						</div>
@@ -61,27 +61,14 @@
 		<!-- Panel izquierdo -->
 		<div class="position-fixed" style="width: 400px; background-color: #ffffff;padding: 90px 5px; height: 100%;">
 
-			<!-- Formulario para ingresar valor de resistencia nominal -->
+			
 			<div class="card mt-2" style="width: 100%; display: flex;	justify-content: center;	align-items: center;" >
-				<div class="card-body" style="text-align: center;" >
-					<form class="row g-2" name="formulario">
-						<div class="col-auto" style="width:250px;" title="Resistencia a compresión que debería tener el cilindro de concreto">							
-							<label class="form-label" style="font-size:16px;">
-
-								<strong>								
-									Resistencia nominal a compresión (MPa)									
-								</strong>
-
-							  <input type="number" value="" style="text-align: center; display: flex;	justify-content: center;	align-items: center;" min="15" max="125" class="form-control form-control-sm" name="resistenciaNominal"
-								id="resistenciaCompresionMpa" placeholder="Entre 15 y 125 MPa" required> 
-
-								<div style="text-align: center; padding: 0.25rem;">		
-									<button type="button" id="start" onclick="cargaVSDeflexion()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
-								</div> 
-
-              </label>
-            </div>					
-					</form>				
+				<div class="card-body" style="text-align: center;">					
+					<div class="col-auto" style="width:250px;">
+						<div style="text-align: center; padding: 0.25rem;">		
+							<button type="button" id="start" onclick="cargaVSDeflexion()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
+						</div>             
+          </div>								
 				</div>
 			</div>
 			
@@ -91,18 +78,19 @@
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 						<script>
 
-							function cargaVSDeflexion() {
-
-              // Dimensiones de la viga en mm
+							// Dimensiones de la viga en mm
               const anchoVigaInicial = 150 + Math.random() - Math.random();
 							const anchoVigaFinal = anchoVigaInicial + Math.random() - Math.random();   
               const alturaVigaInicial = 150 + Math.random() - Math.random();
 							const alturaVigaFinal = alturaVigaInicial + Math.random() - Math.random(); 
               const longitudViga = 450 + Math.random() - Math.random();
-							const longitudVano = longitudViga - 50 + Math.random() - Math.random(); 
+							const longitudVano = longitudViga - 50 + Math.random() - Math.random();
+
+							function cargaVSDeflexion() {              
               
 							// Módulo de rotura (+-0.05 MPa de precision)
-              const resistenciaCompresion = parseInt(document.getElementById("resistenciaCompresionMpa").value); // en MPa              
+							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);
+              //const resistenciaCompresion = parseInt(document.getElementById("resistenciaCompresionMpa").value); // en MPa              
               const frTeorico = (7.5 * Math.sqrt(resistenciaCompresion*1000/6.89)) * 6.89 / 1000; // en MPa
               const frObtenido = frTeorico + frTeorico*Math.random()*0.10 - frTeorico*Math.random()*0.10;
 							const cargaUltima = frObtenido * anchoVigaFinal * alturaVigaFinal**2 / longitudVano;
@@ -234,12 +222,12 @@
 					<div class="card-body" style="height: 100%;">								
 						<p id="reporte-ancho">
 							<script>
-							  document.getElementById("reporte-ancho").innerHTML = "Ancho final: " + parseFloat(anchoVigaFinal).toFixed(2) + " mm" + "\n";
+							  document.getElementById("reporte-ancho").innerHTML = "Ancho final: " + parseFloat(anchoVigaFinal).toFixed(2) + " mm";
 						  </script>
 					  </p>
 						<p id="reporte-altura">
 							<script>
-							  document.getElementById("reporte-altura").innerHTML = "Ancho final: " + parseFloat(alturaVigaFinal).toFixed(2) + " mm" + "\n";
+							  document.getElementById("reporte-altura").innerHTML = "Altura final: " + parseFloat(alturaVigaFinal).toFixed(2) + " mm";
 						  </script>
 						</p>
 						<p id="carga-maxima">
@@ -250,10 +238,7 @@
 								}
 								document.getElementById("carga-maxima").innerHTML = "Carga máxima: " + getMaxOfArray(datosCarga) + " N";
               </script>
-						</p>
-							
-							
-						</div>											
+						</p>																
 					</div>
 				</div>			
 
