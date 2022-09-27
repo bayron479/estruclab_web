@@ -78,51 +78,39 @@
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 						<script>
 
-							// Dimensiones de la viga en mm
-              const anchoVigaInicial = 150 + Math.random() - Math.random();
-							const anchoVigaFinal = anchoVigaInicial + Math.random() - Math.random();   
-              const alturaVigaInicial = 150 + Math.random() - Math.random();
+							// Dimensiones de la viga en mm							
+							const anchoVigaInicial = 150 + Math.random() - Math.random();
+              const anchoVigaFinal = anchoVigaInicial + Math.random() - Math.random();
+							const alturaVigaInicial = 150 + Math.random() - Math.random();						                
 							const alturaVigaFinal = alturaVigaInicial + Math.random() - Math.random(); 
               const longitudViga = 450 + Math.random() - Math.random();
-							const longitudVano = longitudViga - 50 + Math.random() - Math.random();
-
-							function cargaVSDeflexion() {              
-              
-							// Módulo de rotura (+-0.05 MPa de precision)
-							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);
-              //const resistenciaCompresion = parseInt(document.getElementById("resistenciaCompresionMpa").value); // en MPa              
+							const longitudVano = longitudViga - 50 + Math.random() - Math.random();              
+							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);                             
               const frTeorico = (7.5 * Math.sqrt(resistenciaCompresion*1000/6.89)) * 6.89 / 1000; // en MPa
               const frObtenido = frTeorico + frTeorico*Math.random()*0.10 - frTeorico*Math.random()*0.10;
 							const cargaUltima = frObtenido * anchoVigaFinal * alturaVigaFinal**2 / longitudVano;
+							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // MPa
+							const inerciaViga = (anchoVigaInicial * alturaVigaInicial**3) / 12 ;	// mm^4	
+							const deflexionMaxima = Number((cargaUltima * (longitudVano/3) * (3*longitudVano**2 - 4*(longitudVano/3)**2) / (24*moduloElasticidadConcreto*inerciaViga)).toFixed(4));
               
               // Carga en Mpa/min. (rango de 0.86 a 1.21 Wight, 2016)
               const cargaFibraExterior = 1.0 / 60; // Mpa/s 
               const velocidadCarga = ( cargaFibraExterior * anchoVigaInicial * alturaVigaInicial**2 ) / longitudVano ; // en MN/s
-							let cargaAplicada = velocidadCarga + Math.random() - Math.random() ; // en N/s							
+							// const cargaAplicada = velocidadCarga + Math.random(); 							
 	
               let data = [];
-							let datosExcel = [];							
-							let datosCarga = [];								
+							let datosExcel = [];															
 							let carga;
 							let tiempo = 0;
-							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // MPa
-							const inerciaViga = (anchoVigaInicial * alturaVigaInicial**3) / 12 ;	// mm^4	
-							let deflexionCentroViga;									
+							let deflexion;						 									
 
-							for (carga = 0; carga <= cargaUltima; carga += cargaAplicada.toFixed(3)) {								 
-							
-								tiempo ++;
-
-								deflexionCentroViga = (carga * (longitudVano/3) * (3*longitudVano**2 - 4*(longitudVano/3)**2) / (24*moduloElasticidadConcreto*inerciaViga)).toFixed(2);
-								
-								datosExcel.push([carga, deflexionCentroViga]);					
-								
-								datosCarga.push(carga);								
-							
-								data.push({x:deflexionCentroViga, y: carga});
-							
-							}	 
-							
+							// for (deflexion = 0.0000; deflexion <= deflexionMaxima; deflexion += 0.0001) {
+							for (carga = 0; carga <= cargaUltima; carga += velocidadCarga) {
+                deflexion = Number((carga * (longitudVano/3) * (3*longitudVano**2 - 4*(longitudVano/3)**2) / (24*moduloElasticidadConcreto*inerciaViga)).toFixed(4));
+                datosExcel.push([Number(carga), Number(deflexion)]);
+                tiempo ++;
+							}								 
+														
 							tippy('[data-tippy-content]');
 							const totalDuration = data.length*1000;
 							const delayBetweenPoints = 1000;	
@@ -202,13 +190,15 @@
 									}
 								}
 							};
+
+						function cargaVSDeflexion() {  
 							
 							const myChart = new Chart(
 								document.getElementById('myChart'),
 								config
 							);
 							
-							return myChart, datosExcel, datosCarga, cargaUltima, anchoVigaFinal, alturaVigaFinal;
+							return myChart;
 
 						}							 																		
 						
@@ -233,10 +223,8 @@
 						<p id="carga-maxima">
 							<script>
 								// Se obtiene la carga máxima aplicada
-								function getMaxOfArray(datosCarga) {
-									return Math.max.apply(null, datosCarga);
-								}
-								document.getElementById("carga-maxima").innerHTML = "Carga máxima: " + getMaxOfArray(datosCarga) + " N";
+								
+								document.getElementById("carga-maxima").innerHTML = "Carga máxima: " + parseFloat(cargaUltima).toFixed(2) + " N";
               </script>
 						</p>																
 					</div>
