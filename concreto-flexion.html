@@ -39,8 +39,8 @@
 			<div class="position-fixed w-100 p-3 border-bottom" style="z-index: 100000;background-color: #ffffff;">
 				<div class="row">
 					<div class="col-md-3">
-						<a href="modulo-concreto.html" class="d-flex align-items-center text-dark text-decoration-none">
-							<img src="./imagenes/favicon.PNG" style="height: 30px;">
+						<a href="modulo-concreto.html" style="justify-content: space-between;" class="d-flex align-items-center text-dark text-decoration-none">
+							<img src="./imagenes/logo-uv-risk-g7.png" style="height: 45px;">
 							<span class="fs-8">LABORATORIOS VIRTUALES</span>
 						</a>
 					</div>
@@ -49,7 +49,7 @@
 					<div class="col-md-9" style="display: flex;	flex-direction: row; justify-content: space-around;">						
 						<label style="text-align:center;">Resistencia del concreto a flexión</label>						
 						<div>						
-							<a  class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank" href="manual-concreto-compresion.pdf">Manual</a>
+							<a  class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank" href="manual-concreto-flexion.pdf">Manual</a>
 						</div>
 					</div>
 				</div>
@@ -259,14 +259,11 @@
 
 				<!-- Boton descargar datos -->
 				<div class="card">
-					<div class="card-body" style="width: 100%; display: flex; justify-content: center;	align-items: center;">
-																		
-							<button type="button" button id="descargar-datos" onclick="datosEnsayoFlexion()" class="btn btn-success">Descargar datos (.xlsx)</button>					
-						
+					<div class="card-body" style="width: 100%; display: flex; justify-content: center;	align-items: center;">																		
+						<button type="button" button id="descargar-datos" onclick="datosEnsayoFlexion()" class="btn btn-success">Descargar datos (.xlsx)</button>				
 					</div>
 				</div>
-
-				<!-- Descargar datos .xlsx -->
+				
 				<script>
 				  function datosEnsayoFlexion() {
             let wb = XLSX.utils.book_new();					
@@ -278,18 +275,72 @@
 					  ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
 
 						return XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
-					}									 	 		
-				
+					}	
 				</script>
 
 		</div>
 
 		<!-- Animación gltf -->
-		<div>
+		<div style="position: absolute; top: 90px; left: 400px;">
+			<script>
+				const scene = new THREE.Scene();        
+        // const axesHelper = new THREE.AxesHelper(1);			
+			  // scene.add(axesHelper); 
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);      
+			  const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+				scene.background = new THREE.Color(0xa0a0a0);			  
+		    scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
+        
+				// Iluminación
+		    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820);
+		    hemiLight.position.set(0, 3, 0);			  
+			  scene.add(hemiLight);
+			  
+			  const light = new THREE.AmbientLight(0xffffff); // soft white light
+        scene.add(light);
+    
+		    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+				dirLight.position.set(2.5, 2.5, 0);
+        dirLight.target = new THREE.Object3D(0.25, 1.25, 0);
+				scene.add(dirLight);
+				scene.add(dirLight.target);			
 
+			  dirLight.castShadow = true;					
+		    dirLight.shadow.camera.top = 2;			
+		    dirLight.shadow.camera.bottom = -2;
+		    dirLight.shadow.camera.left = -2;
+		    dirLight.shadow.camera.right = 2;
+		    dirLight.shadow.camera.near = 0.1; //0.1
+		    dirLight.shadow.camera.far = 40;
+			  
+        // Navegar por el modelo 3d con el mouse
+			  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+				controls.panSpeed = 1;
+				controls.rotateSpeed = 1;				  
+			  camera.position.set(2, 2.5, 0);  
+			  controls.update();			
+				controls.target = new THREE.Vector3(0, 1.25, 0);		    
+		    renderer.render(scene, camera);	
+  
+        // Cargar escenario
+				const loaderEscenario = new THREE.GLTFLoader();        
+        loaderEscenario.load('laboratorio-flexion.gltf', function(gltf) {        
+        	scene.add(gltf.scene);       
+        }, undefined, function (error) {        
+        	console.error(error);        
+        });
+
+				function animate() {
+        	requestAnimationFrame( animate );
+        	renderer.render( scene, camera );
+			  	controls.update();  
+        }
+        animate();
+
+			</script>
 		</div>
-
-	</div>
 	</main>
 </body>
 </html>
