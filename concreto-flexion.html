@@ -66,7 +66,7 @@
 				<div class="card-body" style="text-align: center;">					
 					<div class="col-auto" style="width:250px;">
 						<div style="text-align: center; padding: 0.25rem;">		
-							<button type="button" id="start" onclick="cargaVSDeflexion()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
+							<button type="button" id="start" onclick="cargaVSDeflexion(), reporteAnchoFinal(), reporteAlturaFinal(), reporteCargaFinal()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
 						</div>             
           </div>								
 				</div>
@@ -81,9 +81,9 @@
 
 							// Dimensiones de la viga en mm							
 							const anchoVigaInicial = 150 + Math.random() - Math.random();
-              const anchoVigaFinal = anchoVigaInicial + Math.random() - Math.random();
+              const anchoVigaFinal = Number((anchoVigaInicial + Math.random() - Math.random()).toFixed(2));
 							const alturaVigaInicial = 150 + Math.random() - Math.random();						                
-							const alturaVigaFinal = alturaVigaInicial + Math.random() - Math.random(); 
+							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() - Math.random()).toFixed(2)); 
               const longitudViga = 450 + Math.random() - Math.random();
 							const longitudVano = longitudViga - 50 + Math.random() - Math.random();              
 							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);                             
@@ -107,7 +107,7 @@
 							
 							for (carga; carga += velocidadCarga;) {
                 deflexion = Number((carga * (longitudVano/3) * (3*longitudVano**2 - 4*(longitudVano/3)**2) / (24*moduloElasticidadConcreto*inerciaViga)).toFixed(4));
-                datosExcel.push([Number(carga), Number(deflexion)]);
+                datosExcel.push([Number((carga/1000).toFixed(3)), Number(deflexion)]);
                 tiempo ++;
 								data.push({x: deflexion, y: carga/1000});
 								if ( carga > cargaUltima ) {
@@ -115,14 +115,12 @@
 								}
 								  else {
 										continue;
-									}
-
-								
+									}								
 							}								 
 														
 							tippy('[data-tippy-content]');
-							const totalDuration = data.length*1000;
-							const delayBetweenPoints = 1000;	
+							const totalDuration = tiempo*100;
+							const delayBetweenPoints = 100;	
 							const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
 						
 							const animation = {
@@ -219,22 +217,42 @@
 				<!-- Reporte -->
 				<div class="card mt-2" style="width: 100%;">
 					<div class="card-body" style="height: 100%;">								
-						<p id="reporte-ancho">
-							<script>
-							  document.getElementById("reporte-ancho").innerHTML = "Ancho final: " + parseFloat(anchoVigaFinal).toFixed(2) + " mm";
-						  </script>
+						<p>	
+							Ancho final: <span id="reporte-ancho">
+								<script>
+									function reporteAnchoFinal() {
+										const AnchoFinal = setTimeout(textoAnchoFinal, totalDuration);										
+									}									
+									function textoAnchoFinal() {
+										document.getElementById("reporte-ancho").innerHTML = " " + String(anchoVigaFinal) + " mm";										
+									}										
+								</script>
+							</span>							
 					  </p>
-						<p id="reporte-altura">
-							<script>
-							  document.getElementById("reporte-altura").innerHTML = "Altura final: " + parseFloat(alturaVigaFinal).toFixed(2) + " mm";
-						  </script>
+
+						<p>
+							Altura final: <span id="reporte-altura">
+								<script>
+									function reporteAlturaFinal() {
+											const AlturaFinal = setTimeout(textoAlturaFinal, totalDuration);										
+										}										
+										function textoAlturaFinal() {
+											document.getElementById("reporte-altura").innerHTML = " " + String(alturaVigaFinal) + " mm";										
+										}										
+								</script>
+							</span>							
 						</p>
-						<p id="carga-maxima">
+
+						<p> Carga máxima: <span id="carga-maxima"> 
 							<script>
-								// Se obtiene la carga máxima aplicada
-								
-								document.getElementById("carga-maxima").innerHTML = "Carga máxima: " + parseFloat(cargaUltima/1000).toFixed(2) + " kN";
+								function reporteCargaFinal() {
+								  const CargaFinal = setTimeout(textoCargaFinal, totalDuration);										
+								}										
+								function textoCargaFinal() {
+									document.getElementById("carga-maxima").innerHTML = " " + (carga/1000).toFixed(3) + " kN";										
+								}							
               </script>
+						  </span>							
 						</p>																
 					</div>
 				</div>			
@@ -256,7 +274,7 @@
 					  let ws_data = datosExcel;
 					  let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
 						wb.Sheets["Concreto a flexión"] = ws;
-						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (N)", "Deformación (mm)"]], { origin: "A1" });
+						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"]], { origin: "A1" });
 					  ws["!cols"] = [ { wch: 20 }, { wch: 20 } ];
 
 						return XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
