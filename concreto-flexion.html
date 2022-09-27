@@ -76,6 +76,7 @@
 			<div class="card mb-2" style="width: 100%;">
 				<div class="card-body">
 					<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
+
 						<script>
 
 							// Dimensiones de la viga en mm							
@@ -88,27 +89,35 @@
 							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);                             
               const frTeorico = (7.5 * Math.sqrt(resistenciaCompresion*1000/6.89)) * 6.89 / 1000; // en MPa
               const frObtenido = frTeorico + frTeorico*Math.random()*0.10 - frTeorico*Math.random()*0.10;
-							const cargaUltima = frObtenido * anchoVigaFinal * alturaVigaFinal**2 / longitudVano;
+							const cargaUltima = Number((frObtenido * anchoVigaFinal * alturaVigaFinal**2 / longitudVano).toFixed(2));
 							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // MPa
 							const inerciaViga = (anchoVigaInicial * alturaVigaInicial**3) / 12 ;	// mm^4	
 							const deflexionMaxima = Number((cargaUltima * (longitudVano/3) * (3*longitudVano**2 - 4*(longitudVano/3)**2) / (24*moduloElasticidadConcreto*inerciaViga)).toFixed(4));
               
               // Carga en Mpa/min. (rango de 0.86 a 1.21 Wight, 2016)
-              const cargaFibraExterior = 1.0 / 60; // Mpa/s 
-              const velocidadCarga = ( cargaFibraExterior * anchoVigaInicial * alturaVigaInicial**2 ) / longitudVano ; // en MN/s
-							// const cargaAplicada = velocidadCarga + Math.random(); 							
+              const cargaFibraExterior = 1.0 / 60; // Mpa/s
+							// Velocidad de carga en N/s 
+              const velocidadCarga = Number(( cargaFibraExterior * anchoVigaInicial * alturaVigaInicial**2 / longitudVano ).toFixed(3));						 							
 	
               let data = [];
 							let datosExcel = [];															
-							let carga;
+							let carga = 0.00;
 							let tiempo = 0;
-							let deflexion;						 									
-
-							// for (deflexion = 0.0000; deflexion <= deflexionMaxima; deflexion += 0.0001) {
-							for (carga = 0; carga <= cargaUltima; carga += velocidadCarga) {
+							let deflexion = 0;							
+							
+							for (carga; carga += velocidadCarga;) {
                 deflexion = Number((carga * (longitudVano/3) * (3*longitudVano**2 - 4*(longitudVano/3)**2) / (24*moduloElasticidadConcreto*inerciaViga)).toFixed(4));
                 datosExcel.push([Number(carga), Number(deflexion)]);
                 tiempo ++;
+								data.push({x: deflexion, y: carga/1000});
+								if ( carga > cargaUltima ) {
+									break;
+								}
+								  else {
+										continue;
+									}
+
+								
 							}								 
 														
 							tippy('[data-tippy-content]');
@@ -184,7 +193,7 @@
 											type: 'linear',
 											title: {
 												display: true,
-												text: 'Carga aplicada (N)'
+												text: 'Carga aplicada (kN)'
 											}
 										}
 									}
@@ -224,7 +233,7 @@
 							<script>
 								// Se obtiene la carga máxima aplicada
 								
-								document.getElementById("carga-maxima").innerHTML = "Carga máxima: " + parseFloat(cargaUltima).toFixed(2) + " N";
+								document.getElementById("carga-maxima").innerHTML = "Carga máxima: " + parseFloat(cargaUltima/1000).toFixed(2) + " kN";
               </script>
 						</p>																
 					</div>
