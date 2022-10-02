@@ -66,7 +66,7 @@
 				<div class="card-body" style="text-align: center;">					
 					<div class="col-auto" style="width:250px;">
 						<div style="text-align: center; padding: 0.25rem;">		
-							<button type="button" id="start" onclick="cargaVSDeflexion(), reporteAnchoFinal(), reporteAlturaFinal(), reporteCargaFinal()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
+							<button type="button" id="start" onclick="verGrafica(), animacionCarga(), reporteAnchoFinal(), reporteAlturaFinal(), reporteCargaFinal()" style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>											
 						</div>             
           </div>								
 				</div>
@@ -207,7 +207,11 @@
 							
 							return myChart;
 
-						}							 																		
+						}	
+						
+						function verGrafica() {
+	            graficaCargaDesplazamiento = setTimeout("cargaVSDeflexion()", 23500);
+            }
 						
 						</script>
 					
@@ -221,7 +225,7 @@
 							Ancho final: <span id="reporte-ancho">
 								<script>
 									function reporteAnchoFinal() {
-										const AnchoFinal = setTimeout(textoAnchoFinal, totalDuration);										
+										const AnchoFinal = setTimeout(textoAnchoFinal, totalDuration+23500);										
 									}									
 									function textoAnchoFinal() {
 										document.getElementById("reporte-ancho").innerHTML = " " + String(anchoVigaFinal) + " mm";										
@@ -234,7 +238,7 @@
 							Altura final: <span id="reporte-altura">
 								<script>
 									function reporteAlturaFinal() {
-											const AlturaFinal = setTimeout(textoAlturaFinal, totalDuration);										
+											const AlturaFinal = setTimeout(textoAlturaFinal, totalDuration+23500);										
 										}										
 										function textoAlturaFinal() {
 											document.getElementById("reporte-altura").innerHTML = " " + String(alturaVigaFinal) + " mm";										
@@ -246,7 +250,7 @@
 						<p> Carga máxima: <span id="carga-maxima"> 
 							<script>
 								function reporteCargaFinal() {
-								  const CargaFinal = setTimeout(textoCargaFinal, totalDuration);										
+								  const CargaFinal = setTimeout(textoCargaFinal, totalDuration+23500);										
 								}										
 								function textoCargaFinal() {
 									document.getElementById("carga-maxima").innerHTML = " " + (carga/1000).toFixed(3) + " kN";										
@@ -328,6 +332,26 @@
 				const loaderEscenario = new THREE.GLTFLoader();        
         loaderEscenario.load('laboratorio-flexion.gltf', function(gltf) {        
         	scene.add(gltf.scene);       
+        }, undefined, function (error) {        
+        	console.error(error);        
+        });
+
+				// Animación inicial
+				function animacionCarga() {
+					let movimiento = setInterval(movimientoMaquina, 100);					
+					
+					function movimientoMaquina() {
+						cargaMaquina.position.y -= 0.00100;
+						setTimeout(() => { clearInterval(movimiento); }, 23500);											  
+					}
+				}
+
+				// Mecanismo de carga de la máquina
+        const loaderCargaMaquina = new THREE.GLTFLoader();        
+        loaderCargaMaquina.load('flexion-carga.gltf', function(gltf) {        
+        	cargaMaquina = gltf.scene;
+					scene.add(cargaMaquina);  
+					    
         }, undefined, function (error) {        
         	console.error(error);        
         });
