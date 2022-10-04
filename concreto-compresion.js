@@ -185,7 +185,104 @@ function datosEnsayo() {
 	return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");	
 }
 	
+// tippy('[data-tippy-content]');
+// 							const totalDuration = tiempo*100;
 
+// 							// Animación gráfica
+							
+											
+// 							const config = {
+// 								type: 'line',
+// 								data: {
+// 									datasets: [{   
+// 										borderColor: 'rgb(200, 50, 50)',     
+// 										borderWidth: 1.5,
+// 										radius: 0,
+// 										data: [],
+// 									}],
+// 								},
+							
+// 								options: {
+// 									animation: false,
+// 									interaction: {
+// 										intersect: false
+// 									},
+// 									plugins: {
+// 										legend: false,
+// 										title: {
+// 												display: true,
+// 												text: 'Concreto a flexión'				
+// 											}
+// 									},
+								
+// 									scales:{
+// 										x: {          
+// 											type: 'linear',
+// 											title: {
+// 												display: true,
+// 												text: 'Deflexión en el punto medio (mm)'
+// 											},
+// 										},
+									
+// 										y: {
+// 											type: 'linear',
+// 											title: {
+// 												display: true,
+// 												text: 'Carga aplicada (kN)'
+// 											}
+// 										}
+// 									}
+// 								}
+// 							};
+
+// 							const myChart = new Chart(
+// 								document.getElementById('myChart'),
+// 								config
+// 							);
+
+// 						function cargaVSDeflexion() {
+
+// 							myChart.config.options.animation = true;
+// 							myChart.config.data.datasets[3] = data; 
+							
+// 							const delayBetweenPoints = 100;	
+// 							const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+
+// 							const animation = {
+// 								x: {
+// 									type: 'number',
+// 									easing: 'linear',
+// 									duration: delayBetweenPoints,
+// 									from: NaN, // the point is initially skipped
+// 									delay(ctx) {
+// 									if (ctx.type !== 'data' || ctx.xStarted) {
+// 										return 0;
+// 									}
+// 									ctx.xStarted = true;
+// 									return ctx.index * delayBetweenPoints;
+// 									}
+// 								},
+							
+// 								y: {
+// 									type: 'number',
+// 									easing: 'linear',
+// 									duration: delayBetweenPoints,
+								
+// 									from: previousY,
+// 									delay(ctx) {
+// 										if (ctx.type !== 'data' || ctx.yStarted) {
+// 											return 0;
+// 										}
+// 										ctx.yStarted = true;
+// 										return ctx.index * delayBetweenPoints;
+// 									}
+// 								}
+// 							};		
+							
+							
+// 							return myChart;						
+
+// 						}	
  
 
   
