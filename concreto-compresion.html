@@ -362,7 +362,7 @@
   
         // Cargar escenario
 				const loaderEscenario = new THREE.GLTFLoader();        
-        loaderEscenario.load('laboratorio-compresion.gltf', function(gltf) {        
+        loaderEscenario.load('escenario-compresion.gltf', function(gltf) {        
         	scene.add(gltf.scene);       
         }, undefined, function (error) {        
         	console.error(error);        
@@ -410,7 +410,14 @@
         	renderer.render( scene, camera );
 			  	controls.update();  
         }
-        animate();		
+        animate();
+				
+				// La ventana se ajusta automáticamente
+				window.addEventListener('resize', function() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+					camera.updateProjectionMatrix();
+					renderer.setSize(window.innerWidth, window.innerHeight);
+				});
 
 		  </script>		
 		
