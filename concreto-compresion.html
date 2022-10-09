@@ -100,31 +100,31 @@
 					// "Reinforced concrete mechanics and design, 7ed, 2016"
 					// Ecuación 3-23 p-91 Para concretos con f'c entre 15 y 125 MPa
 
-					const diametroCilindro = 150 + Math.random() - Math.random(); // en mm 
-					const longitudCilindro = 300 + Math.random() - Math.random(); // en mm
+					const diametroCilindro = 150 + Math.random() - Math.random(); // en mm
+					const areaCilindro = Math.PI * (diametroCilindro / 2) ** 2; // en mm^2
+					const longitudCompresometro = 150 + Math.random(); // en mm 
+					const longitudCilindro = 300 + Math.random() - Math.random(); // en mm					
+					const precision = 0.05;
+					// Velocidad de carga = 1 mm / min
+					const velocidadCarga = (1 / 60); // en mm/s
+					const pasoDeformacion = velocidadCarga / (longitudCompresometro - velocidadCarga); // (mm/mm)/s
+					const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);					
+					// 1 psi = 6894.76 Pa
+					const FC = resistenciaCompresion * 1000 / 6.89; // FC es f'c en psi
+					const n = 0.8 + (FC / 2500);
+					const Ec = 57000 * Math.sqrt(FC); // en psi
+					const e0 = (FC / Ec) * (n / (n - 1));
+					let data1 = [];
+					let data2 = [];
+					let datosCarga = [];
 					let datosExcel = [];
 					let cargaMaxima;
 					let falla, finEnsayo = false;
 					let tiempoFalla;
-
-
-					const areaCilindro = Math.PI * (diametroCilindro / 2) ** 2;
-					const precision = Number(0.05);
-					// Velocidad de carga = 1 mm / min
-					const velocidadCarga = Number(1 / 60); // en mm/s
-					const pasoDeformacion = velocidadCarga / (longitudCilindro - velocidadCarga);
-					const resistenciaNominal = Math.floor((Math.random() * 50) + 5);
-					//const resistenciaNominal = parseInt(document.getElementById('resistenciaNominal').value);
-					const resistenciaObtenida = resistenciaNominal + resistenciaNominal * Math.random() * 0.15 - resistenciaNominal * Math.random() * 0.15;
-					// 1 psi = 6894.76 Pa
-					const FC = resistenciaObtenida * 1000 / 6.89; // FC es f'c en psi
-					const n = 0.8 + (FC / 2500);
-					const Ec = 57000 * Math.sqrt(FC); // en psi
-					const e0 = (FC / Ec) * (n / (n - 1));
-					let data = [];
-					let datosCarga = [];
 					let e;
 					let tiempo = 0;
+					let deformacion1;
+					let deformacion2;
 
 					for (e = 0.00000; e <= 0.00300; e += pasoDeformacion) {
 
@@ -134,19 +134,21 @@
 
 						let fc = (6.89 / 1000) * (n * FC * coef) / (n - 1 + coef ** (n * k));
 
-						let carga = ((fc + Math.random() * precision) * areaCilindro / 1000).toFixed(3); // en kN 
+						let carga = Number(((fc + Math.random() * precision) * areaCilindro / 1000).toFixed(3)); // en kN 
 
-						let deformacion = (longitudCilindro * e / (1 + e)).toFixed(3); // en mm
+						deformacion1 = Number((longitudCompresometro * e / (1 + e) + Math.random() * 0.005).toFixed(3)); // en mm
+						deformacion2 = Number((longitudCompresometro * e / (1 + e) + Math.random() * 0.005).toFixed(3)); // en mm						
 
-						datosExcel.push([Number(carga), Number(deformacion)]);
+						datosExcel.push([carga, deformacion1, deformacion2]);
 
-						datosCarga.push(Number(carga));
+						datosCarga.push(carga);
 
 						tiempo++;
 
-						cargaMaxima = Math.max.apply(null, datosCarga);						
+						cargaMaxima = Math.max.apply(null, datosCarga);
 
-						data.push({ x: deformacion, y: carga });
+						data1.push({ x: deformacion1, y: carga });
+						data2.push({ x: deformacion2, y: carga });
 
 						if (carga < cargaMaxima) {
 							falla = true;
@@ -154,8 +156,7 @@
 						}
 
 						if (carga < 0.95 * cargaMaxima) {
-							break;
-							finEnsayo = true;
+							break;							
 						}
 
 						else {
@@ -208,8 +209,14 @@
 								borderColor: 'rgb(200, 50, 50)',
 								borderWidth: 1.5,
 								radius: 0,
-								data: data,
-							}],
+								data: data1,
+							},
+							{
+								borderColor: 'rgb(50,50,250)',
+								borderWidth: 1.5,
+								radius: 0,
+								data: data2,
+							}]
 						},
 
 						options: {
@@ -230,7 +237,7 @@
 									type: 'linear',
 									title: {
 										display: true,
-										text: 'Deformación (mm)'
+										text: 'Deformación compresómetro (mm)'
 									},
 								},
 
@@ -277,7 +284,7 @@
 				<p id="reporte-longitud">
 					<script>
 						function reporteLongitud() {
-							document.getElementById("reporte-longitud").innerHTML = "Longitud inicial: " + parseFloat(longitudCilindro).toFixed(2) + " mm" + "\n";
+							document.getElementById("reporte-longitud").innerHTML = "Longitud efectiva compresómetro: " + parseFloat(longitudCompresometro).toFixed(2) + " mm" + "\n";
 						}
 						reporteLongitud()
 					</script>
@@ -310,8 +317,8 @@
 				let ws_data = datosExcel;
 				let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
 				wb.Sheets["Concreto a compresión"] = ws;
-				XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"]], { origin: "A1" });
-				ws["!cols"] = [{ wch: 20 }, { wch: 20 }];
+				XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"]], { origin: "A1" });
+				ws["!cols"] = [{ wch: 20 }, { wch: 25 }, { wch: 25 }];
 
 				return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
 			} 
