@@ -107,8 +107,8 @@
 					const precision = 0.05;
 					// Velocidad de carga = 1 mm / min
 					const velocidadCarga = (1 / 60); // en mm/s
-					const pasoDeformacion = velocidadCarga / (longitudCompresometro - velocidadCarga); // (mm/mm)/s
-					const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);					
+					// const pasoDeformacion = velocidadCarga * ( 1 / (longitudCompresometro - 1) ); // (mm/mm)/s
+					const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // f'c en MPa					
 					// 1 psi = 6894.76 Pa
 					const FC = resistenciaCompresion * 1000 / 6.89; // FC es f'c en psi
 					const n = 0.8 + (FC / 2500);
@@ -126,7 +126,7 @@
 					let deformacion1;
 					let deformacion2;
 
-					for (e = 0.00000; e <= 0.00300; e += pasoDeformacion) {
+					for (e = 0.00000; e <= 0.00300; e += 0.00001) {
 
 						let coef = e / e0;
 
