@@ -103,14 +103,13 @@
 					const diametroCilindro = 150 + Math.random() - Math.random(); // en mm
 					const areaCilindro = Math.PI * (diametroCilindro / 2) ** 2; // en mm^2
 					const longitudCompresometro = 150 + Math.random(); // en mm 
-					const longitudCilindro = 300 + Math.random() - Math.random(); // en mm					
-					const precision = 0.05;
-					// Velocidad de carga = 1 mm / min
-					const velocidadCarga = (1 / 60); // en mm/s
-					// const pasoDeformacion = velocidadCarga * ( 1 / (longitudCompresometro - 1) ); // (mm/mm)/s
+					const longitudCilindro = 300 + Math.random() - Math.random(); // en mm	
+					const datosCilindro = [];
+					datosCilindro.push([longitudCompresometro, diametroCilindro, longitudCilindro]);				
+					const precision = 0.05;					
 					const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // f'c en MPa					
 					// 1 psi = 6894.76 Pa
-					const FC = resistenciaCompresion * 1000 / 6.89; // FC es f'c en psi
+					const FC = resistenciaCompresion * 1000 / 6.89476; // FC es f'c en psi
 					const n = 0.8 + (FC / 2500);
 					const Ec = 57000 * Math.sqrt(FC); // en psi
 					const e0 = (FC / Ec) * (n / (n - 1));
@@ -136,8 +135,8 @@
 
 						let carga = Number(((fc + Math.random() * precision) * areaCilindro / 1000).toFixed(3)); // en kN 
 
-						deformacion1 = Number((longitudCompresometro * e / (1 + e) + Math.random() * 0.005).toFixed(3)); // en mm
-						deformacion2 = Number((longitudCompresometro * e / (1 + e) + Math.random() * 0.005).toFixed(3)); // en mm						
+						deformacion1 = Number((longitudCompresometro * e + Math.random() * 0.005).toFixed(3)); // en mm
+						deformacion2 = Number((longitudCompresometro * e + Math.random() * 0.005).toFixed(3)); // en mm						
 
 						datosExcel.push([carga, deformacion1, deformacion2]);
 
@@ -313,15 +312,34 @@
 			// Datos en Excel
 			function datosEnsayo() {
 				let wb = XLSX.utils.book_new();
-				wb.SheetNames.push("Concreto a compresión");
+				wb.SheetNames.push("Datos sensores", "Datos cilindro");
 				let ws_data = datosExcel;
-				let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
-				wb.Sheets["Concreto a compresión"] = ws;
+				let ws_data2 = datosCilindro;
+				let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });				
+				let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2"});
+				wb.Sheets["Datos sensores"] = ws;
+        wb.Sheets["Datos cilindro"] = ws2;				
 				XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"]], { origin: "A1" });
+				XLSX.utils.sheet_add_aoa(ws2, [["long efect compresómetro (mm)", "Diámetro cilindro (mm)", "Longitud cilindro (mm)"]], { origin: "A1" });
+
 				ws["!cols"] = [{ wch: 20 }, { wch: 25 }, { wch: 25 }];
+        ws2["!cols"] = [{ wch: 30 }, { wch: 25 }, { wch: 25 }];
 
 				return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
 			} 
+
+			// function datosEnsayo() {
+			// 	let wb = XLSX.utils.book_new();
+			// 	wb.SheetNames.push("Concreto a compresión");
+			// 	let ws_data = datosExcel;
+			// 	let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
+			// 	wb.Sheets["Concreto a compresión"] = ws;
+			// 	XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"]], { origin: "A1" });
+			// 	ws["!cols"] = [{ wch: 20 }, { wch: 25 }, { wch: 25 }];
+
+			// 	return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
+			// } 
+
 		</script>
 
 
