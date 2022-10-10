@@ -100,14 +100,13 @@
 					// "Reinforced concrete mechanics and design, 7ed, 2016"
 					// Ecuación 3-23 p-91 Para concretos con f'c entre 15 y 125 MPa
 
-					const diametroCilindro = 150 + Math.random() - Math.random(); // en mm
+					const diametroCilindro = Number((150 + Math.random() - Math.random()).toFixed(2)); // en mm
 					const areaCilindro = Math.PI * (diametroCilindro / 2) ** 2; // en mm^2
-					const longitudCompresometro = 150 + Math.random(); // en mm 
-					const longitudCilindro = 300 + Math.random() - Math.random(); // en mm	
-					const datosCilindro = [];
-					datosCilindro.push([longitudCompresometro, diametroCilindro, longitudCilindro]);				
-					const precision = 0.05;					
-					const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // f'c en MPa					
+					const longitudCompresometro = Number((150 + Math.random()).toFixed(2)); // en mm 
+					const longitudCilindro = Number((300 + Math.random() - Math.random()).toFixed(2)); // en mm	
+					const datosCilindro = [];					
+					const precision = 0.05;
+					const resistenciaCompresion = Math.floor((Math.random() * 50) + 15); // f'c en MPa					
 					// 1 psi = 6894.76 Pa
 					const FC = resistenciaCompresion * 1000 / 6.89476; // FC es f'c en psi
 					const n = 0.8 + (FC / 2500);
@@ -151,11 +150,12 @@
 
 						if (carga < cargaMaxima) {
 							falla = true;
-							tiempoFalla = carga.length * 1000;
+							tiempoFalla = carga.length * 1000;							
 						}
 
 						if (carga < 0.95 * cargaMaxima) {
-							break;							
+							datosCilindro.push([longitudCompresometro, diametroCilindro, longitudCilindro, cargaMaxima]);
+							break;
 						}
 
 						else {
@@ -312,21 +312,21 @@
 			// Datos en Excel
 			function datosEnsayo() {
 				let wb = XLSX.utils.book_new();
-				wb.SheetNames.push("Datos sensores", "Datos cilindro");
+				wb.SheetNames.push("Datos sensores", "Reporte");
 				let ws_data = datosExcel;
 				let ws_data2 = datosCilindro;
-				let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });				
-				let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2"});
+				let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
+				let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
 				wb.Sheets["Datos sensores"] = ws;
-        wb.Sheets["Datos cilindro"] = ws2;				
+				wb.Sheets["Reporte"] = ws2;
 				XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"]], { origin: "A1" });
-				XLSX.utils.sheet_add_aoa(ws2, [["long efect compresómetro (mm)", "Diámetro cilindro (mm)", "Longitud cilindro (mm)"]], { origin: "A1" });
+				XLSX.utils.sheet_add_aoa(ws2, [["Longitud efectiva compresómetro (mm)", "Diámetro cilindro (mm)", "Longitud cilindro (mm)", "Carga máxima (kN)"]], { origin: "A1" });
 
 				ws["!cols"] = [{ wch: 20 }, { wch: 25 }, { wch: 25 }];
-        ws2["!cols"] = [{ wch: 30 }, { wch: 25 }, { wch: 25 }];
+				ws2["!cols"] = [{ wch: 35 }, { wch: 25 }, { wch: 25 }, { wch: 20 }];
 
 				return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
-			} 
+			}
 
 			// function datosEnsayo() {
 			// 	let wb = XLSX.utils.book_new();
