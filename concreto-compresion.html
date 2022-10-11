@@ -315,11 +315,11 @@
 				wb.SheetNames.push("Datos sensores", "Reporte");
 				let ws_data = datosExcel;
 				let ws_data2 = datosCilindro;
-				let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
+				let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A3" });
 				let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
 				wb.Sheets["Datos sensores"] = ws;
 				wb.Sheets["Reporte"] = ws2;
-				XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"]], { origin: "A1" });
+				XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"], [0.000, 0.000, 0.000]], { origin: "A1" });
 				XLSX.utils.sheet_add_aoa(ws2, [["Longitud efectiva compresómetro (mm)", "Diámetro cilindro (mm)", "Longitud cilindro (mm)", "Carga máxima (kN)"]], { origin: "A1" });
 
 				ws["!cols"] = [{ wch: 20 }, { wch: 25 }, { wch: 25 }];

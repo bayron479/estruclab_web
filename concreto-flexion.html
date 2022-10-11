@@ -100,20 +100,25 @@
 							const cargaFibraExterior = 1.0 / 60; // Mpa/s
 							// Velocidad de carga en N/s 
 							const velocidadCarga = Number((cargaFibraExterior * anchoVigaInicial * alturaVigaInicial ** 2 / longitudVano).toFixed(3));
-
+							
 							let data = [];													
 							let datosExcel = [];
+							let datosViga = [];
 							let carga = 0;
 							let tiempo = 0;
 							let deflexion = 0;
+							
 
-							for (carga; carga += velocidadCarga;) {
-								deflexion = Number((carga * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
+							for (carga; carga += velocidadCarga + 0.15*Math.random()*velocidadCarga;) {
+								deflexion = Number((carga * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
+								// let deflexionRuido = Number((deflexion + Math.random() * 0.10 * deflexion).toFixed(5));
 								datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga / 1000 });
 								if (carga > cargaUltima) {
+									datosViga.push([anchoVigaFinal, alturaVigaFinal, Number((carga / 1000).toFixed(3))])
 									break;
+									
 								}
 								else {
 									continue;
@@ -274,13 +279,17 @@
 				<script>
 					function datosEnsayoFlexion() {
 						let wb = XLSX.utils.book_new();
-						wb.SheetNames.push("Datos máquina", "Reporte");
-						// let ws_data0 = [[0.000, 0.0000]];
-						let ws_data = datosExcel;												
+						wb.SheetNames.push("Datos máquina", "Reporte");						
+						let ws_data = datosExcel;
+						let ws_data2 = datosViga;												
 						let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A3" });
+						let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
 						wb.Sheets["Datos máquina"] = ws;
+						wb.Sheets["Reporte"] = ws2;
 						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"], [0.000, 0.0000]], { origin: "A1" });
+						XLSX.utils.sheet_add_aoa(ws2, [["Ancho final (mm)", "Altura final (mm)", "Carga máxima (kN)"]], { origin: "A1" });
 						ws["!cols"] = [{ wch: 20 }, { wch: 20 }];
+						ws2["!cols"] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }];
 
 						return XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
 					}	
