@@ -4,6 +4,7 @@
 <head>
 
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"&amp;gt;>
 
 	<title>Resistencia del concreto a flexión</title>
 
@@ -109,9 +110,8 @@
 							let deflexion = 0;
 							
 
-							for (carga; carga += velocidadCarga + 0.15*Math.random()*velocidadCarga;) {
-								deflexion = Number((carga * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
-								// let deflexionRuido = Number((deflexion + Math.random() * 0.10 * deflexion).toFixed(5));
+							for (carga; carga += velocidadCarga + 0.40*Math.random()*velocidadCarga;) {
+								deflexion = Number(((carga + 0.40*Math.random()*velocidadCarga) * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
 								datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga / 1000 });
