@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"&amp;gt;>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" &amp;gt;>
 	<link rel="icon" href="./imagenes/computer-icon-small.png">
 	<link rel="shortcut icon" href="./imagenes/favicon.PNG" type="image/x-icon">
 	<meta name="author" content="Grupo de Investigación RISK - Universidad del Valle">
@@ -82,7 +82,7 @@
 				<div class="col-auto" style="width:250px;">
 					<div style="text-align: center; padding: 0.25rem;">
 						<button type="button" style="text-align: center;" class="btn btn-primary"
-							onclick="verGrafica(),mensajeCargaMaxima(),animacionCarga()">
+							onclick="verGrafica(),mensajeCargaMaxima(),animacionCarga(),fallaCilindro()">
 							Iniciar ensayo
 						</button>
 					</div>
@@ -105,7 +105,7 @@
 					const areaCilindro = Math.PI * (diametroCilindro / 2) ** 2; // en mm^2
 					const longitudCompresometro = Number((150 + Math.random()).toFixed(2)); // en mm 
 					const longitudCilindro = Number((300 + Math.random() - Math.random()).toFixed(2)); // en mm	
-					const datosCilindro = [];					
+					const datosCilindro = [];
 					const precision = 0.05;
 					const resistenciaCompresion = Math.floor((Math.random() * 50) + 15); // f'c en MPa					
 					// 1 psi = 6894.76 Pa
@@ -119,7 +119,7 @@
 					let datosExcel = [];
 					let cargaMaxima;
 					let falla, finEnsayo = false;
-					let tiempoFalla;
+					let tiempoFalla = 0;
 					let e;
 					let tiempo = 0;
 					let deformacion1;
@@ -144,14 +144,16 @@
 
 						tiempo++;
 
+						// let cargaMaxima = Number(Math.max.apply(null, datosCarga));
 						cargaMaxima = Math.max.apply(null, datosCarga);
 
 						data1.push({ x: deformacion1, y: carga });
 						data2.push({ x: deformacion2, y: carga });
 
 						if (carga < cargaMaxima) {
-							falla = true;
-							tiempoFalla = carga.length * 1000;							
+							//falla = true;
+							tiempoFalla = tiempo * 100;
+							//cilindroGLTF = 'cilindro-cone.gltf';
 						}
 
 						if (carga < 0.95 * cargaMaxima) {
@@ -329,28 +331,14 @@
 				return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
 			}
 
-			// function datosEnsayo() {
-			// 	let wb = XLSX.utils.book_new();
-			// 	wb.SheetNames.push("Concreto a compresión");
-			// 	let ws_data = datosExcel;
-			// 	let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
-			// 	wb.Sheets["Concreto a compresión"] = ws;
-			// 	XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"]], { origin: "A1" });
-			// 	ws["!cols"] = [{ wch: 20 }, { wch: 25 }, { wch: 25 }];
-
-			// 	return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
-			// } 
-
 		</script>
-
-
 	</div>
 
-	<!-- Modelo 3d -->
 	<div style="position: absolute; top: 90px; left: 400px;">
 
-		<script>
+		<!-- Modelo 3d -->
 
+		<script>
 			const scene = new THREE.Scene();
 			// const axesHelper = new THREE.AxesHelper(1);			
 			// scene.add(axesHelper); 
@@ -404,10 +392,11 @@
 			var loaderCilindro = new THREE.GLTFLoader();
 			var cilindroGLTF = 'cilindro-normal.gltf';
 
-			const cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla);
-
+			function fallaCilindro() {
+				const cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
+			}
 			function fracturaCilindro() {
-				var cilindroGLTF = 'cilindro-cone.gltf';
+				cilindroGLTF = 'cilindro-cone.gltf';
 			}
 
 			loaderCilindro.load(cilindroGLTF, function (gltf) {
@@ -454,6 +443,7 @@
 		</script>
 
 	</div>
+
 
 </body>
 
