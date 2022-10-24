@@ -393,10 +393,16 @@
 			var cilindroGLTF = 'cilindro-normal.gltf';
 
 			function fallaCilindro() {
-				const cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
+				cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
 			}
 			function fracturaCilindro() {
 				cilindroGLTF = 'cilindro-cone.gltf';
+				loaderCilindro.load(cilindroGLTF, function (gltf) {
+				cilindro = gltf.scene;
+				scene.add(cilindro);
+			}, undefined, function (error) {
+				console.error(error);
+			});
 			}
 
 			loaderCilindro.load(cilindroGLTF, function (gltf) {
