@@ -4,7 +4,7 @@
 <head>
 
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"&amp;gt;>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" &amp;gt;>
 	<link rel="icon" href="./imagenes/computer-icon-small.png">
 
 	<title>Resistencia del concreto a flexión</title>
@@ -102,24 +102,24 @@
 							const cargaFibraExterior = 1.0 / 60; // Mpa/s
 							// Velocidad de carga en N/s 
 							const velocidadCarga = Number((cargaFibraExterior * anchoVigaInicial * alturaVigaInicial ** 2 / longitudVano).toFixed(3));
-							
-							let data = [];													
+
+							let data = [];
 							let datosExcel = [];
 							let datosViga = [];
 							let carga = 0;
 							let tiempo = 0;
 							let deflexion = 0;
-							
 
-							for (carga; carga += velocidadCarga + 0.40*Math.random()*velocidadCarga;) {
-								deflexion = Number(((carga + 0.40*Math.random()*velocidadCarga) * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
+
+							for (carga; carga += velocidadCarga + 0.40 * Math.random() * velocidadCarga;) {
+								deflexion = Number(((carga + 0.40 * Math.random() * velocidadCarga) * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
 								datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga / 1000 });
 								if (carga > cargaUltima) {
 									datosViga.push([anchoVigaFinal, alturaVigaFinal, Number((carga / 1000).toFixed(3))])
 									break;
-									
+
 								}
 								else {
 									continue;
@@ -280,9 +280,9 @@
 				<script>
 					function datosEnsayoFlexion() {
 						let wb = XLSX.utils.book_new();
-						wb.SheetNames.push("Datos máquina", "Reporte");						
+						wb.SheetNames.push("Datos máquina", "Reporte");
 						let ws_data = datosExcel;
-						let ws_data2 = datosViga;												
+						let ws_data2 = datosViga;
 						let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A3" });
 						let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
 						wb.Sheets["Datos máquina"] = ws;
@@ -346,6 +346,31 @@
 					const loaderEscenario = new THREE.GLTFLoader();
 					loaderEscenario.load('escenario-flexion.gltf', function (gltf) {
 						scene.add(gltf.scene);
+					}, undefined, function (error) {
+						console.error(error);
+					});
+
+					// Cargar viga
+					var loaderViga = new THREE.GLTFLoader();
+					var vigaGLTF = 'flexion-viga.gltf';
+
+					function fallaVIga() {
+						vigaAgrietada = setTimeout(fracturaViga, totalDuration + 23500); // corregir tiempo falla
+					}
+
+					function fracturaViga() {
+						vigaGLTF = 'flexion-falla-viga.gltf';
+						loaderCilindro.load(vigaGLTF, function (gltf) {
+							viga = gltf.scene;
+							scene.add(viga);
+						}, undefined, function (error) {
+							console.error(error);
+						});
+					}
+
+					loaderViga.load(vigaGLTF, function (gltf) {
+						viga = gltf.scene;
+						scene.add(viga);
 					}, undefined, function (error) {
 						console.error(error);
 					});
