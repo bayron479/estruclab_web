@@ -117,8 +117,7 @@
 					let data2 = [];
 					let datosCarga = [];
 					let datosExcel = [];
-					let cargaMaxima;
-					let falla, finEnsayo = false;
+					let cargaMaxima;					
 					let tiempoFalla = 0;
 					let e;
 					let tiempo = 0;
@@ -150,10 +149,8 @@
 						data1.push({ x: deformacion1, y: carga });
 						data2.push({ x: deformacion2, y: carga });
 
-						if (carga < cargaMaxima) {
-							//falla = true;
-							tiempoFalla = tiempo * 100;
-							//cilindroGLTF = 'cilindro-cone.gltf';
+						if (carga < cargaMaxima) {							
+							tiempoFalla = tiempo * 100;							
 						}
 
 						if (carga < 0.95 * cargaMaxima) {
@@ -260,7 +257,7 @@
 							config
 						);
 
-						return myChart, datosCarga, falla, parseInt(tiempoFalla), cargaMaxima, datosExcel;
+						return myChart, datosCarga, parseInt(tiempoFalla), cargaMaxima, datosExcel;
 					}
 
 					function verGrafica() {
