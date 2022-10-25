@@ -69,7 +69,7 @@
 						<div class="col-auto" style="width:250px;">
 							<div style="text-align: center; padding: 0.25rem;">
 								<button type="button" id="start"
-									onclick="verGrafica(), animacionCarga(), reporteAnchoFinal(), reporteAlturaFinal(), reporteCargaFinal()"
+									onclick="verGrafica(), animacionCarga(), reporteAnchoFinal(), reporteAlturaFinal(), reporteCargaFinal(), fallaVIga()"
 									style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>
 							</div>
 						</div>
@@ -354,26 +354,28 @@
 					var loaderViga = new THREE.GLTFLoader();
 					var vigaGLTF = 'flexion-viga.gltf';
 
-					function fallaVIga() {
-						vigaAgrietada = setTimeout(fracturaViga, totalDuration + 23500); // corregir tiempo falla
-					}
-
-					function fracturaViga() {
-						vigaGLTF = 'flexion-falla-viga.gltf';
-						loaderCilindro.load(vigaGLTF, function (gltf) {
-							viga = gltf.scene;
-							scene.add(viga);
-						}, undefined, function (error) {
-							console.error(error);
-						});
-					}
-
 					loaderViga.load(vigaGLTF, function (gltf) {
 						viga = gltf.scene;
 						scene.add(viga);
 					}, undefined, function (error) {
 						console.error(error);
 					});
+
+					// Falla viga
+					function fallaVIga() {
+						vigaAgrietada = setTimeout(fracturaViga, totalDuration + 23500); // corregir tiempo falla
+					}
+
+					function fracturaViga() {
+						vigaGLTF = 'flexion-falla-viga.gltf';
+						loaderViga.load(vigaGLTF, function (gltf) {
+							vigaFalla = gltf.scene;
+							scene.add(vigaFalla);
+							scene.remove(viga);
+						}, undefined, function (error) {
+							console.error(error);
+						});
+					}
 
 					// Animación inicial
 					function animacionCarga() {
