@@ -85,9 +85,9 @@
 
 							// Dimensiones de la viga en mm							
 							const anchoVigaInicial = 150 + Math.random() - Math.random();
-							const anchoVigaFinal = Number((anchoVigaInicial + Math.random() - Math.random()).toFixed(2));
+							const anchoVigaFinal = Number((anchoVigaInicial + Math.random()*0.05).toFixed(2));
 							const alturaVigaInicial = 150 + Math.random() - Math.random();
-							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() - Math.random()).toFixed(2));
+							const alturaVigaFinal = Number((alturaVigaInicial + Math.random()*0.05).toFixed(2));
 							const longitudViga = 450 + Math.random() - Math.random();
 							const longitudVano = longitudViga - 50 + Math.random() - Math.random();
 							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);
