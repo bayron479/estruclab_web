@@ -117,7 +117,7 @@
 					let data2 = [];
 					let datosCarga = [];
 					let datosExcel = [];
-					let cargaMaxima;					
+					let cargaMaxima;
 					let tiempoFalla = 0;
 					let e;
 					let tiempo = 0;
@@ -142,14 +142,14 @@
 						datosCarga.push(carga);
 
 						tiempo++;
-						
+
 						cargaMaxima = Math.max.apply(null, datosCarga);
 
 						data1.push({ x: deformacion1, y: carga });
 						data2.push({ x: deformacion2, y: carga });
 
-						if (carga < cargaMaxima) {							
-							tiempoFalla = datosCarga.indexOf(cargaMaxima) * 100;														
+						if (carga < cargaMaxima) {
+							tiempoFalla = datosCarga.indexOf(cargaMaxima) * 100;
 						}
 
 						if (carga < 0.95 * cargaMaxima) {
@@ -371,14 +371,16 @@
 			const controls = new THREE.OrbitControls(camera, renderer.domElement);
 			controls.panSpeed = 1;
 			controls.rotateSpeed = 1;
-			camera.position.set(2, 2.5, 0);
+			camera.position.set( 1.18977973034127, 1.991873417162895,0.3960026995739613);
+			// { x:, y: , z:  } 
 			controls.update();
-			controls.target = new THREE.Vector3(0, 1.25, 0);
+			controls.target = new THREE.Vector3(-0.20827620969626534, 1.6734158853956165, 0.3165655835425431); 
+			
 			renderer.render(scene, camera);
 
 			// Cargar escenario
 			const loaderEscenario = new THREE.GLTFLoader();
-			loaderEscenario.load('escenario-compresion.gltf', function (gltf) {
+			loaderEscenario.load('escenario-compresion2.gltf', function (gltf) {
 				scene.add(gltf.scene);
 			}, undefined, function (error) {
 				console.error(error);
@@ -401,13 +403,13 @@
 			function fracturaCilindro() {
 				cilindroGLTF = 'cilindro-cone.gltf';
 				loaderCilindro.load(cilindroGLTF, function (gltf) {
-				cilindroFalla = gltf.scene;
-				scene.add(cilindroFalla);
-				scene.remove(cilindro);
-			}, undefined, function (error) {
-				console.error(error);
-			});
-			}			
+					cilindroFalla = gltf.scene;
+					scene.add(cilindroFalla);
+					scene.remove(cilindro);
+				}, undefined, function (error) {
+					console.error(error);
+				});
+			}
 
 			// Animación inicial de la máquina haciendo contacto con el cilindro
 			function animacionCarga() {
