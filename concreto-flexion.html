@@ -85,16 +85,16 @@
 
 							// Dimensiones de la viga en mm							
 							const anchoVigaInicial = 150 + Math.random() - Math.random();
-							const anchoVigaFinal = Number((anchoVigaInicial + Math.random()*0.05).toFixed(2));
+							const anchoVigaFinal = Number((anchoVigaInicial + Math.random() * 0.05).toFixed(2));
 							const alturaVigaInicial = 150 + Math.random() - Math.random();
-							const alturaVigaFinal = Number((alturaVigaInicial + Math.random()*0.05).toFixed(2));
+							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() * 0.05).toFixed(2));
 							const longitudViga = 450 + Math.random() - Math.random();
 							const longitudVano = longitudViga - 50 + Math.random() - Math.random();
-							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5);
-							const frTeorico = (7.5 * Math.sqrt(resistenciaCompresion * 1000 / 6.89)) * 6.89 / 1000; // en MPa
+							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // en MPa							
+							const frTeorico = 0.62 * Math.sqrt(resistenciaCompresion); // NSR-10 en MPa
 							const frObtenido = frTeorico + frTeorico * Math.random() * 0.10 - frTeorico * Math.random() * 0.10;
 							const cargaUltima = Number((frObtenido * anchoVigaFinal * alturaVigaFinal ** 2 / longitudVano).toFixed(2));
-							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // MPa
+							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // en MPa. NSR-10
 							const inerciaViga = (anchoVigaInicial * alturaVigaInicial ** 3) / 12;	// mm^4	
 							const deflexionMaxima = Number((cargaUltima * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
 
@@ -110,9 +110,8 @@
 							let tiempo = 0;
 							let deflexion = 0;
 
-
-							for (carga; carga += velocidadCarga + 0.40 * Math.random() * velocidadCarga;) {
-								deflexion = Number(((carga + 0.40 * Math.random() * velocidadCarga) * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
+							for (carga; carga += velocidadCarga + 0.15 * Math.random() * velocidadCarga;) {
+								deflexion = Number(((carga + 0.15 * Math.random() * velocidadCarga) * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
 								datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga / 1000 });
