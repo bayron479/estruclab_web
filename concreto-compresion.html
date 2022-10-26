@@ -142,15 +142,14 @@
 						datosCarga.push(carga);
 
 						tiempo++;
-
-						// let cargaMaxima = Number(Math.max.apply(null, datosCarga));
+						
 						cargaMaxima = Math.max.apply(null, datosCarga);
 
 						data1.push({ x: deformacion1, y: carga });
 						data2.push({ x: deformacion2, y: carga });
 
 						if (carga < cargaMaxima) {							
-							tiempoFalla = tiempo * 100;							
+							tiempoFalla = datosCarga.indexOf(cargaMaxima) * 100;														
 						}
 
 						if (carga < 0.95 * cargaMaxima) {
@@ -389,25 +388,26 @@
 			var loaderCilindro = new THREE.GLTFLoader();
 			var cilindroGLTF = 'cilindro-normal.gltf';
 
-			function fallaCilindro() {
-				cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
-			}
-			function fracturaCilindro() {
-				cilindroGLTF = 'cilindro-cone.gltf';
-				loaderCilindro.load(cilindroGLTF, function (gltf) {
-				cilindro = gltf.scene;
-				scene.add(cilindro);
-			}, undefined, function (error) {
-				console.error(error);
-			});
-			}
-
 			loaderCilindro.load(cilindroGLTF, function (gltf) {
 				cilindro = gltf.scene;
 				scene.add(cilindro);
 			}, undefined, function (error) {
 				console.error(error);
 			});
+
+			function fallaCilindro() {
+				cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
+			}
+			function fracturaCilindro() {
+				cilindroGLTF = 'cilindro-cone.gltf';
+				loaderCilindro.load(cilindroGLTF, function (gltf) {
+				cilindroFalla = gltf.scene;
+				scene.add(cilindroFalla);
+				scene.remove(cilindro);
+			}, undefined, function (error) {
+				console.error(error);
+			});
+			}			
 
 			// Animación inicial de la máquina haciendo contacto con el cilindro
 			function animacionCarga() {
