@@ -130,7 +130,7 @@
 
 						let k = (coef <= 1) ? 1 : 0.67 + (FC / 9000);
 
-						let fc = (6.89 / 1000) * (n * FC * coef) / (n - 1 + coef ** (n * k));
+						let fc = (6.89476 / 1000) * (n * FC * coef) / (n - 1 + coef ** (n * k));
 
 						let carga = Number(((fc + Math.random() * precision) * areaCilindro / 1000).toFixed(3)); // en kN 
 
