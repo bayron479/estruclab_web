@@ -84,16 +84,15 @@
 						<script>
 
 							// Dimensiones de la viga en mm							
-							const anchoVigaInicial = 150 + Math.random() - Math.random();
+							const anchoVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
 							const anchoVigaFinal = Number((anchoVigaInicial + Math.random() * 0.05).toFixed(2));
-							const alturaVigaInicial = 150 + Math.random() - Math.random();
+							const alturaVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
 							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() * 0.05).toFixed(2));
-							const longitudViga = 450 + Math.random() - Math.random();
-							const longitudVano = longitudViga - 50 + Math.random() - Math.random();
-							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // en MPa							
-							const frTeorico = 0.62 * Math.sqrt(resistenciaCompresion); // NSR-10 en MPa
-							const frObtenido = frTeorico + frTeorico * Math.random() * 0.10 - frTeorico * Math.random() * 0.10;
-							const cargaUltima = Number((frObtenido * anchoVigaFinal * alturaVigaFinal ** 2 / longitudVano).toFixed(2));
+							const longitudViga = Number((700 + Math.random() - Math.random()).toFixed(2));
+							const longitudVano = longitudViga - 100 + Math.random() - Math.random();
+							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // aleatoria entre 5 y 50 MPa							
+							const fr = 0.62 * Math.sqrt(resistenciaCompresion); // NSR-10, módulo de rotura en MPa							
+							const cargaUltima = Number((fr * anchoVigaFinal * alturaVigaFinal ** 2 / longitudVano).toFixed(2));
 							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // en MPa. NSR-10
 							const inerciaViga = (anchoVigaInicial * alturaVigaInicial ** 3) / 12;	// mm^4	
 							const deflexionMaxima = Number((cargaUltima * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
@@ -111,12 +110,13 @@
 							let deflexion = 0;
 
 							for (carga; carga += velocidadCarga + 0.15 * Math.random() * velocidadCarga;) {
-								deflexion = Number(((carga + 0.15 * Math.random() * velocidadCarga) * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
+								deflexion = Number((carga * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
+								//deflexion = Number(((carga + 0.15 * Math.random() * velocidadCarga) * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
 								datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga / 1000 });
 								if (carga > cargaUltima) {
-									datosViga.push([anchoVigaFinal, alturaVigaFinal, Number((carga / 1000).toFixed(3))])
+									datosViga.push([longitudViga, anchoVigaInicial, anchoVigaFinal, alturaVigaInicial, alturaVigaFinal, Number((carga / 1000).toFixed(3))])
 									break;
 
 								}
@@ -286,10 +286,10 @@
 						let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
 						wb.Sheets["Datos máquina"] = ws;
 						wb.Sheets["Reporte"] = ws2;
-						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación (mm)"], [0.000, 0.0000]], { origin: "A1" });
-						XLSX.utils.sheet_add_aoa(ws2, [["Ancho final (mm)", "Altura final (mm)", "Carga máxima (kN)"]], { origin: "A1" });
+						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deflexión (mm)"], [0.000, 0.0000]], { origin: "A1" });
+						XLSX.utils.sheet_add_aoa(ws2, [["Longitud viga (mm)", "Ancho inicial (mm)", "Ancho final (mm)", "Altura inicial (mm)", "Altura final (mm)", "Carga máxima (kN)"]], { origin: "A1" });
 						ws["!cols"] = [{ wch: 20 }, { wch: 20 }];
-						ws2["!cols"] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }];
+						ws2["!cols"] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
 
 						return XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
 					}	
