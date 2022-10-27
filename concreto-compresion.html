@@ -400,8 +400,13 @@
 			function fallaCilindro() {
 				cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
 			}
-			function fracturaCilindro() {
-				cilindroGLTF = 'cilindro-cone.gltf';
+
+// modo de falla aleatorio
+listaFallas = ["cilindro-columnar.gltf", "cilindro-cone-and-shear.gltf", "cilindro-cone-and-split.gltf", "cilindro-cone.gltf", "cilindro-shear.gltf"];
+fallaAleatoria = listaFallas[Math.floor((Math.random() * listaFallas.length))];
+
+			function fracturaCilindro() {				
+				cilindroGLTF = fallaAleatoria;
 				loaderCilindro.load(cilindroGLTF, function (gltf) {
 					cilindroFalla = gltf.scene;
 					scene.add(cilindroFalla);
