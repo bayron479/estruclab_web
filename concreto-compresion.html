@@ -371,11 +371,11 @@
 			const controls = new THREE.OrbitControls(camera, renderer.domElement);
 			controls.panSpeed = 1;
 			controls.rotateSpeed = 1;
-			camera.position.set( 1.18977973034127, 1.991873417162895,0.3960026995739613);
+			camera.position.set(1.18977973034127, 1.991873417162895, 0.3960026995739613);
 			// { x:, y: , z:  } 
 			controls.update();
-			controls.target = new THREE.Vector3(-0.20827620969626534, 1.6734158853956165, 0.3165655835425431); 
-			
+			controls.target = new THREE.Vector3(-0.20827620969626534, 1.6734158853956165, 0.3165655835425431);
+
 			renderer.render(scene, camera);
 
 			// Cargar escenario
@@ -401,11 +401,11 @@
 				cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
 			}
 
-// modo de falla aleatorio
-listaFallas = ["cilindro-columnar.gltf", "cilindro-cone-and-shear.gltf", "cilindro-cone-and-split.gltf", "cilindro-cone.gltf", "cilindro-shear.gltf"];
-fallaAleatoria = listaFallas[Math.floor((Math.random() * listaFallas.length))];
+			// modo de falla aleatorio
+			listaFallas = ["cilindro-columnar.gltf", "cilindro-cone-and-shear.gltf", "cilindro-cone-and-split.gltf", "cilindro-cone.gltf", "cilindro-shear.gltf"];
+			fallaAleatoria = listaFallas[Math.floor((Math.random() * listaFallas.length))];
 
-			function fracturaCilindro() {				
+			function fracturaCilindro() {
 				cilindroGLTF = fallaAleatoria;
 				loaderCilindro.load(cilindroGLTF, function (gltf) {
 					cilindroFalla = gltf.scene;
