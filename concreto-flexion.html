@@ -302,7 +302,7 @@
 					const scene = new THREE.Scene();
 					// const axesHelper = new THREE.AxesHelper(1);
 					// scene.add(axesHelper);
-					const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+					const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
 					const renderer = new THREE.WebGLRenderer();
 					renderer.setSize(window.innerWidth, window.innerHeight);
 					document.body.appendChild(renderer.domElement);
@@ -335,9 +335,9 @@
 					const controls = new THREE.OrbitControls(camera, renderer.domElement);
 					controls.panSpeed = 1;
 					controls.rotateSpeed = 1;
-					camera.position.set(3, 2.5, -3);
+					camera.position.set(1.157770213015245, 2.100484046808414, -3.3288208326617137);
 					controls.update();
-					controls.target = new THREE.Vector3(0, 1.25, -3);
+					controls.target = new THREE.Vector3(-0.3005936805199805, 1.9602141946418012, -3.311068946505764);
 					renderer.render(scene, camera);
 
 					// Cargar escenario

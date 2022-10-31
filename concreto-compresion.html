@@ -338,7 +338,7 @@
 			const scene = new THREE.Scene();
 			// const axesHelper = new THREE.AxesHelper(1);			
 			// scene.add(axesHelper); 
-			const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+			const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
 			const renderer = new THREE.WebGLRenderer();
 			renderer.setSize(window.innerWidth, window.innerHeight);
 			document.body.appendChild(renderer.domElement);
@@ -449,6 +449,8 @@
 				camera.updateProjectionMatrix();
 				renderer.setSize(window.innerWidth, window.innerHeight);
 			});
+
+			// { x: 1.157770213015245, y: 2.100484046808414, z: -3.3288208326617137 }
 
 		</script>
 
