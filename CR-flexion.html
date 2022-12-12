@@ -64,6 +64,50 @@
 			<!-- Panel izquierdo -->
 			<div class="position-fixed" style="width: 400px; background-color: #ffffff;padding: 90px 5px; height: 100%;">
 
+
+				<!-- Materiales -->
+
+				<!-- Acero -->
+				<div class="col-auto" style="width: 400px; display: flex; text-align: center; justify-content: center">
+
+					<form class="row g-2">
+						<label class="form-label mt-3"
+							style="font-size:16px; display: inline-block; width: 400px; text-align: center; padding: 0;">Acero de
+							refuerzo (Fy = 420 MPa)
+						</label>
+
+						<div style="display: flex; justify-content: center;">
+							<select id="select_barra" class="form-select" aria-label="Default select example"
+								style="width:200px; text-align: center" onclick="aceroRefuerzo()">
+								<option value="opcion_1" selected="opcion_1">Opción 1</option>
+								<option value="opcion_2">Opción 2</option>
+								<option value="opcion_3">Opción 3</option>
+							</select>
+						</div>
+
+					</form>
+				</div>
+
+				<!-- Concreto -->
+				<div class="col-auto" style="width: 400px; display: flex; text-align: center; justify-content: center">
+
+					<form class="row g-2">
+						<label class="form-label mt-3"
+							style="font-size:16px; display: inline-block; width: 400px; text-align: center; padding: 0;">Resistencia a
+							compresión del concreto (MPa)
+						</label>
+
+						<div style="display: flex; justify-content: center;">
+							<select id="select_barra" class="form-select" aria-label="Default select example"
+								style="width:200px; text-align: center;" onclick="concreto()">
+								<option value="opcion_1" selected="opcion_1">Opción 1</option>
+								<option value="opcion_2">Opción 2</option>
+								<option value="opcion_3">Opción 3</option>
+							</select>
+						</div>
+					</form>
+				</div>
+
 				<div class="card mt-2" style="width: 100%; display: flex;	justify-content: center;	align-items: center;">
 					<div class="card-body" style="text-align: center;">
 						<div class="col-auto" style="width:250px;">
@@ -224,48 +268,11 @@
 					</div>
 				</div>
 
-				<!-- Reporte -->
-				<div class="card mt-2" style="width: 100%;">
-					<div class="card-body" style="height: 100%;">
-						<p>
-							Ancho final: <span id="reporte-ancho">
-								<script>
-									function reporteAnchoFinal() {
-										const AnchoFinal = setTimeout(textoAnchoFinal, totalDuration + 23500);
-									}
-									function textoAnchoFinal() {
-										document.getElementById("reporte-ancho").innerHTML = " " + String(anchoVigaFinal) + " mm";
-									}										
-								</script>
-							</span>
-						</p>
 
-						<p>
-							Altura final: <span id="reporte-altura">
-								<script>
-									function reporteAlturaFinal() {
-										const AlturaFinal = setTimeout(textoAlturaFinal, totalDuration + 23500);
-									}
-									function textoAlturaFinal() {
-										document.getElementById("reporte-altura").innerHTML = " " + String(alturaVigaFinal) + " mm";
-									}										
-								</script>
-							</span>
-						</p>
 
-						<p> Carga máxima: <span id="carga-maxima">
-								<script>
-									function reporteCargaFinal() {
-										const CargaFinal = setTimeout(textoCargaFinal, totalDuration + 23500);
-									}
-									function textoCargaFinal() {
-										document.getElementById("carga-maxima").innerHTML = " " + (carga / 1000).toFixed(3) + " kN";
-									}							
-								</script>
-							</span>
-						</p>
-					</div>
-				</div>
+
+
+
 
 				<!-- Boton descargar datos -->
 				<div class="card">
