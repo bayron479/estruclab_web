@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" &amp;gt;>
+	<link rel="icon" href="./imagenes/computer-icon-small.png">
+
+	<title>Resistencia del concreto a flexión</title>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+		integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+		crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/1.35.0/iconfont/tabler-icons.min.css"
+		integrity="sha512-tpsEzNMLQS7w9imFSjbEOHdZav3/aObSESAL1y5jyJDoICFF2YwEdAHOPdOr1t+h8hTzar0flphxR76pd0V1zQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+	<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/controls/OrbitControls.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/loaders/GLTFLoader.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script src="https://cdn.sheetjs.com/xlsx-0.18.10/package/dist/xlsx.full.min.js"></script>
+
+</head>
+
+<body>
+	<main>
+
+		<header>
+			<div class="position-fixed w-100 p-3 border-bottom" style="z-index: 100000;background-color: #ffffff;">
+				<div class="row">
+					<div class="col-md-3">
+						<a href="modulo-concreto.html" style="justify-content: space-between;"
+							class="d-flex align-items-center text-dark text-decoration-none">
+							<img src="./imagenes/logo-uv-risk-g7.png" style="height: 45px;">
+							<span class="fs-8">LABORATORIOS VIRTUALES</span>
+						</a>
+					</div>
+
+					<!-- Título del ensayo y manual en pdf -->
+					<div class="col-md-9" style="display: flex;	flex-direction: row; justify-content: space-around;">
+						<label style="text-align:center;">Concreto reforzado a flexión</label>
+						<div>
+							<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
+								href="manual-concreto-reforzado-flexion.pdf">Manual</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</header>
+
+		<div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
+			<!-- Panel izquierdo -->
+			<div class="position-fixed" style="width: 400px; background-color: #ffffff;padding: 90px 5px; height: 100%;">
+
+				<div class="card mt-2" style="width: 100%; display: flex;	justify-content: center;	align-items: center;">
+					<div class="card-body" style="text-align: center;">
+						<div class="col-auto" style="width:250px;">
+							<div style="text-align: center; padding: 0.25rem;">
+								<button type="button" id="start"
+									onclick="verGrafica(), animacionCarga(), reporteAnchoFinal(), reporteAlturaFinal(), reporteCargaFinal(), fallaVIga()"
+									style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Gráfica carga aplicada vs deformación -->
+				<div class="card mb-2" style="width: 100%;">
+					<div class="card-body">
+						<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
+
+						<script>
+
+							// Dimensiones de la viga en mm							
+							const anchoVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
+							const anchoVigaFinal = Number((anchoVigaInicial + Math.random() * 0.05).toFixed(2));
+							const alturaVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
+							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() * 0.05).toFixed(2));
+							const longitudViga = Number((700 + Math.random() - Math.random()).toFixed(2));
+							const longitudVano = longitudViga - 100 + Math.random() - Math.random();
+							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // aleatoria entre 5 y 50 MPa							
+							const fr = 0.62 * Math.sqrt(resistenciaCompresion); // NSR-10, módulo de rotura en MPa							
+							const cargaUltima = Number((fr * anchoVigaFinal * alturaVigaFinal ** 2 / longitudVano).toFixed(2));
+							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // en MPa. NSR-10
+							const inerciaViga = (anchoVigaInicial * alturaVigaInicial ** 3) / 12;	// mm^4	
+							const deflexionMaxima = Number((cargaUltima * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
+
+							// Carga en Mpa/min. (rango de 0.86 a 1.21 Wight, 2016)
+							const cargaFibraExterior = 1.0 / 60; // Mpa/s
+							// Velocidad de carga en N/s 
+							const velocidadCarga = Number((cargaFibraExterior * anchoVigaInicial * alturaVigaInicial ** 2 / longitudVano).toFixed(3));
+
+							let data = [];
+							let datosExcel = [];
+							let datosViga = [];
+							let carga = 0;
+							let tiempo = 0;
+							let deflexion = 0;
+
+							for (carga; carga += velocidadCarga + 0.15 * Math.random() * velocidadCarga;) {
+								deflexion = Number((carga * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
+								datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
+								tiempo++;
+								data.push({ x: deflexion, y: carga / 1000 });
+								if (carga > cargaUltima) {
+									datosViga.push([longitudViga, anchoVigaInicial, anchoVigaFinal, alturaVigaInicial, alturaVigaFinal, Number((carga / 1000).toFixed(3))])
+									break;
+
+								}
+								else {
+									continue;
+								}
+							}
+
+							tippy('[data-tippy-content]');
+							const totalDuration = tiempo * 100;
+							const delayBetweenPoints = 100;
+							const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+
+							const animation = {
+								x: {
+									type: 'number',
+									easing: 'linear',
+									duration: delayBetweenPoints,
+									from: NaN, // the point is initially skipped
+									delay(ctx) {
+										if (ctx.type !== 'data' || ctx.xStarted) {
+											return 0;
+										}
+										ctx.xStarted = true;
+										return ctx.index * delayBetweenPoints;
+									}
+								},
+
+								y: {
+									type: 'number',
+									easing: 'linear',
+									duration: delayBetweenPoints,
+
+									from: previousY,
+									delay(ctx) {
+										if (ctx.type !== 'data' || ctx.yStarted) {
+											return 0;
+										}
+										ctx.yStarted = true;
+										return ctx.index * delayBetweenPoints;
+									}
+								}
+							};
+
+							const config = {
+								type: 'line',
+								data: {
+									datasets: [{
+										borderColor: 'rgb(200, 50, 50)',
+										borderWidth: 1.5,
+										radius: 0,
+										data: data,
+									}],
+								},
+
+								options: {
+									animation,
+									interaction: {
+										intersect: false
+									},
+									plugins: {
+										legend: false,
+										title: {
+											display: true,
+											text: 'Concreto a flexión'
+										}
+									},
+
+									scales: {
+										x: {
+											type: 'linear',
+											title: {
+												display: true,
+												text: 'Deflexión en el punto medio (mm)'
+											},
+										},
+
+										y: {
+											type: 'linear',
+											title: {
+												display: true,
+												text: 'Carga aplicada (kN)'
+											}
+										}
+									}
+								}
+							};
+
+							function cargaVSDeflexion() {
+
+								const myChart = new Chart(
+									document.getElementById('myChart'),
+									config
+								);
+
+								return myChart;
+
+							}
+
+							function verGrafica() {
+								graficaCargaDesplazamiento = setTimeout("cargaVSDeflexion()", 23500);
+							}
+
+						</script>
+
+					</div>
+				</div>
+
+				<!-- Reporte -->
+				<div class="card mt-2" style="width: 100%;">
+					<div class="card-body" style="height: 100%;">
+						<p>
+							Ancho final: <span id="reporte-ancho">
+								<script>
+									function reporteAnchoFinal() {
+										const AnchoFinal = setTimeout(textoAnchoFinal, totalDuration + 23500);
+									}
+									function textoAnchoFinal() {
+										document.getElementById("reporte-ancho").innerHTML = " " + String(anchoVigaFinal) + " mm";
+									}										
+								</script>
+							</span>
+						</p>
+
+						<p>
+							Altura final: <span id="reporte-altura">
+								<script>
+									function reporteAlturaFinal() {
+										const AlturaFinal = setTimeout(textoAlturaFinal, totalDuration + 23500);
+									}
+									function textoAlturaFinal() {
+										document.getElementById("reporte-altura").innerHTML = " " + String(alturaVigaFinal) + " mm";
+									}										
+								</script>
+							</span>
+						</p>
+
+						<p> Carga máxima: <span id="carga-maxima">
+								<script>
+									function reporteCargaFinal() {
+										const CargaFinal = setTimeout(textoCargaFinal, totalDuration + 23500);
+									}
+									function textoCargaFinal() {
+										document.getElementById("carga-maxima").innerHTML = " " + (carga / 1000).toFixed(3) + " kN";
+									}							
+								</script>
+							</span>
+						</p>
+					</div>
+				</div>
+
+				<!-- Boton descargar datos -->
+				<div class="card">
+					<div class="card-body" style="width: 100%; display: flex; justify-content: center;	align-items: center;">
+						<button type="button" button id="descargar-datos" onclick="datosEnsayoFlexion()"
+							class="btn btn-success">Descargar datos (.xlsx)</button>
+					</div>
+				</div>
+
+				<script>
+					function datosEnsayoFlexion() {
+						let wb = XLSX.utils.book_new();
+						wb.SheetNames.push("Datos máquina", "Reporte");
+						let ws_data = datosExcel;
+						let ws_data2 = datosViga;
+						let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A3" });
+						let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
+						wb.Sheets["Datos máquina"] = ws;
+						wb.Sheets["Reporte"] = ws2;
+						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deflexión (mm)"], [0.000, 0.0000]], { origin: "A1" });
+						XLSX.utils.sheet_add_aoa(ws2, [["Longitud viga (mm)", "Ancho inicial (mm)", "Ancho final (mm)", "Altura inicial (mm)", "Altura final (mm)", "Carga máxima (kN)"]], { origin: "A1" });
+						ws["!cols"] = [{ wch: 20 }, { wch: 20 }];
+						ws2["!cols"] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
+
+						return XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
+					}	
+				</script>
+
+			</div>
+
+			<!-- Animación gltf -->
+			<div style="position: absolute; top: 90px; left: 400px;">
+				<script>
+					const scene = new THREE.Scene();
+					// const axesHelper = new THREE.AxesHelper(1);
+					// scene.add(axesHelper);
+					const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
+					const renderer = new THREE.WebGLRenderer();
+					renderer.setSize(window.innerWidth, window.innerHeight);
+					document.body.appendChild(renderer.domElement);
+					scene.background = new THREE.Color(0xa0a0a0);
+					scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
+
+					// Iluminación
+					const hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820);
+					hemiLight.position.set(0, 3, 0);
+					scene.add(hemiLight);
+
+					const light = new THREE.AmbientLight(0xffffff); // soft white light
+					scene.add(light);
+
+					const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+					dirLight.position.set(2.5, 2.5, 0);
+					dirLight.target = new THREE.Object3D(0.25, 1.25, 0);
+					scene.add(dirLight);
+					scene.add(dirLight.target);
+
+					dirLight.castShadow = true;
+					dirLight.shadow.camera.top = 2;
+					dirLight.shadow.camera.bottom = -2;
+					dirLight.shadow.camera.left = -2;
+					dirLight.shadow.camera.right = 2;
+					dirLight.shadow.camera.near = 0.1; //0.1
+					dirLight.shadow.camera.far = 40;
+
+					// Navegar por el modelo 3d con el mouse
+					const controls = new THREE.OrbitControls(camera, renderer.domElement);
+					controls.panSpeed = 1;
+					controls.rotateSpeed = 1;
+					camera.position.set(1.157770213015245, 2.100484046808414, -3.3288208326617137);
+					controls.update();
+					controls.target = new THREE.Vector3(-0.3005936805199805, 1.9602141946418012, -3.311068946505764);
+					renderer.render(scene, camera);
+
+					// Cargar escenario
+					const loaderEscenario = new THREE.GLTFLoader();
+					loaderEscenario.load('escenario-flexion.gltf', function (gltf) {
+						scene.add(gltf.scene);
+					}, undefined, function (error) {
+						console.error(error);
+					});
+
+					// Cargar viga
+					var loaderViga = new THREE.GLTFLoader();
+					var vigaGLTF = 'flexion-viga.gltf';
+
+					loaderViga.load(vigaGLTF, function (gltf) {
+						viga = gltf.scene;
+						scene.add(viga);
+					}, undefined, function (error) {
+						console.error(error);
+					});
+
+					// Falla viga
+					function fallaVIga() {
+						vigaAgrietada = setTimeout(fracturaViga, totalDuration + 23500); // corregir tiempo falla
+					}
+
+					function fracturaViga() {
+						vigaGLTF = 'flexion-falla-viga.gltf';
+						loaderViga.load(vigaGLTF, function (gltf) {
+							vigaFalla = gltf.scene;
+							scene.add(vigaFalla);
+							scene.remove(viga);
+						}, undefined, function (error) {
+							console.error(error);
+						});
+					}
+
+					// Animación inicial
+					function animacionCarga() {
+						let movimiento = setInterval(movimientoMaquina, 100);
+
+						function movimientoMaquina() {
+							cargaMaquina.position.y -= 0.00100;
+							setTimeout(() => { clearInterval(movimiento); }, 23500);
+						}
+					}
+
+					// Mecanismo de carga de la máquina
+					const loaderCargaMaquina = new THREE.GLTFLoader();
+					loaderCargaMaquina.load('flexion-carga.gltf', function (gltf) {
+						cargaMaquina = gltf.scene;
+						scene.add(cargaMaquina);
+
+					}, undefined, function (error) {
+						console.error(error);
+					});
+
+					function animate() {
+						requestAnimationFrame(animate);
+						renderer.render(scene, camera);
+						controls.update();
+					}
+					animate();
+
+					// La ventana se ajusta automáticamente
+					window.addEventListener('resize', function () {
+						camera.aspect = window.innerWidth / window.innerHeight;
+						camera.updateProjectionMatrix();
+						renderer.setSize(window.innerWidth, window.innerHeight);
+					});
+
+				</script>
+			</div>
+	</main>
+</body>
+
+</html>
