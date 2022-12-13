@@ -342,65 +342,58 @@
 					const controls = new THREE.OrbitControls(camera, renderer.domElement);
 					controls.panSpeed = 1;
 					controls.rotateSpeed = 1;
-					camera.position.set(1.157770213015245, 2.100484046808414, -3.3288208326617137);
+					// { x: 2.777685149458178, y: 1.8450022050202635, z: -2.9444663101406996 }
+					camera.position.set(2.777685149458178, 1.8450022050202635, -2.9444663101406996);
 					controls.update();
+					// { x: -0.3005936805199805, y: 1.9602141946418012, z: -3.311068946505764 }
 					controls.target = new THREE.Vector3(-0.3005936805199805, 1.9602141946418012, -3.311068946505764);
 					renderer.render(scene, camera);
 
 					// Cargar escenario
 					const loaderEscenario = new THREE.GLTFLoader();
-					loaderEscenario.load('escenario-flexion.gltf', function (gltf) {
+					loaderEscenario.load('escenario-CR-flexion.gltf', function (gltf) {
 						scene.add(gltf.scene);
 					}, undefined, function (error) {
 						console.error(error);
 					});
 
-					// Cargar viga
-					var loaderViga = new THREE.GLTFLoader();
-					var vigaGLTF = 'flexion-viga.gltf';
+					
 
-					loaderViga.load(vigaGLTF, function (gltf) {
-						viga = gltf.scene;
-						scene.add(viga);
-					}, undefined, function (error) {
-						console.error(error);
-					});
+					// // Falla viga
+					// function fallaVIga() {
+					// 	vigaAgrietada = setTimeout(fracturaViga, totalDuration + 23500); // corregir tiempo falla
+					// }
 
-					// Falla viga
-					function fallaVIga() {
-						vigaAgrietada = setTimeout(fracturaViga, totalDuration + 23500); // corregir tiempo falla
-					}
+					// function fracturaViga() {
+					// 	vigaGLTF = 'flexion-falla-viga.gltf';
+					// 	loaderViga.load(vigaGLTF, function (gltf) {
+					// 		vigaFalla = gltf.scene;
+					// 		scene.add(vigaFalla);
+					// 		scene.remove(viga);
+					// 	}, undefined, function (error) {
+					// 		console.error(error);
+					// 	});
+					// }
 
-					function fracturaViga() {
-						vigaGLTF = 'flexion-falla-viga.gltf';
-						loaderViga.load(vigaGLTF, function (gltf) {
-							vigaFalla = gltf.scene;
-							scene.add(vigaFalla);
-							scene.remove(viga);
-						}, undefined, function (error) {
-							console.error(error);
-						});
-					}
+					// // Animación inicial
+					// function animacionCarga() {
+					// 	let movimiento = setInterval(movimientoMaquina, 100);
 
-					// Animación inicial
-					function animacionCarga() {
-						let movimiento = setInterval(movimientoMaquina, 100);
+					// 	function movimientoMaquina() {
+					// 		cargaMaquina.position.y -= 0.00100;
+					// 		setTimeout(() => { clearInterval(movimiento); }, 23500);
+					// 	}
+					// }
 
-						function movimientoMaquina() {
-							cargaMaquina.position.y -= 0.00100;
-							setTimeout(() => { clearInterval(movimiento); }, 23500);
-						}
-					}
+					// // Mecanismo de carga de la máquina
+					// const loaderCargaMaquina = new THREE.GLTFLoader();
+					// loaderCargaMaquina.load('flexion-carga.gltf', function (gltf) {
+					// 	cargaMaquina = gltf.scene;
+					// 	scene.add(cargaMaquina);
 
-					// Mecanismo de carga de la máquina
-					const loaderCargaMaquina = new THREE.GLTFLoader();
-					loaderCargaMaquina.load('flexion-carga.gltf', function (gltf) {
-						cargaMaquina = gltf.scene;
-						scene.add(cargaMaquina);
-
-					}, undefined, function (error) {
-						console.error(error);
-					});
+					// }, undefined, function (error) {
+					// 	console.error(error);
+					// });
 
 					function animate() {
 						requestAnimationFrame(animate);
