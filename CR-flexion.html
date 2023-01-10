@@ -120,7 +120,7 @@
 					</div>
 				</div>
 
-				<!-- Gráfica carga aplicada vs deformación -->
+				<!-- Gráfica carga aplicada vs deflección -->
 				<div class="card mb-2" style="width: 100%;">
 					<div class="card-body">
 						<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
@@ -129,17 +129,47 @@
 
 							// Dimensiones de la viga en mm							
 							const anchoVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
-							const anchoVigaFinal = Number((anchoVigaInicial + Math.random() * 0.05).toFixed(2));
-							const alturaVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
-							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() * 0.05).toFixed(2));
+							const alturaVigaInicial = Number((250 + Math.random() - Math.random()).toFixed(2));
+							const diametroEstribos = 6.4; // en mm, barras #2
+							const recubrimientoMinimo = 30; // en mm
+							const diametroAceroTraccion = 9.5; // en mm, barras #3
+							const diametroAceroCompresion = 6.4; // en mm, barras #2
+							const profundidadRefuerzoCompresion = recubrimientoMinimo + diametroEstribos + diametroAceroCompresion/2;
+							const distanciaRefuerzoAFibraExterior = recubrimientoMinimo + diametroEstribos + diametroAceroTraccion/2;
+							const profundidadAceroTraccion = alturaVigaInicial - distanciaRefuerzoAFibraExterior;
+
 							const longitudViga = Number((700 + Math.random() - Math.random()).toFixed(2));
 							const longitudVano = longitudViga - 100 + Math.random() - Math.random();
-							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // aleatoria entre 5 y 50 MPa							
-							const fr = 0.62 * Math.sqrt(resistenciaCompresion); // NSR-10, módulo de rotura en MPa							
-							const cargaUltima = Number((fr * anchoVigaFinal * alturaVigaFinal ** 2 / longitudVano).toFixed(2));
-							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // en MPa. NSR-10
+							const resistenciaCompresionConcreto = number((28 + Math.random()).tofixed(2)); // MPa							
+							const resistenciaFluenciaAcero = number((420 + Math.random()).tofixed(2)); // MPa
+							const moduloElasticidadAcero = 200000; // MPa
+
+							// Agrietamiento
+							const moduloRoturaConcreto = 0.63 * Math.sqrt(resistenciaCompresionConcreto);
+							// const cargaUltima = Number((fr * anchoVigaFinal * alturaVigaFinal ** 2 / longitudVano).toFixed(2));
+							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresionConcreto); // en MPa. NSR-10
 							const inerciaViga = (anchoVigaInicial * alturaVigaInicial ** 3) / 12;	// mm^4	
-							const deflexionMaxima = Number((cargaUltima * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
+							const momentoRotura = moduloRoturaConcreto * inerciaViga / (alturaVigaInicial / 2) / 1000; // Cracking Moment
+							const curvatura = momentoRotura / (momentoRotura * inerciaViga); // Cracking Curvature 
+
+							// Fluencia
+
+							const areaAceroCompresion = 2*32; // en mm2
+							const areaAceroTraccion1 = 2*71;
+							const areaAceroTraccion2 = 3*71;
+							const areaAceroTraccion3 = 4*71;
+
+							const cuantiaRefuerzoTraccion1 = areaAceroTraccion1 / (anchoVigaInicial * profundidadAceroTraccion);
+							const cuantiaRefuerzoTraccion2 = areaAceroTraccion2 / (anchoVigaInicial * profundidadAceroTraccion);
+							const cuantiaRefuerzoTraccion3 = areaAceroTraccion3 / (anchoVigaInicial * profundidadAceroTraccion);
+							const cuantiaRefuerzoCompresion = areaAceroCompresion / (anchoVigaInicial * profundidadAceroTraccion);
+
+							// coeficiente n: relación modular
+							const relacionModular = Math.round(moduloElasticidadAcero / moduloElasticidadConcreto); // retorna el entero más próximo.
+
+							// k: factor de profundidad del eje neutro. k = ((p+pp)**2*n**2 + 2*(p+pp*dp/d)*n)**(1/2) - (p+pp)*n
+							const factorProfundidadEjeNeutro = Math.sqrt((cuantiaRefuerzoTraccion1 + cuantiaRefuerzoCompresion)**2 * relacionModular**2 + 2*relacionModular*(cuantiaRefuerzoTraccion1+cuantiaRefuerzoCompresion*(profundidadRefuerzoCompresion/profundidadAceroTraccion)));
+							//const deflexionMaxima = Number((cargaUltima * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
 
 							// Carga en Mpa/min. (rango de 0.86 a 1.21 Wight, 2016)
 							const cargaFibraExterior = 1.0 / 60; // Mpa/s
@@ -357,7 +387,7 @@
 						console.error(error);
 					});
 
-					
+
 
 					// // Falla viga
 					// function fallaVIga() {
