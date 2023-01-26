@@ -84,23 +84,24 @@
 						<script>
 
 							// Dimensiones de la viga en mm							
-							const anchoVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
-							const anchoVigaFinal = Number((anchoVigaInicial + Math.random() * 0.05).toFixed(2));
-							const alturaVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
-							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() * 0.05).toFixed(2));
-							const longitudViga = Number((700 + Math.random() - Math.random()).toFixed(2));
-							const longitudVano = longitudViga - 100 + Math.random() - Math.random();
+							const anchoVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(1));
+							const anchoVigaFinal = Number((anchoVigaInicial + Math.random() * 0.05).toFixed(1));
+							const alturaVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(1));
+							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() * 0.05).toFixed(1));
+							const longitudViga = Number((700 + Math.random() - Math.random()).toFixed(1));							
+							const distanciaEntreApoyos = 600; // mm
+							
 							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // aleatoria entre 5 y 50 MPa							
 							const fr = 0.62 * Math.sqrt(resistenciaCompresion); // NSR-10, módulo de rotura en MPa							
-							const cargaUltima = Number((fr * anchoVigaFinal * alturaVigaFinal ** 2 / longitudVano).toFixed(2));
-							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresion); // en MPa. NSR-10
+							const cargaUltima = Number((fr * anchoVigaFinal * alturaVigaFinal ** 2 / distanciaEntreApoyos).toFixed(2));
+							const moduloElasticidadConcreto = 3900 * Math.sqrt(resistenciaCompresion); // en MPa. NSR-10
 							const inerciaViga = (anchoVigaInicial * alturaVigaInicial ** 3) / 12;	// mm^4	
-							const deflexionMaxima = Number((cargaUltima * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
+							const deflexionMaxima = Number((cargaUltima * (distanciaEntreApoyos / 3) * (3 * distanciaEntreApoyos ** 2 - 4 * (distanciaEntreApoyos / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
 
 							// Carga en Mpa/min. (rango de 0.86 a 1.21 Wight, 2016)
 							const cargaFibraExterior = 1.0 / 60; // Mpa/s
 							// Velocidad de carga en N/s 
-							const velocidadCarga = Number((cargaFibraExterior * anchoVigaInicial * alturaVigaInicial ** 2 / longitudVano).toFixed(3));
+							const velocidadCarga = Number((cargaFibraExterior * anchoVigaInicial * alturaVigaInicial ** 2 / distanciaEntreApoyos).toFixed(3));
 
 							let data = [];
 							let datosExcel = [];
@@ -110,7 +111,7 @@
 							let deflexion = 0;
 
 							for (carga; carga += velocidadCarga + 0.15 * Math.random() * velocidadCarga;) {
-								deflexion = Number((carga * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
+								deflexion = Number((carga * (distanciaEntreApoyos / 3) * (3 * distanciaEntreApoyos ** 2 - 4 * (distanciaEntreApoyos / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
 								datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga / 1000 });

@@ -169,6 +169,22 @@
 
 							// k: factor de profundidad del eje neutro. k = ((p+pp)**2*n**2 + 2*(p+pp*dp/d)*n)**(1/2) - (p+pp)*n
 							const factorProfundidadEjeNeutro = Math.sqrt((cuantiaRefuerzoTraccion1 + cuantiaRefuerzoCompresion)**2 * relacionModular**2 + 2*relacionModular*(cuantiaRefuerzoTraccion1+cuantiaRefuerzoCompresion*(profundidadRefuerzoCompresion/profundidadAceroTraccion)));
+							
+							// Inercia agrietada. Icr = b*(k*d)**3/3 + (n-1)*Asp*(k*d-dp)**2 + n*As*(d-k*d)**2
+
+							let inerciaAgrietada = anchoVigaInicial * (factorProfundidadEjeNeutro*profundidadAceroTraccion)**3/3 + (relacionModular-1)*cuantiaRefuerzoCompresion*(relacionModular*profundidadAceroTraccion-profundidadRefuerzoCompresion)**2 + relacionModular*areaAceroTraccion1*(profundidadAceroTraccion-factorProfundidadEjeNeutro*profundidadAceroTraccion)**2 ;
+							// Momento de fluencia My = (1/n)*(fy*Icr)/(d-k*d)
+							let momentoFluencia = (1/relacionModular)*(resistenciaFluenciaAcero*inerciaAgrietada)/(profundidadAceroTraccion-factorProfundidadEjeNeutro*profundidadAceroTraccion);
+							// Phiy = My/(Ec*Icr)
+							let Phiy = momentoFluencia/(moduloElasticidadConcreto*inerciaAgrietada);
+							
+							
+							
+							
+							
+							
+							
+							
 							//const deflexionMaxima = Number((cargaUltima * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
 
 							// Carga en Mpa/min. (rango de 0.86 a 1.21 Wight, 2016)
