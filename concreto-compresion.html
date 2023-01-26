@@ -51,427 +51,433 @@
 </head>
 
 <body>
+	<main>
+		<header>
 
-	<!-- Encabezado -->
-	<div class="position-fixed w-100 p-3 border-bottom" style="z-index: 100000;background-color: #ffffff;">
-		<div class="row">
-			<div class="col-md-3">
-				<a href="modulo-concreto.html" style="justify-content: space-between;"
-					class="d-flex align-items-center text-dark text-decoration-none">
-					<img src="./imagenes/logo-uv-risk-g7.png" style="height: 45px;">
-					<span class="fs-8" style="text-align: right;">LABORATORIOS VIRTUALES</span>
-				</a>
-			</div>
-
-			<!-- Título del ensayo y manual en pdf -->
-			<div class="col-md-9" style="display: flex;	flex-direction: row; justify-content: space-around;">
-				
-				<div style="width:700px; display: flex;	flex-direction: row; justify-content: space-around;">
-					<p style="text-align: center;">Resistencia del concreto a compresión</p>
-				</div>
-				
-				<div style="display: flex;	flex-direction: row-reverse;">
-
-					<div>
-						<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
-							href="manual-concreto-compresion.pdf">Manual</a>
-					</div>
-					<div>
-						<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
-							href="concreto-flexion.html">Concreto a flexión</a>
-					</div>
-					<div>
-						<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
-							href="CR-flexion.html">Concreto reforzado a flexión</a>
+			<!-- Encabezado -->
+			<div class="position-fixed w-100 p-3 border-bottom" style="z-index: 100000;background-color: #ffffff;">
+				<div class="row">
+					<div class="col-md-3">
+						<a href="modulo-concreto.html" style="justify-content: space-between;"
+							class="d-flex align-items-center text-dark text-decoration-none">
+							<img src="./imagenes/logo-uv-risk-g7.png" style="height: 45px;">
+							<span class="fs-8" style="text-align: right;">LABORATORIOS VIRTUALES</span>
+						</a>
 					</div>
 
-			</div>
-		</div>
-	</div>
+					<!-- Título del ensayo y manual en pdf -->
+					<div class="col-md-9" style="display: flex;	flex-direction: row; justify-content: space-around;">
 
-	<!-- Panel izquierdo -->
-	<div class="position-fixed" style="width: 400px; background-color: #ffffff;padding: 90px 5px; height: 100%;">
+						<div style="width:700px; display: flex;	flex-direction: row; justify-content: space-around;">
+							<p style="text-align: center;">Resistencia del concreto a compresión</p>
+						</div>
 
-		<div class="card mt-2" style="width: 100%; display: flex;	justify-content: center;	align-items: center;">
-			<div class="card-body" style="text-align: center;">
-				<div class="col-auto" style="width:250px;">
-					<div style="text-align: center; padding: 0.25rem;">
-						<button type="button" style="text-align: center;" class="btn btn-primary"
-							onclick="verGrafica(),mensajeCargaMaxima(),animacionCarga(),fallaCilindro()">
-							Iniciar ensayo
-						</button>
+						<div style="display: flex;	flex-direction: row-reverse;">
+
+							<div>
+								<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
+									href="manual-concreto-compresion.pdf">Manual</a>
+							</div>
+							<div>
+								<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
+									href="concreto-flexion.html">Concreto a flexión</a>
+							</div>
+							<div>
+								<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
+									href="CR-flexion.html">Concreto reforzado a flexión</a>
+							</div>
+
+						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+		</header>
 
-		<!-- Gráfica carga vs deformación-->
-		<div class="card mb-2" style="width: 100%;">
-			<div class="card-body">
-				<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
+		<div style="width: 100%; height: 100%; display: flex; flex-direction: row;">
+			<!-- Panel izquierdo -->
+			<div class="position-fixed" style="width: 400px; background-color: #ffffff;padding: 90px 5px; height: 100%;">
 
-				<script>
-					// Para calcular los valores de esfuerzo y deformación se usa la ecuación de 
-					// Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, 
-					// "Reinforced concrete mechanics and design, 7ed, 2016"
-					// Ecuación 3-23 p-91 Para concretos con f'c entre 15 y 125 MPa
+				<div class="card mt-2" style="width: 100%; display: flex;	justify-content: center;	align-items: center;">
+					<div class="card-body" style="text-align: center;">
+						<div class="col-auto" style="width:250px;">
+							<div style="text-align: center; padding: 0.25rem;">
+								<button type="button" style="text-align: center;" class="btn btn-primary"
+									onclick="verGrafica(),mensajeCargaMaxima(),animacionCarga(),fallaCilindro()">
+									Iniciar ensayo
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
-					const diametroCilindro = Number((150 + Math.random() - Math.random()).toFixed(2)); // en mm
-					const areaCilindro = Math.PI * (diametroCilindro / 2) ** 2; // en mm^2
-					const longitudCompresometro = Number((150 + Math.random()).toFixed(2)); // en mm 
-					const longitudCilindro = Number((300 + Math.random() - Math.random()).toFixed(2)); // en mm	
-					const datosCilindro = [];
-					const precision = 0.05;
-					const resistenciaCompresion = Math.floor((Math.random() * 50) + 15); // f'c en MPa					
-					// 1 psi = 6894.76 Pa
-					const FC = resistenciaCompresion * 1000 / 6.89476; // FC es f'c en psi
-					const n = 0.8 + (FC / 2500);
-					const Ec = 57000 * Math.sqrt(FC); // en psi
-					const e0 = (FC / Ec) * (n / (n - 1));
-					let data1 = [];
-					let data2 = [];
-					let datosCarga = [];
-					let datosExcel = [];
-					let cargaMaxima;
-					let tiempoFalla = 0;
-					let e;
-					let tiempo = 0;
-					let deformacion1;
-					let deformacion2;
+				<!-- Gráfica carga vs deformación-->
+				<div class="card mb-2" style="width: 100%;">
+					<div class="card-body">
+						<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 
-					for (e = 0.00000; e <= 0.00350; e += 0.00001) {
+						<script>
+							// Para calcular los valores de esfuerzo y deformación se usa la ecuación de 
+							// Thorenfeldt, Tomaszewicz y Jensen del libro de Wight, 
+							// "Reinforced concrete mechanics and design, 7ed, 2016"
+							// Ecuación 3-23 p-91 Para concretos con f'c entre 15 y 125 MPa
 
-						let coef = e / e0;
+							const diametroCilindro = Number((150 + Math.random() - Math.random()).toFixed(2)); // en mm
+							const areaCilindro = Math.PI * (diametroCilindro / 2) ** 2; // en mm^2
+							const longitudCompresometro = Number((150 + Math.random()).toFixed(2)); // en mm 
+							const longitudCilindro = Number((300 + Math.random() - Math.random()).toFixed(2)); // en mm	
+							const datosCilindro = [];
+							const precision = 0.05;
+							const resistenciaCompresion = Math.floor((Math.random() * 50) + 15); // f'c en MPa					
+							// 1 psi = 6894.76 Pa
+							const FC = resistenciaCompresion * 1000 / 6.89476; // FC es f'c en psi
+							const n = 0.8 + (FC / 2500);
+							const Ec = 57000 * Math.sqrt(FC); // en psi
+							const e0 = (FC / Ec) * (n / (n - 1));
+							let data1 = [];
+							let data2 = [];
+							let datosCarga = [];
+							let datosExcel = [];
+							let cargaMaxima;
+							let tiempoFalla = 0;
+							let e;
+							let tiempo = 0;
+							let deformacion1;
+							let deformacion2;
 
-						let k = (coef <= 1) ? 1 : 0.67 + (FC / 9000);
+							for (e = 0.00000; e <= 0.00350; e += 0.00001) {
 
-						let fc = (6.89476 / 1000) * (n * FC * coef) / (n - 1 + coef ** (n * k));
+								let coef = e / e0;
 
-						let carga = Number(((fc + Math.random() * precision) * areaCilindro / 1000).toFixed(3)); // en kN 
+								let k = (coef <= 1) ? 1 : 0.67 + (FC / 9000);
 
-						deformacion1 = Number((longitudCompresometro * e + Math.random() * 0.005).toFixed(3)); // en mm
-						deformacion2 = Number((longitudCompresometro * e + Math.random() * 0.005).toFixed(3)); // en mm						
+								let fc = (6.89476 / 1000) * (n * FC * coef) / (n - 1 + coef ** (n * k));
 
-						datosExcel.push([carga, deformacion1, deformacion2]);
+								let carga = Number(((fc + Math.random() * precision) * areaCilindro / 1000).toFixed(3)); // en kN 
 
-						datosCarga.push(carga);
+								deformacion1 = Number((longitudCompresometro * e + Math.random() * 0.005).toFixed(3)); // en mm
+								deformacion2 = Number((longitudCompresometro * e + Math.random() * 0.005).toFixed(3)); // en mm						
 
-						tiempo++;
+								datosExcel.push([carga, deformacion1, deformacion2]);
 
-						cargaMaxima = Math.max.apply(null, datosCarga);
+								datosCarga.push(carga);
 
-						data1.push({ x: deformacion1, y: carga });
-						data2.push({ x: deformacion2, y: carga });
+								tiempo++;
 
-						if (carga < cargaMaxima) {
-							tiempoFalla = datosCarga.indexOf(cargaMaxima) * 100;
-						}
+								cargaMaxima = Math.max.apply(null, datosCarga);
 
-						if (carga < 0.95 * cargaMaxima) {
-							datosCilindro.push([longitudCompresometro, diametroCilindro, longitudCilindro, cargaMaxima]);
-							break;
-						}
+								data1.push({ x: deformacion1, y: carga });
+								data2.push({ x: deformacion2, y: carga });
 
-						else {
-							continue;
-						}
-
-					}
-
-					// Configuración de la animación de la gráfica
-					tippy('[data-tippy-content]');
-					const totalDuration = tiempo * 100;
-					const delayBetweenPoints = 100;
-					const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
-
-					const animation = {
-						x: {
-							type: 'number',
-							easing: 'linear',
-							duration: delayBetweenPoints,
-							from: NaN, // the point is initially skipped
-							delay(ctx) {
-								if (ctx.type !== 'data' || ctx.xStarted) {
-									return 0;
+								if (carga < cargaMaxima) {
+									tiempoFalla = datosCarga.indexOf(cargaMaxima) * 100;
 								}
-								ctx.xStarted = true;
-								return ctx.index * delayBetweenPoints;
+
+								if (carga < 0.95 * cargaMaxima) {
+									datosCilindro.push([longitudCompresometro, diametroCilindro, longitudCilindro, cargaMaxima]);
+									break;
+								}
+
+								else {
+									continue;
+								}
+
 							}
-						},
 
-						y: {
-							type: 'number',
-							easing: 'linear',
-							duration: delayBetweenPoints,
+							// Configuración de la animación de la gráfica
+							tippy('[data-tippy-content]');
+							const totalDuration = tiempo * 100;
+							const delayBetweenPoints = 100;
+							const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
 
-							from: previousY,
-							delay(ctx) {
-								if (ctx.type !== 'data' || ctx.yStarted) {
-									return 0;
-								}
-								ctx.yStarted = true;
-								return ctx.index * delayBetweenPoints;
-							}
-						}
-					};
-
-					const config = {
-						type: 'line',
-						data: {
-							datasets: [{
-								borderColor: 'rgb(200, 50, 50)',
-								borderWidth: 1.5,
-								radius: 0,
-								data: data1,
-							},
-							{
-								borderColor: 'rgb(50,50,250)',
-								borderWidth: 1.5,
-								radius: 0,
-								data: data2,
-							}]
-						},
-
-						options: {
-							animation,
-							interaction: {
-								intersect: false
-							},
-							plugins: {
-								legend: false,
-								title: {
-									display: true,
-									text: 'Concreto a compresión'
-								}
-							},
-
-							scales: {
+							const animation = {
 								x: {
-									type: 'linear',
-									title: {
-										display: true,
-										text: 'Deformación compresómetro (mm)'
-									},
+									type: 'number',
+									easing: 'linear',
+									duration: delayBetweenPoints,
+									from: NaN, // the point is initially skipped
+									delay(ctx) {
+										if (ctx.type !== 'data' || ctx.xStarted) {
+											return 0;
+										}
+										ctx.xStarted = true;
+										return ctx.index * delayBetweenPoints;
+									}
 								},
 
 								y: {
-									type: 'linear',
-									title: {
-										display: true,
-										text: 'Carga aplicada (kN)'
+									type: 'number',
+									easing: 'linear',
+									duration: delayBetweenPoints,
+
+									from: previousY,
+									delay(ctx) {
+										if (ctx.type !== 'data' || ctx.yStarted) {
+											return 0;
+										}
+										ctx.yStarted = true;
+										return ctx.index * delayBetweenPoints;
 									}
 								}
+							};
+
+							const config = {
+								type: 'line',
+								data: {
+									datasets: [{
+										borderColor: 'rgb(200, 50, 50)',
+										borderWidth: 1.5,
+										radius: 0,
+										data: data1,
+									},
+									{
+										borderColor: 'rgb(50,50,250)',
+										borderWidth: 1.5,
+										radius: 0,
+										data: data2,
+									}]
+								},
+
+								options: {
+									animation,
+									interaction: {
+										intersect: false
+									},
+									plugins: {
+										legend: false,
+										title: {
+											display: true,
+											text: 'Concreto a compresión'
+										}
+									},
+
+									scales: {
+										x: {
+											type: 'linear',
+											title: {
+												display: true,
+												text: 'Deformación compresómetro (mm)'
+											},
+										},
+
+										y: {
+											type: 'linear',
+											title: {
+												display: true,
+												text: 'Carga aplicada (kN)'
+											}
+										}
+									}
+								}
+							};
+
+							function grafica() {
+								const myChart = new Chart(
+									document.getElementById('myChart'),
+									config
+								);
+
+								return myChart, datosCarga, parseInt(tiempoFalla), cargaMaxima, datosExcel;
 							}
-						}
-					};
 
-					function grafica() {
-						const myChart = new Chart(
-							document.getElementById('myChart'),
-							config
-						);
+							function verGrafica() {
+								graficaCargaDesplazamiento = setTimeout("grafica()", 20600);
+							}
 
-						return myChart, datosCarga, parseInt(tiempoFalla), cargaMaxima, datosExcel;
-					}
+						</script>
+					</div>
+				</div>
 
-					function verGrafica() {
-						graficaCargaDesplazamiento = setTimeout("grafica()", 20600);
+				<!-- Reporte -->
+				<div class="card mt-2" style="width: 100%;">
+					<div class="card-body" style="height: 100%;">
+						<p id="reporte-diametro">
+							<script>
+								function reporteDiametro() {
+									document.getElementById("reporte-diametro").innerHTML = "Diámetro: " + parseFloat(diametroCilindro).toFixed(2) + " mm" + "\n";
+								}
+								reporteDiametro()
+							</script>
+						</p>
+
+						<p id="reporte-longitud">
+							<script>
+								function reporteLongitud() {
+									document.getElementById("reporte-longitud").innerHTML = "Longitud efectiva compresómetro: " + parseFloat(longitudCompresometro).toFixed(2) + " mm" + "\n";
+								}
+								reporteLongitud()
+							</script>
+						</p>
+						<p id="reporte-carga">
+							<script>
+								function mensajeCargaMaxima() {
+									Falla = setTimeout("datoCargaMaxima()", totalDuration + 20600);
+								}
+
+								function datoCargaMaxima() {
+									document.getElementById("reporte-carga").innerHTML = "Carga Máxima: " + parseFloat(cargaMaxima).toFixed(3) + " kN" + "\n";
+								}
+							</script>
+						</p>
+					</div>
+				</div>
+
+				<!-- Boton descargar datos -->
+				<div class="card">
+					<div class="card-body" style="width: 100%; display: flex; justify-content: center;	align-items: center;">
+						<button type="button" onclick="datosEnsayo()" class="btn btn-success">Descargar datos (.xlsx)</button>
+					</div>
+				</div>
+				<script>
+					// Datos en Excel
+					function datosEnsayo() {
+						let wb = XLSX.utils.book_new();
+						wb.SheetNames.push("Datos sensores", "Reporte");
+						let ws_data = datosExcel;
+						let ws_data2 = datosCilindro;
+						let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A3" });
+						let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
+						wb.Sheets["Datos sensores"] = ws;
+						wb.Sheets["Reporte"] = ws2;
+						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"], [0.000, 0.000, 0.000]], { origin: "A1" });
+						XLSX.utils.sheet_add_aoa(ws2, [["Longitud efectiva compresómetro (mm)", "Diámetro cilindro (mm)", "Longitud cilindro (mm)", "Carga máxima (kN)"]], { origin: "A1" });
+
+						ws["!cols"] = [{ wch: 20 }, { wch: 25 }, { wch: 25 }];
+						ws2["!cols"] = [{ wch: 35 }, { wch: 25 }, { wch: 25 }, { wch: 20 }];
+
+						return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
 					}
 
 				</script>
 			</div>
-		</div>
 
-		<!-- Reporte -->
-		<div class="card mt-2" style="width: 100%;">
-			<div class="card-body" style="height: 100%;">
-				<p id="reporte-diametro">
-					<script>
-						function reporteDiametro() {
-							document.getElementById("reporte-diametro").innerHTML = "Diámetro: " + parseFloat(diametroCilindro).toFixed(2) + " mm" + "\n";
+			<div style="position: absolute; top: 90px; left: 400px;">
+
+				<!-- Modelo 3d -->
+
+				<script>
+					const scene = new THREE.Scene();
+					// const axesHelper = new THREE.AxesHelper(1);			
+					// scene.add(axesHelper); 
+					const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
+					const renderer = new THREE.WebGLRenderer();
+					renderer.setSize(window.innerWidth, window.innerHeight);
+					document.body.appendChild(renderer.domElement);
+					scene.background = new THREE.Color(0xa0a0a0);
+					scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
+
+					// Iluminación
+					const hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820);
+					hemiLight.position.set(0, 3, 0);
+					scene.add(hemiLight);
+
+					const light = new THREE.AmbientLight(0xffffff, 1.5); // soft white light
+					scene.add(light);
+
+					const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+					dirLight.position.set(2.5, 2.5, 0);
+					dirLight.target = new THREE.Object3D(0.25, 1.25, 0);
+					scene.add(dirLight);
+					scene.add(dirLight.target);
+
+					dirLight.castShadow = true;
+					dirLight.shadow.camera.top = 2;
+					dirLight.shadow.camera.bottom = -2;
+					dirLight.shadow.camera.left = -2;
+					dirLight.shadow.camera.right = 2;
+					dirLight.shadow.camera.near = 0.1; //0.1
+					dirLight.shadow.camera.far = 40;
+
+					// Navegar por el modelo 3d con el mouse
+					const controls = new THREE.OrbitControls(camera, renderer.domElement);
+					controls.panSpeed = 1;
+					controls.rotateSpeed = 1;
+					camera.position.set(1.18977973034127, 1.991873417162895, 0.3960026995739613);
+					// { x:, y: , z:  } 
+					controls.update();
+					controls.target = new THREE.Vector3(-0.20827620969626534, 1.6734158853956165, 0.3165655835425431);
+
+					renderer.render(scene, camera);
+
+					// Cargar escenario
+					const loaderEscenario = new THREE.GLTFLoader();
+					loaderEscenario.load('escenario-compresion2.gltf', function (gltf) {
+						scene.add(gltf.scene);
+					}, undefined, function (error) {
+						console.error(error);
+					});
+
+					// Cargar cilindro 
+					var loaderCilindro = new THREE.GLTFLoader();
+					var cilindroGLTF = 'cilindro-normal.gltf';
+
+					loaderCilindro.load(cilindroGLTF, function (gltf) {
+						cilindro = gltf.scene;
+						scene.add(cilindro);
+					}, undefined, function (error) {
+						console.error(error);
+					});
+
+					function fallaCilindro() {
+						cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
+					}
+
+					// modo de falla aleatorio
+					listaFallas = ["cilindro-columnar.gltf", "cilindro-cone-and-shear.gltf", "cilindro-cone-and-split.gltf", "cilindro-cone.gltf", "cilindro-shear.gltf"];
+					fallaAleatoria = listaFallas[Math.floor((Math.random() * listaFallas.length))];
+
+					function fracturaCilindro() {
+						cilindroGLTF = fallaAleatoria;
+						loaderCilindro.load(cilindroGLTF, function (gltf) {
+							cilindroFalla = gltf.scene;
+							scene.add(cilindroFalla);
+							scene.remove(cilindro);
+						}, undefined, function (error) {
+							console.error(error);
+						});
+					}
+
+					// Animación inicial de la máquina haciendo contacto con el cilindro
+					function animacionCarga() {
+						let movimiento = setInterval(movimientoMaquina, 100);
+
+						function movimientoMaquina() {
+							cargaMaquina.position.y -= 0.00100;
+							setTimeout(() => { clearInterval(movimiento); }, 20600);
 						}
-						reporteDiametro()
-					</script>
-				</p>
+					}
 
-				<p id="reporte-longitud">
-					<script>
-						function reporteLongitud() {
-							document.getElementById("reporte-longitud").innerHTML = "Longitud efectiva compresómetro: " + parseFloat(longitudCompresometro).toFixed(2) + " mm" + "\n";
-						}
-						reporteLongitud()
-					</script>
-				</p>
-				<p id="reporte-carga">
-					<script>
-						function mensajeCargaMaxima() {
-							Falla = setTimeout("datoCargaMaxima()", totalDuration + 20600);
-						}
+					// Cargar mecanismo de carga de la máquina
+					const loaderCargaMaquina = new THREE.GLTFLoader();
+					loaderCargaMaquina.load('compresion-carga.gltf', function (gltf) {
+						cargaMaquina = gltf.scene;
+						scene.add(cargaMaquina);
 
-						function datoCargaMaxima() {
-							document.getElementById("reporte-carga").innerHTML = "Carga Máxima: " + parseFloat(cargaMaxima).toFixed(3) + " kN" + "\n";
-						}
-					</script>
-				</p>
-			</div>
-		</div>
+					}, undefined, function (error) {
+						console.error(error);
+					});
 
-		<!-- Boton descargar datos -->
-		<div class="card">
-			<div class="card-body" style="width: 100%; display: flex; justify-content: center;	align-items: center;">
-				<button type="button" onclick="datosEnsayo()" class="btn btn-success">Descargar datos (.xlsx)</button>
-			</div>
-		</div>
-		<script>
-			// Datos en Excel
-			function datosEnsayo() {
-				let wb = XLSX.utils.book_new();
-				wb.SheetNames.push("Datos sensores", "Reporte");
-				let ws_data = datosExcel;
-				let ws_data2 = datosCilindro;
-				let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A3" });
-				let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
-				wb.Sheets["Datos sensores"] = ws;
-				wb.Sheets["Reporte"] = ws2;
-				XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deformación sensor 1 (mm)", "Deformación sensor 2 (mm)"], [0.000, 0.000, 0.000]], { origin: "A1" });
-				XLSX.utils.sheet_add_aoa(ws2, [["Longitud efectiva compresómetro (mm)", "Diámetro cilindro (mm)", "Longitud cilindro (mm)", "Carga máxima (kN)"]], { origin: "A1" });
+					function animate() {
+						requestAnimationFrame(animate);
+						renderer.render(scene, camera);
+						controls.update();
+					}
+					animate();
 
-				ws["!cols"] = [{ wch: 20 }, { wch: 25 }, { wch: 25 }];
-				ws2["!cols"] = [{ wch: 35 }, { wch: 25 }, { wch: 25 }, { wch: 20 }];
-
-				return XLSX.writeFile(wb, "datos_concreto_compresion.xlsx");
-			}
-
-		</script>
-	</div>
-
-	<div style="position: absolute; top: 90px; left: 400px;">
-
-		<!-- Modelo 3d -->
-
-		<script>
-			const scene = new THREE.Scene();
-			// const axesHelper = new THREE.AxesHelper(1);			
-			// scene.add(axesHelper); 
-			const camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
-			const renderer = new THREE.WebGLRenderer();
-			renderer.setSize(window.innerWidth, window.innerHeight);
-			document.body.appendChild(renderer.domElement);
-			scene.background = new THREE.Color(0xa0a0a0);
-			scene.fog = new THREE.Fog(0xa0a0a0, 10, 50);
-
-			// Iluminación
-			const hemiLight = new THREE.HemisphereLight(0xffffff, 0x080820);
-			hemiLight.position.set(0, 3, 0);
-			scene.add(hemiLight);
-
-			const light = new THREE.AmbientLight(0xffffff, 1.5); // soft white light
-			scene.add(light);
-
-			const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-			dirLight.position.set(2.5, 2.5, 0);
-			dirLight.target = new THREE.Object3D(0.25, 1.25, 0);
-			scene.add(dirLight);
-			scene.add(dirLight.target);
-
-			dirLight.castShadow = true;
-			dirLight.shadow.camera.top = 2;
-			dirLight.shadow.camera.bottom = -2;
-			dirLight.shadow.camera.left = -2;
-			dirLight.shadow.camera.right = 2;
-			dirLight.shadow.camera.near = 0.1; //0.1
-			dirLight.shadow.camera.far = 40;
-
-			// Navegar por el modelo 3d con el mouse
-			const controls = new THREE.OrbitControls(camera, renderer.domElement);
-			controls.panSpeed = 1;
-			controls.rotateSpeed = 1;
-			camera.position.set(1.18977973034127, 1.991873417162895, 0.3960026995739613);
-			// { x:, y: , z:  } 
-			controls.update();
-			controls.target = new THREE.Vector3(-0.20827620969626534, 1.6734158853956165, 0.3165655835425431);
-
-			renderer.render(scene, camera);
-
-			// Cargar escenario
-			const loaderEscenario = new THREE.GLTFLoader();
-			loaderEscenario.load('escenario-compresion2.gltf', function (gltf) {
-				scene.add(gltf.scene);
-			}, undefined, function (error) {
-				console.error(error);
-			});
-
-			// Cargar cilindro 
-			var loaderCilindro = new THREE.GLTFLoader();
-			var cilindroGLTF = 'cilindro-normal.gltf';
-
-			loaderCilindro.load(cilindroGLTF, function (gltf) {
-				cilindro = gltf.scene;
-				scene.add(cilindro);
-			}, undefined, function (error) {
-				console.error(error);
-			});
-
-			function fallaCilindro() {
-				cilindroAgrietado = setTimeout(fracturaCilindro, tiempoFalla + 20600);
-			}
-
-			// modo de falla aleatorio
-			listaFallas = ["cilindro-columnar.gltf", "cilindro-cone-and-shear.gltf", "cilindro-cone-and-split.gltf", "cilindro-cone.gltf", "cilindro-shear.gltf"];
-			fallaAleatoria = listaFallas[Math.floor((Math.random() * listaFallas.length))];
-
-			function fracturaCilindro() {
-				cilindroGLTF = fallaAleatoria;
-				loaderCilindro.load(cilindroGLTF, function (gltf) {
-					cilindroFalla = gltf.scene;
-					scene.add(cilindroFalla);
-					scene.remove(cilindro);
-				}, undefined, function (error) {
-					console.error(error);
-				});
-			}
-
-			// Animación inicial de la máquina haciendo contacto con el cilindro
-			function animacionCarga() {
-				let movimiento = setInterval(movimientoMaquina, 100);
-
-				function movimientoMaquina() {
-					cargaMaquina.position.y -= 0.00100;
-					setTimeout(() => { clearInterval(movimiento); }, 20600);
-				}
-			}
-
-			// Cargar mecanismo de carga de la máquina
-			const loaderCargaMaquina = new THREE.GLTFLoader();
-			loaderCargaMaquina.load('compresion-carga.gltf', function (gltf) {
-				cargaMaquina = gltf.scene;
-				scene.add(cargaMaquina);
-
-			}, undefined, function (error) {
-				console.error(error);
-			});
-
-			function animate() {
-				requestAnimationFrame(animate);
-				renderer.render(scene, camera);
-				controls.update();
-			}
-			animate();
-
-			// La ventana se ajusta automáticamente
-			window.addEventListener('resize', function () {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				renderer.setSize(window.innerWidth, window.innerHeight);
-			});
+					// La ventana se ajusta automáticamente
+					window.addEventListener('resize', function () {
+						camera.aspect = window.innerWidth / window.innerHeight;
+						camera.updateProjectionMatrix();
+						renderer.setSize(window.innerWidth, window.innerHeight);
+					});
 
 			// { x: 1.157770213015245, y: 2.100484046808414, z: -3.3288208326617137 }
 
-		</script>
+				</script>
 
-	</div>
+			</div>
 
+		</div>
 
+	</main>
 </body>
 
 </html>
