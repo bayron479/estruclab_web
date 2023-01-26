@@ -48,13 +48,31 @@
 					</div>
 
 					<!-- Título del ensayo y manual en pdf -->
-					<div class="col-md-9" style="display: flex;	flex-direction: row; justify-content: space-around;">
-						<label style="text-align:center;">Resistencia del concreto a flexión</label>
-						<div>
-							<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
-								href="manual-concreto-flexion.pdf">Manual</a>
+					<div class="col-md-9" style="display: flex;	flex-direction: row; justify-items: auto;">
+
+						<div style="width:700px; display: flex;	flex-direction: row; justify-content: space-around;">
+							<p style="text-align: center;">Resistencia del concreto a flexión</p>
+						</div>
+
+						<div style="display: flex;	flex-direction: row-reverse;">
+
+							<div>
+								<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
+									href="manual-concreto-flexion.pdf">Manual</a>
+							</div>
+							<div>
+								<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
+									href="concreto-compresion.html">Concreto a compresión</a>
+							</div>
+							<div>
+								<a class="btn btn-sm btn-outline-secondary" style="text-align: right;" target="_blank"
+									href="concreto-flexion.html">Concreto a flexión</a>
+							</div>
+
 						</div>
 					</div>
+
+
 				</div>
 			</div>
 
@@ -88,9 +106,9 @@
 							const anchoVigaFinal = Number((anchoVigaInicial + Math.random() * 0.05).toFixed(1));
 							const alturaVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(1));
 							const alturaVigaFinal = Number((alturaVigaInicial + Math.random() * 0.05).toFixed(1));
-							const longitudViga = Number((700 + Math.random() - Math.random()).toFixed(1));							
+							const longitudViga = Number((700 + Math.random() - Math.random()).toFixed(1));
 							const distanciaEntreApoyos = 600; // mm
-							
+
 							const resistenciaCompresion = Math.floor((Math.random() * 50) + 5); // aleatoria entre 5 y 50 MPa							
 							const fr = 0.62 * Math.sqrt(resistenciaCompresion); // NSR-10, módulo de rotura en MPa							
 							const cargaUltima = Number((fr * anchoVigaFinal * alturaVigaFinal ** 2 / distanciaEntreApoyos).toFixed(2));
