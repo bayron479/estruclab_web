@@ -101,9 +101,8 @@
 					<div class="card-body" style="text-align: center;">
 						<div class="col-auto" style="width:250px;">
 							<div style="text-align: center; padding: 0.25rem;">
-								<button type="button" id="start"
-									onclick="verGrafica()"
-									style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>
+								<button type="button" id="start" onclick="verGrafica()" style="text-align: center;"
+									class="btn btn-primary">Iniciar ensayo</button>
 							</div>
 						</div>
 					</div>
@@ -119,13 +118,13 @@
 							const fallaFragilCarga = [0, 16.4, 38.4, 45.0, 57.5]; // [kN]
 							const fallaFragilDeflexion = [0, 0.87, 6.87, 8.47, 12.85];	// [mm]
 							let data = [];
-							let datosExcel = [];													
+							let datosExcel = [];
 							let tiempo = 0;
-							let deflexion=0;
+							let deflexion;
 
 							// Tramo 1
 
-							for (deflexion = 0; deflexion = fallaFragilDeflexion[1]; deflexion += 0.01) {
+							for (deflexion = 0.00; deflexion < fallaFragilDeflexion[1]; deflexion += 0.01) {
 
 								let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]);
 								datosExcel.push([carga, deflexion]);
@@ -135,19 +134,40 @@
 
 							// Tramo 2
 
-							// for (deflexion = fallaFragilDeflexion[1]; deflexion += 0.01; deflexion = fallaFragilDeflexion[2]) {
+							for (deflexion = fallaFragilDeflexion[1]; deflexion < fallaFragilDeflexion[2]; deflexion += 0.01) {
 
-							// 	carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1];
-							// 	datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
-							// 	tiempo++;
-							// 	data.push({ x: deflexion, y: carga / 1000 });
-							// }
+								let carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1];
+								datosExcel.push([carga, deflexion]);
+								tiempo++;
+								data.push({ x: deflexion, y: carga });
+							}
 
-							
+							// Tramo 3
+
+							for (deflexion = fallaFragilDeflexion[2]; deflexion < fallaFragilDeflexion[3]; deflexion += 0.01) {
+
+								let carga = (deflexion - fallaFragilDeflexion[2]) * ((fallaFragilCarga[3] - fallaFragilCarga[2]) / (fallaFragilDeflexion[3] - fallaFragilDeflexion[2])) + fallaFragilCarga[2];
+								datosExcel.push([carga, deflexion]);
+								tiempo++;
+								data.push({ x: deflexion, y: carga });
+							}
+
+							// Tramo 4
+
+							for (deflexion = fallaFragilDeflexion[3]; deflexion < fallaFragilDeflexion[4]; deflexion += 0.01) {
+
+								let carga = (deflexion - fallaFragilDeflexion[3]) * ((fallaFragilCarga[4] - fallaFragilCarga[3]) / (fallaFragilDeflexion[4] - fallaFragilDeflexion[3])) + fallaFragilCarga[3];
+								datosExcel.push([carga, deflexion]);
+								tiempo++;
+								data.push({ x: deflexion, y: carga });
+							}
+
+
+
 
 
 							tippy('[data-tippy-content]');
-							const totalDuration = tiempo * 100;
+							const totalDuration = tiempo * 10;
 							const delayBetweenPoints = 100;
 							const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
 
@@ -202,7 +222,7 @@
 										legend: false,
 										title: {
 											display: true,
-											text: 'Concreto a flexión'
+											text: 'Concreto reforzado a flexión'
 										}
 									},
 
@@ -238,7 +258,7 @@
 							}
 
 							function verGrafica() {
-								graficaCargaDesplazamiento = setTimeout("cargaVSDeflexion()", 5000);
+								graficaCargaDesplazamiento = setTimeout("cargaVSDeflexion()", 1000);
 							}
 
 						</script>
