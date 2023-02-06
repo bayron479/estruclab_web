@@ -115,8 +115,8 @@
 
 						<script>
 
-							const fallaFragilCarga = [0, 16.4, 38.4, 45.0, 57.5]; // [kN]
-							const fallaFragilDeflexion = [0, 0.87, 6.87, 8.47, 12.85];	// [mm]
+							const fallaFragilCarga = [0, 16.4, 38.4, 45.0, 57.5, 18.0]; // [kN]
+							const fallaFragilDeflexion = [0, 0.87, 6.87, 8.47, 12.85, 13.5];	// [mm]
 							let data = [];
 							let datosExcel = [];
 							let tiempo = 0;
@@ -124,7 +124,7 @@
 
 							// Tramo 1
 
-							for (deflexion = 0.00; deflexion < fallaFragilDeflexion[1]; deflexion += 0.01) {
+							for (deflexion = 0.00; deflexion < fallaFragilDeflexion[1]; deflexion += 0.10) {
 
 								let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]);
 								datosExcel.push([carga, deflexion]);
@@ -134,7 +134,7 @@
 
 							// Tramo 2
 
-							for (deflexion = fallaFragilDeflexion[1]; deflexion < fallaFragilDeflexion[2]; deflexion += 0.01) {
+							for (deflexion = fallaFragilDeflexion[1]; deflexion < fallaFragilDeflexion[2]; deflexion += 0.10) {
 
 								let carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1];
 								datosExcel.push([carga, deflexion]);
@@ -144,7 +144,7 @@
 
 							// Tramo 3
 
-							for (deflexion = fallaFragilDeflexion[2]; deflexion < fallaFragilDeflexion[3]; deflexion += 0.01) {
+							for (deflexion = fallaFragilDeflexion[2]; deflexion < fallaFragilDeflexion[3]; deflexion += 0.10) {
 
 								let carga = (deflexion - fallaFragilDeflexion[2]) * ((fallaFragilCarga[3] - fallaFragilCarga[2]) / (fallaFragilDeflexion[3] - fallaFragilDeflexion[2])) + fallaFragilCarga[2];
 								datosExcel.push([carga, deflexion]);
@@ -154,9 +154,19 @@
 
 							// Tramo 4
 
-							for (deflexion = fallaFragilDeflexion[3]; deflexion < fallaFragilDeflexion[4]; deflexion += 0.01) {
+							for (deflexion = fallaFragilDeflexion[3]; deflexion < fallaFragilDeflexion[4]; deflexion += 0.10) {
 
 								let carga = (deflexion - fallaFragilDeflexion[3]) * ((fallaFragilCarga[4] - fallaFragilCarga[3]) / (fallaFragilDeflexion[4] - fallaFragilDeflexion[3])) + fallaFragilCarga[3];
+								datosExcel.push([carga, deflexion]);
+								tiempo++;
+								data.push({ x: deflexion, y: carga });
+							}
+
+							// Tramo 5
+
+							for (deflexion = fallaFragilDeflexion[4]; deflexion < fallaFragilDeflexion[5]; deflexion += 0.10) {
+
+								let carga = (deflexion - fallaFragilDeflexion[4]) * ((fallaFragilCarga[5] - fallaFragilCarga[4]) / (fallaFragilDeflexion[5] - fallaFragilDeflexion[4])) + fallaFragilCarga[4];
 								datosExcel.push([carga, deflexion]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga });
@@ -278,19 +288,20 @@
 				<script>
 					function datosEnsayoFlexion() {
 						let wb = XLSX.utils.book_new();
-						wb.SheetNames.push("Datos máquina", "Reporte");
+						// wb.SheetNames.push("Datos Ensayo", "Reporte");
+						wb.SheetNames.push("Datos Ensayo");
 						let ws_data = datosExcel;
-						let ws_data2 = datosViga;
-						let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A3" });
-						let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
-						wb.Sheets["Datos máquina"] = ws;
-						wb.Sheets["Reporte"] = ws2;
-						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deflexión (mm)"], [0.000, 0.0000]], { origin: "A1" });
-						XLSX.utils.sheet_add_aoa(ws2, [["Longitud viga (mm)", "Ancho inicial (mm)", "Ancho final (mm)", "Altura inicial (mm)", "Altura final (mm)", "Carga máxima (kN)"]], { origin: "A1" });
+						// let ws_data2 = datosViga;
+						let ws = XLSX.utils.aoa_to_sheet(ws_data, { origin: "A2" });
+						// let ws2 = XLSX.utils.aoa_to_sheet(ws_data2, { origin: "A2" });
+						wb.Sheets["Datos Ensayo"] = ws;
+						// wb.Sheets["Reporte"] = ws2;
+						XLSX.utils.sheet_add_aoa(ws, [["Carga aplicada (kN)", "Deflexión (mm)"]], { origin: "A1" });
+						// XLSX.utils.sheet_add_aoa(ws2, [["Longitud viga (mm)", "Ancho viga (mm)", "Refuerzo longitudinal (mm^2)", "Carga máxima (kN)"]], { origin: "A1" });
 						ws["!cols"] = [{ wch: 20 }, { wch: 20 }];
-						ws2["!cols"] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
+						// ws2["!cols"] = [{ wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
 
-						return XLSX.writeFile(wb, "datos_concreto_flexion.xlsx");
+						return XLSX.writeFile(wb, "datos_concreto_reforzado_flexion.xlsx");
 					}	
 				</script>
 
