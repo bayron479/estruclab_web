@@ -115,8 +115,8 @@
 
 						<script>
 
-							const fallaFragilCarga = [0, 16.4, 38.4, 45.0, 57.5, 18.0]; // [kN]
-							const fallaFragilDeflexion = [0, 0.87, 6.87, 8.47, 12.85, 13.5];	// [mm]
+							const fallaFragilCarga = [0, 10.0, 37.5, 42.5, 17.5, 0]; // [kN]
+							const fallaFragilDeflexion = [0, 2.5, 9.0, 40.0, 43.5, 36.0];	// [mm]
 							let data = [];
 							let datosExcel = [];
 							let tiempo = 0;
@@ -124,9 +124,9 @@
 
 							// Tramo 1
 
-							for (deflexion = 0.00; deflexion < fallaFragilDeflexion[1]; deflexion += 0.05) {
+							for (deflexion = 0.00; deflexion < fallaFragilDeflexion[1]; deflexion += 0.1) {
 
-								let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]) + Math.random() - Math.random() ;
+								let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]) + Math.random() ;
 								datosExcel.push([carga, deflexion]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga });
@@ -134,7 +134,7 @@
 
 							// Tramo 2
 
-							for (deflexion = fallaFragilDeflexion[1]; deflexion < fallaFragilDeflexion[2]; deflexion += 0.05) {
+							for (deflexion = fallaFragilDeflexion[1]; deflexion < fallaFragilDeflexion[2]; deflexion += 0.1) {
 
 								let carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1] + Math.random() - Math.random() ;
 								datosExcel.push([carga, deflexion]);
@@ -144,7 +144,7 @@
 
 							// Tramo 3
 
-							for (deflexion = fallaFragilDeflexion[2]; deflexion < fallaFragilDeflexion[3]; deflexion += 0.05) {
+							for (deflexion = fallaFragilDeflexion[2]; deflexion < fallaFragilDeflexion[3]; deflexion += 0.1) {
 
 								let carga = (deflexion - fallaFragilDeflexion[2]) * ((fallaFragilCarga[3] - fallaFragilCarga[2]) / (fallaFragilDeflexion[3] - fallaFragilDeflexion[2])) + fallaFragilCarga[2] + Math.random() - Math.random() ;
 								datosExcel.push([carga, deflexion]);
@@ -154,7 +154,7 @@
 
 							// Tramo 4
 
-							for (deflexion = fallaFragilDeflexion[3]; deflexion < fallaFragilDeflexion[4]; deflexion += 0.05) {
+							for (deflexion = fallaFragilDeflexion[3]; deflexion < fallaFragilDeflexion[4]; deflexion += 0.1) {
 
 								let carga = (deflexion - fallaFragilDeflexion[3]) * ((fallaFragilCarga[4] - fallaFragilCarga[3]) / (fallaFragilDeflexion[4] - fallaFragilDeflexion[3])) + fallaFragilCarga[3] + Math.random() - Math.random() ;
 								datosExcel.push([carga, deflexion]);
@@ -164,17 +164,13 @@
 
 							// Tramo 5
 
-							for (deflexion = fallaFragilDeflexion[4]; deflexion < fallaFragilDeflexion[5]; deflexion += 0.05) {
+							for (deflexion = fallaFragilDeflexion[4]; deflexion > fallaFragilDeflexion[5]; deflexion -= 0.05) {
 
-								let carga = (deflexion - fallaFragilDeflexion[4]) * ((fallaFragilCarga[5] - fallaFragilCarga[4]) / (fallaFragilDeflexion[5] - fallaFragilDeflexion[4])) + fallaFragilCarga[4] + Math.random() - Math.random() ;
+								let carga = (deflexion - fallaFragilDeflexion[4]) * ((fallaFragilCarga[5] - fallaFragilCarga[4]) / (fallaFragilDeflexion[5] - fallaFragilDeflexion[4])) + fallaFragilCarga[4] + Math.random() ;
 								datosExcel.push([carga, deflexion]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga });
 							}
-
-
-
-
 
 							tippy('[data-tippy-content]');
 							const totalDuration = tiempo * 10;
