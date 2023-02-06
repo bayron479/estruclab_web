@@ -81,39 +81,19 @@
 
 					<form class="row g-2">
 						<label class="form-label mt-3"
-							style="font-size:16px; display: inline-block; width: 400px; text-align: center; padding: 0;">Acero de
-							refuerzo (Fy = 420 MPa)
+							style="font-size:16px; display: inline-block; width: 400px; text-align: center; padding: 0;">Refuerzo a
+							tracción:
 						</label>
 
 						<div style="display: flex; justify-content: center;">
 							<select id="select_barra" class="form-select" aria-label="Default select example"
 								style="width:200px; text-align: center" onclick="aceroRefuerzo()">
-								<option value="opcion_1" selected="opcion_1">Opción 1</option>
-								<option value="opcion_2">Opción 2</option>
-								<option value="opcion_3">Opción 3</option>
+								<option value="opcion_1" selected="opcion_1">2 barras # 3</option>
+								<option value="opcion_2">4 barras # 6</option>
+
 							</select>
 						</div>
 
-					</form>
-				</div>
-
-				<!-- Concreto -->
-				<div class="col-auto" style="width: 400px; display: flex; text-align: center; justify-content: center">
-
-					<form class="row g-2">
-						<label class="form-label mt-3"
-							style="font-size:16px; display: inline-block; width: 400px; text-align: center; padding: 0;">Resistencia a
-							compresión del concreto (MPa)
-						</label>
-
-						<div style="display: flex; justify-content: center;">
-							<select id="select_barra" class="form-select" aria-label="Default select example"
-								style="width:200px; text-align: center;" onclick="concreto()">
-								<option value="opcion_1" selected="opcion_1">Opción 1</option>
-								<option value="opcion_2">Opción 2</option>
-								<option value="opcion_3">Opción 3</option>
-							</select>
-						</div>
 					</form>
 				</div>
 
@@ -122,106 +102,49 @@
 						<div class="col-auto" style="width:250px;">
 							<div style="text-align: center; padding: 0.25rem;">
 								<button type="button" id="start"
-									onclick="verGrafica(), animacionCarga(), reporteAnchoFinal(), reporteAlturaFinal(), reporteCargaFinal(), fallaVIga()"
+									onclick="verGrafica()"
 									style="text-align: center;" class="btn btn-primary">Iniciar ensayo</button>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<!-- Gráfica carga aplicada vs deflección -->
+				<!-- Gráfica carga aplicada vs deflexión -->
 				<div class="card mb-2" style="width: 100%;">
 					<div class="card-body">
 						<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 
 						<script>
 
-							// Dimensiones de la viga en mm							
-							const anchoVigaInicial = Number((150 + Math.random() - Math.random()).toFixed(2));
-							const alturaVigaInicial = Number((250 + Math.random() - Math.random()).toFixed(2));
-							const diametroEstribos = 6.4; // en mm, barras #2
-							const recubrimientoMinimo = 30; // en mm
-							const diametroAceroTraccion = 9.5; // en mm, barras #3
-							const diametroAceroCompresion = 6.4; // en mm, barras #2
-							const profundidadRefuerzoCompresion = recubrimientoMinimo + diametroEstribos + diametroAceroCompresion / 2;
-							const distanciaRefuerzoAFibraExterior = recubrimientoMinimo + diametroEstribos + diametroAceroTraccion / 2;
-							const profundidadAceroTraccion = alturaVigaInicial - distanciaRefuerzoAFibraExterior;
-
-							const longitudViga = Number((700 + Math.random() - Math.random()).toFixed(2));
-							const longitudVano = longitudViga - 100 + Math.random() - Math.random();
-							const resistenciaCompresionConcreto = number((28 + Math.random()).tofixed(2)); // MPa							
-							const resistenciaFluenciaAcero = number((420 + Math.random()).tofixed(2)); // MPa
-							const moduloElasticidadAcero = 200000; // MPa
-
-							// Agrietamiento
-							const moduloRoturaConcreto = 0.63 * Math.sqrt(resistenciaCompresionConcreto);
-							// const cargaUltima = Number((fr * anchoVigaFinal * alturaVigaFinal ** 2 / longitudVano).toFixed(2));
-							const moduloElasticidadConcreto = 4700 * Math.sqrt(resistenciaCompresionConcreto); // en MPa. NSR-10
-							const inerciaViga = (anchoVigaInicial * alturaVigaInicial ** 3) / 12;	// mm^4	
-							const momentoRotura = moduloRoturaConcreto * inerciaViga / (alturaVigaInicial / 2) / 1000; // Cracking Moment
-							const curvatura = momentoRotura / (momentoRotura * inerciaViga); // Cracking Curvature 
-
-							// Fluencia
-
-							const areaAceroCompresion = 2 * 32; // en mm2
-							const areaAceroTraccion1 = 2 * 71;
-							const areaAceroTraccion2 = 3 * 71;
-							const areaAceroTraccion3 = 4 * 71;
-
-							const cuantiaRefuerzoTraccion1 = areaAceroTraccion1 / (anchoVigaInicial * profundidadAceroTraccion);
-							const cuantiaRefuerzoTraccion2 = areaAceroTraccion2 / (anchoVigaInicial * profundidadAceroTraccion);
-							const cuantiaRefuerzoTraccion3 = areaAceroTraccion3 / (anchoVigaInicial * profundidadAceroTraccion);
-							const cuantiaRefuerzoCompresion = areaAceroCompresion / (anchoVigaInicial * profundidadAceroTraccion);
-
-							// coeficiente n: relación modular
-							const relacionModular = Math.round(moduloElasticidadAcero / moduloElasticidadConcreto); // retorna el entero más próximo.
-
-							// k: factor de profundidad del eje neutro. k = ((p+pp)**2*n**2 + 2*(p+pp*dp/d)*n)**(1/2) - (p+pp)*n
-							const factorProfundidadEjeNeutro = Math.sqrt((cuantiaRefuerzoTraccion1 + cuantiaRefuerzoCompresion) ** 2 * relacionModular ** 2 + 2 * relacionModular * (cuantiaRefuerzoTraccion1 + cuantiaRefuerzoCompresion * (profundidadRefuerzoCompresion / profundidadAceroTraccion)));
-
-							// Inercia agrietada. Icr = b*(k*d)**3/3 + (n-1)*Asp*(k*d-dp)**2 + n*As*(d-k*d)**2
-
-							let inerciaAgrietada = anchoVigaInicial * (factorProfundidadEjeNeutro * profundidadAceroTraccion) ** 3 / 3 + (relacionModular - 1) * cuantiaRefuerzoCompresion * (relacionModular * profundidadAceroTraccion - profundidadRefuerzoCompresion) ** 2 + relacionModular * areaAceroTraccion1 * (profundidadAceroTraccion - factorProfundidadEjeNeutro * profundidadAceroTraccion) ** 2;
-							// Momento de fluencia My = (1/n)*(fy*Icr)/(d-k*d)
-							let momentoFluencia = (1 / relacionModular) * (resistenciaFluenciaAcero * inerciaAgrietada) / (profundidadAceroTraccion - factorProfundidadEjeNeutro * profundidadAceroTraccion);
-							// Phiy = My/(Ec*Icr)
-							let Phiy = momentoFluencia / (moduloElasticidadConcreto * inerciaAgrietada);
-
-
-
-
-
-
-
-
-							//const deflexionMaxima = Number((cargaUltima * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(4));
-
-							// Carga en Mpa/min. (rango de 0.86 a 1.21 Wight, 2016)
-							const cargaFibraExterior = 1.0 / 60; // Mpa/s
-							// Velocidad de carga en N/s 
-							const velocidadCarga = Number((cargaFibraExterior * anchoVigaInicial * alturaVigaInicial ** 2 / longitudVano).toFixed(3));
-
+							const fallaFragilCarga = [0, 16.4, 38.4, 45.0, 57.5]; // [kN]
+							const fallaFragilDeflexion = [0, 0.87, 6.87, 8.47, 12.85];	// [mm]
 							let data = [];
-							let datosExcel = [];
-							let datosViga = [];
-							let carga = 0;
+							let datosExcel = [];													
 							let tiempo = 0;
-							let deflexion = 0;
+							let deflexion=0;
 
-							for (carga; carga += velocidadCarga + 0.15 * Math.random() * velocidadCarga;) {
-								deflexion = Number((carga * (longitudVano / 3) * (3 * longitudVano ** 2 - 4 * (longitudVano / 3) ** 2) / (24 * moduloElasticidadConcreto * inerciaViga)).toFixed(5));
-								datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
+							// Tramo 1
+
+							for (deflexion = 0; deflexion = fallaFragilDeflexion[1]; deflexion += 0.01) {
+
+								let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]);
+								datosExcel.push([carga, deflexion]);
 								tiempo++;
-								data.push({ x: deflexion, y: carga / 1000 });
-								if (carga > cargaUltima) {
-									datosViga.push([longitudViga, anchoVigaInicial, anchoVigaFinal, alturaVigaInicial, alturaVigaFinal, Number((carga / 1000).toFixed(3))])
-									break;
-
-								}
-								else {
-									continue;
-								}
+								data.push({ x: deflexion, y: carga });
 							}
+
+							// Tramo 2
+
+							// for (deflexion = fallaFragilDeflexion[1]; deflexion += 0.01; deflexion = fallaFragilDeflexion[2]) {
+
+							// 	carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1];
+							// 	datosExcel.push([Number((carga / 1000).toFixed(3)), Number(deflexion)]);
+							// 	tiempo++;
+							// 	data.push({ x: deflexion, y: carga / 1000 });
+							// }
+
+							
+
 
 							tippy('[data-tippy-content]');
 							const totalDuration = tiempo * 100;
@@ -315,18 +238,13 @@
 							}
 
 							function verGrafica() {
-								graficaCargaDesplazamiento = setTimeout("cargaVSDeflexion()", 23500);
+								graficaCargaDesplazamiento = setTimeout("cargaVSDeflexion()", 5000);
 							}
 
 						</script>
 
 					</div>
 				</div>
-
-
-
-
-
 
 
 				<!-- Boton descargar datos -->
