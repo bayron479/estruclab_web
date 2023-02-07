@@ -114,59 +114,101 @@
 						<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 
 						<script>
+							const fallaDuctilCarga = [0, 10.0, 37.5, 42.5, 17.5, 0]; // [kN]
+							const fallaDuctilDeflexion = [0, 2.5, 9.0, 40.0, 43.5, 36.0];	// [mm]							
 
-							const fallaFragilCarga = [0, 10.0, 37.5, 42.5, 17.5, 0]; // [kN]
-							const fallaFragilDeflexion = [0, 2.5, 9.0, 40.0, 43.5, 36.0];	// [mm]
+							const fallaFragilCarga = [0, 20.0, 40.0, 60.0, 90.0, 70.0, 18.0, 0]; // [kN]
+							const fallaFragilDeflexion = [0, 2.5, 5.0, 8.0, 15.0, 16.0, 22.0, 12.5];	// [mm]
+
 							let data = [];
 							let datosExcel = [];
 							let tiempo = 0;
 							let deflexion;
 
+							function fallaFragil() {
+								// Tramo 1
+								for (deflexion = 0.00; deflexion < fallaFragilDeflexion[1]; deflexion += 0.2) {
+									let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]) + Math.random();
+									datosExcel.push([carga, deflexion]);
+									tiempo++;
+									data.push({ x: deflexion, y: carga });
+								}
+								// Tramo 2
+								for (deflexion = fallaFragilDeflexion[1]; deflexion < fallaFragilDeflexion[2]; deflexion += 0.2) {
+									let carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1] + Math.random();
+									datosExcel.push([carga, deflexion]);
+									tiempo++;
+									data.push({ x: deflexion, y: carga });
+								}
+								// Tramo 3
+								for (deflexion = fallaFragilDeflexion[2]; deflexion < fallaFragilDeflexion[3]; deflexion += 0.2) {
+									let carga = (deflexion - fallaFragilDeflexion[2]) * ((fallaFragilCarga[3] - fallaFragilCarga[2]) / (fallaFragilDeflexion[3] - fallaFragilDeflexion[2])) + fallaFragilCarga[2] + Math.random();
+									datosExcel.push([carga, deflexion]);
+									tiempo++;
+									data.push({ x: deflexion, y: carga });
+								}
+								// Tramo 4
+								for (deflexion = fallaFragilDeflexion[3]; deflexion < fallaFragilDeflexion[4]; deflexion += 0.2) {
+									let carga = (deflexion - fallaFragilDeflexion[3]) * ((fallaFragilCarga[4] - fallaFragilCarga[3]) / (fallaFragilDeflexion[4] - fallaFragilDeflexion[3])) + fallaFragilCarga[3] + Math.random();
+									datosExcel.push([carga, deflexion]);
+									tiempo++;
+									data.push({ x: deflexion, y: carga });
+								}
+								// Tramo 5
+								for (deflexion = fallaFragilDeflexion[4]; deflexion < fallaFragilDeflexion[5]; deflexion += 0.2) {
+									let carga = (deflexion - fallaFragilDeflexion[4]) * ((fallaFragilCarga[5] - fallaFragilCarga[4]) / (fallaFragilDeflexion[5] - fallaFragilDeflexion[4])) + fallaFragilCarga[4] + Math.random();
+									datosExcel.push([carga, deflexion]);
+									tiempo++;
+									data.push({ x: deflexion, y: carga });
+								}
+								// Tramo 6
+								for (deflexion = fallaFragilDeflexion[5]; deflexion < fallaFragilDeflexion[6]; deflexion += 0.2) {
+									let carga = (deflexion - fallaFragilDeflexion[5]) * ((fallaFragilCarga[6] - fallaFragilCarga[5]) / (fallaFragilDeflexion[6] - fallaFragilDeflexion[5])) + fallaFragilCarga[5] + Math.random();
+									datosExcel.push([carga, deflexion]);
+									tiempo++;
+									data.push({ x: deflexion, y: carga });
+								}
+								// Tramo 7
+								for (deflexion = fallaDuctilDeflexion[6]; deflexion > fallaDuctilDeflexion[7]; deflexion -= 0.2) {
+									let carga = (deflexion - fallaDuctilDeflexion[6]) * ((fallaDuctilCarga[7] - fallaDuctilCarga[6]) / (fallaDuctilDeflexion[7] - fallaDuctilDeflexion[6])) + fallaDuctilCarga[6] + Math.random();
+									datosExcel.push([carga, deflexion]);
+									tiempo++;
+									data.push({ x: deflexion, y: carga });
+								}
+							}
+
+							// *** Falla Dúctil ***
 							// Tramo 1
-
-							for (deflexion = 0.00; deflexion < fallaFragilDeflexion[1]; deflexion += 0.2) {
-
-								let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]) + Math.random() ;
+							for (deflexion = 0.00; deflexion < fallaDuctilDeflexion[1]; deflexion += 0.2) {
+								let carga = deflexion * (fallaDuctilCarga[1] / fallaDuctilDeflexion[1]) + Math.random();
 								datosExcel.push([carga, deflexion]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga });
 							}
-
 							// Tramo 2
-
-							for (deflexion = fallaFragilDeflexion[1]; deflexion < fallaFragilDeflexion[2]; deflexion += 0.2) {
-
-								let carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1] + Math.random();
+							for (deflexion = fallaDuctilDeflexion[1]; deflexion < fallaDuctilDeflexion[2]; deflexion += 0.2) {
+								let carga = (deflexion - fallaDuctilDeflexion[1]) * ((fallaDuctilCarga[2] - fallaDuctilCarga[1]) / (fallaDuctilDeflexion[2] - fallaDuctilDeflexion[1])) + fallaDuctilCarga[1] + Math.random();
 								datosExcel.push([carga, deflexion]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga });
 							}
-
 							// Tramo 3
-
-							for (deflexion = fallaFragilDeflexion[2]; deflexion < fallaFragilDeflexion[3]; deflexion += 0.2) {
-
-								let carga = (deflexion - fallaFragilDeflexion[2]) * ((fallaFragilCarga[3] - fallaFragilCarga[2]) / (fallaFragilDeflexion[3] - fallaFragilDeflexion[2])) + fallaFragilCarga[2] + Math.random();
+							for (deflexion = fallaDuctilDeflexion[2]; deflexion < fallaDuctilDeflexion[3]; deflexion += 0.2) {
+								let carga = (deflexion - fallaDuctilDeflexion[2]) * ((fallaDuctilCarga[3] - fallaDuctilCarga[2]) / (fallaDuctilDeflexion[3] - fallaDuctilDeflexion[2])) + fallaDuctilCarga[2] + Math.random();
 								datosExcel.push([carga, deflexion]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga });
 							}
-
 							// Tramo 4
-
-							for (deflexion = fallaFragilDeflexion[3]; deflexion < fallaFragilDeflexion[4]; deflexion += 0.2) {
-
-								let carga = (deflexion - fallaFragilDeflexion[3]) * ((fallaFragilCarga[4] - fallaFragilCarga[3]) / (fallaFragilDeflexion[4] - fallaFragilDeflexion[3])) + fallaFragilCarga[3] + Math.random();
+							for (deflexion = fallaDuctilDeflexion[3]; deflexion < fallaDuctilDeflexion[4]; deflexion += 0.2) {
+								let carga = (deflexion - fallaDuctilDeflexion[3]) * ((fallaDuctilCarga[4] - fallaDuctilCarga[3]) / (fallaDuctilDeflexion[4] - fallaDuctilDeflexion[3])) + fallaDuctilCarga[3] + Math.random();
 								datosExcel.push([carga, deflexion]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga });
 							}
-
 							// Tramo 5
-
-							for (deflexion = fallaFragilDeflexion[4]; deflexion > fallaFragilDeflexion[5]; deflexion -= 0.2) {
-
-								let carga = (deflexion - fallaFragilDeflexion[4]) * ((fallaFragilCarga[5] - fallaFragilCarga[4]) / (fallaFragilDeflexion[5] - fallaFragilDeflexion[4])) + fallaFragilCarga[4] + Math.random() ;
+							for (deflexion = fallaDuctilDeflexion[4]; deflexion > fallaDuctilDeflexion[5]; deflexion -= 0.2) {
+								let carga = (deflexion - fallaDuctilDeflexion[4]) * ((fallaDuctilCarga[5] - fallaDuctilCarga[4]) / (fallaDuctilDeflexion[5] - fallaDuctilDeflexion[4])) + fallaDuctilCarga[4] + Math.random();
 								datosExcel.push([carga, deflexion]);
 								tiempo++;
 								data.push({ x: deflexion, y: carga });
