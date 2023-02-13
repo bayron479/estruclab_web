@@ -103,7 +103,7 @@
 						<div style="display: flex; justify-content: center;">
 							<select id="options" class="form-select" aria-label="Default select example"
 								style="width:200px; text-align: center">
-								<option value="opcion_1">2 barras # 3</option>
+								<option value="opcion_1" selected>2 barras # 3</option>
 								<option value="opcion_2">4 barras # 6</option>
 							</select>
 						</div>
@@ -113,8 +113,7 @@
 				<!-- Contenedor de imagen -->
 				<div id="imageContainer" class="card mt-2"
 					style="width: 380px; display: flex;	justify-content: center;	align-items: center;">
-					<img id="selectedImage" src="./imagenes/viga_subreforzada.PNG" alt="Sección transversal de la viga"
-						style="width: 100%">
+					<img id="selectedImage" src="" alt="Sección transversal de la viga" style="width: 100%">
 				</div>
 
 				<script>
@@ -132,7 +131,7 @@
 								break;
 
 							default:
-								selectedImage.src = "";
+								selectedImage.src = "./imagenes/viga_subreforzada.PNG";
 								break;
 						}
 					});
@@ -142,7 +141,7 @@
 					<div class="card-body" style="text-align: center;">
 						<div class="col-auto" style="width:250px;">
 							<div style="text-align: center; padding: 0.25rem;">
-								<button type="button" id="start" onclick="datosGrafica(), verGrafica()" style="text-align: center;"
+								<button type="button" id="start" onclick="verGrafica()" style="text-align: center;"
 									class="btn btn-primary">Iniciar ensayo</button>
 							</div>
 						</div>
@@ -267,13 +266,14 @@
 
 							}
 
-							function datosGrafica () {
-								if (options.value = "opcion_1") {
+							switch (options.value) {
+								case "opcion_1":
 									fallaDuctil();
-								}
-								else {
+									break;
+
+								case "opcion_2":
 									fallaFragil();
-								}
+									break;
 							}
 
 							tippy('[data-tippy-content]');
