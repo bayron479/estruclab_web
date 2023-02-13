@@ -116,7 +116,8 @@
 					<img id="selectedImage" src="" alt="Sección transversal de la viga" style="height: 200px">
 				</div>
 
-				<div class="card mt-2" style="width: 100%; height: 50px; display: flex;	justify-content: center;	align-items: center;">
+				<div class="card mt-2"
+					style="width: 100%; height: 50px; display: flex;	justify-content: center;	align-items: center;">
 					<div class="card-body" style="text-align: center;">
 						<div class="col-auto" style="width:250px;">
 							<div style="text-align: center; padding: 0.25rem;">
@@ -193,49 +194,49 @@
 
 								// Tramo 1
 								for (deflexion = 0.00; deflexion < fallaFragilDeflexion[1]; deflexion += 0.2) {
-									let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]) + Math.random()*1.5;
+									let carga = deflexion * (fallaFragilCarga[1] / fallaFragilDeflexion[1]) + Math.random() * 1.5;
 									datosExcel.push([Number(carga.toFixed(3)), deflexion]);
 									tiempo++;
 									data.push({ x: deflexion, y: Number(carga.toFixed(3)) });
 								}
 								// Tramo 2
 								for (deflexion = fallaFragilDeflexion[1]; deflexion < fallaFragilDeflexion[2]; deflexion += 0.2) {
-									let carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1] + Math.random()*1.5;
+									let carga = (deflexion - fallaFragilDeflexion[1]) * ((fallaFragilCarga[2] - fallaFragilCarga[1]) / (fallaFragilDeflexion[2] - fallaFragilDeflexion[1])) + fallaFragilCarga[1] + Math.random() * 1.5;
 									datosExcel.push([Number(carga.toFixed(3)), deflexion]);
 									tiempo++;
 									data.push({ x: deflexion, y: Number(carga.toFixed(3)) });
 								}
 								// Tramo 3
 								for (deflexion = fallaFragilDeflexion[2]; deflexion < fallaFragilDeflexion[3]; deflexion += 0.2) {
-									let carga = (deflexion - fallaFragilDeflexion[2]) * ((fallaFragilCarga[3] - fallaFragilCarga[2]) / (fallaFragilDeflexion[3] - fallaFragilDeflexion[2])) + fallaFragilCarga[2] + Math.random()*1.5;
+									let carga = (deflexion - fallaFragilDeflexion[2]) * ((fallaFragilCarga[3] - fallaFragilCarga[2]) / (fallaFragilDeflexion[3] - fallaFragilDeflexion[2])) + fallaFragilCarga[2] + Math.random() * 1.5;
 									datosExcel.push([Number(carga.toFixed(3)), deflexion]);
 									tiempo++;
 									data.push({ x: deflexion, y: Number(carga.toFixed(3)) });
 								}
 								// Tramo 4
 								for (deflexion = fallaFragilDeflexion[3]; deflexion < fallaFragilDeflexion[4]; deflexion += 0.2) {
-									let carga = (deflexion - fallaFragilDeflexion[3]) * ((fallaFragilCarga[4] - fallaFragilCarga[3]) / (fallaFragilDeflexion[4] - fallaFragilDeflexion[3])) + fallaFragilCarga[3] + Math.random()*1.5;
+									let carga = (deflexion - fallaFragilDeflexion[3]) * ((fallaFragilCarga[4] - fallaFragilCarga[3]) / (fallaFragilDeflexion[4] - fallaFragilDeflexion[3])) + fallaFragilCarga[3] + Math.random() * 1.5;
 									datosExcel.push([Number(carga.toFixed(3)), deflexion]);
 									tiempo++;
 									data.push({ x: deflexion, y: Number(carga.toFixed(3)) });
 								}
 								// Tramo 5
 								for (deflexion = fallaFragilDeflexion[4]; deflexion < fallaFragilDeflexion[5]; deflexion += 0.2) {
-									let carga = (deflexion - fallaFragilDeflexion[4]) * ((fallaFragilCarga[5] - fallaFragilCarga[4]) / (fallaFragilDeflexion[5] - fallaFragilDeflexion[4])) + fallaFragilCarga[4] + Math.random()*1.5;
+									let carga = (deflexion - fallaFragilDeflexion[4]) * ((fallaFragilCarga[5] - fallaFragilCarga[4]) / (fallaFragilDeflexion[5] - fallaFragilDeflexion[4])) + fallaFragilCarga[4] + Math.random() * 1.5;
 									datosExcel.push([Number(carga.toFixed(3)), deflexion]);
 									tiempo++;
 									data.push({ x: deflexion, y: Number(carga.toFixed(3)) });
 								}
 								// Tramo 6
 								for (deflexion = fallaFragilDeflexion[5]; deflexion < fallaFragilDeflexion[6]; deflexion += 0.2) {
-									let carga = (deflexion - fallaFragilDeflexion[5]) * ((fallaFragilCarga[6] - fallaFragilCarga[5]) / (fallaFragilDeflexion[6] - fallaFragilDeflexion[5])) + fallaFragilCarga[5] + Math.random()*1.5;
+									let carga = (deflexion - fallaFragilDeflexion[5]) * ((fallaFragilCarga[6] - fallaFragilCarga[5]) / (fallaFragilDeflexion[6] - fallaFragilDeflexion[5])) + fallaFragilCarga[5] + Math.random() * 1.5;
 									datosExcel.push([Number(carga.toFixed(3)), deflexion]);
 									tiempo++;
 									data.push({ x: deflexion, y: Number(carga.toFixed(3)) });
 								}
 								// Tramo 7
 								for (deflexion = fallaFragilDeflexion[6]; deflexion > fallaFragilDeflexion[7]; deflexion -= 0.2) {
-									let carga = (deflexion - fallaFragilDeflexion[6]) * ((fallaFragilCarga[7] - fallaFragilCarga[6]) / (fallaFragilDeflexion[7] - fallaFragilDeflexion[6])) + fallaFragilCarga[6] + Math.random()*1.5;
+									let carga = (deflexion - fallaFragilDeflexion[6]) * ((fallaFragilCarga[7] - fallaFragilCarga[6]) / (fallaFragilDeflexion[7] - fallaFragilDeflexion[6])) + fallaFragilCarga[6] + Math.random() * 1.5;
 									datosExcel.push([Number(carga.toFixed(3)), deflexion]);
 									tiempo++;
 									data.push({ x: deflexion, y: Number(carga.toFixed(3)) });
@@ -380,7 +381,8 @@
 
 				<!-- Boton descargar datos -->
 				<div class="card">
-					<div class="card-body" style="width: 100%; height: 50px; display: flex; justify-content: center;	align-items: center;">
+					<div class="card-body"
+						style="width: 100%; height: 50px; display: flex; justify-content: center;	align-items: center;">
 						<button type="button" button id="descargar-datos" onclick="datosEnsayoFlexion()"
 							class="btn btn-success">Descargar datos (.xlsx)</button>
 					</div>
@@ -440,10 +442,10 @@
 					const controls = new THREE.OrbitControls(camera, renderer.domElement);
 					controls.panSpeed = 1;
 					controls.rotateSpeed = 1;
-					// { x: 2.777685149458178, y: 1.8450022050202635, z: -2.9444663101406996 }
+
 					camera.position.set(2.777685149458178, 1.8450022050202635, -2.9444663101406996);
 					controls.update();
-					// { x: -0.3005936805199805, y: 1.9602141946418012, z: -3.311068946505764 }
+
 					controls.target = new THREE.Vector3(-0.3005936805199805, 1.9602141946418012, -3.311068946505764);
 					renderer.render(scene, camera);
 
