@@ -101,9 +101,9 @@
 						</label>
 
 						<div style="display: flex; justify-content: center;">
-							<select id="options" class="form-select" aria-label="Default select example"
+							<select autofocus id="options" class="form-select" aria-label="Default select example"
 								style="width:200px; text-align: center">
-								<option value="opcion_1" selected>2 barras # 3</option>
+								<option value="opcion_1">2 barras # 3</option>
 								<option value="opcion_2">4 barras # 6</option>
 							</select>
 						</div>
@@ -131,7 +131,7 @@
 								break;
 
 							default:
-								selectedImage.src = "./imagenes/viga_subreforzada.PNG";
+								selectedImage.src = "";
 								break;
 						}
 					});
