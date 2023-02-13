@@ -31,6 +31,21 @@
 
 	<script src="https://cdn.sheetjs.com/xlsx-0.18.10/package/dist/xlsx.full.min.js"></script>
 
+	<!-- LaTex en Javascript para dibujar sección de la viga -->
+
+	<script type="module">
+		import { LaTeXJSComponent } from "https://cdn.jsdelivr.net/npm/latex.js/dist/latex.mjs"
+		customElements.define("latex-js", LaTeXJSComponent)
+	</script>
+
+	<style>
+		latex-js {
+			display: inline-block;
+			width: 90%;
+			margin-right: 2em;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -86,16 +101,42 @@
 						</label>
 
 						<div style="display: flex; justify-content: center;">
-							<select id="select_barra" class="form-select" aria-label="Default select example"
+							<select id="options" class="form-select" aria-label="Default select example"
 								style="width:200px; text-align: center" onclick="aceroRefuerzo()">
-								<option value="opcion_1" selected="opcion_1">2 barras # 3</option>
+								<option value="opcion_1" selected>2 barras # 3</option>
 								<option value="opcion_2">4 barras # 6</option>
 
 							</select>
 						</div>
-
 					</form>
 				</div>
+
+				<!-- Contenedor de imagen -->
+				<div id="imageContainer" class="card mt-2"
+					style="width: 380px; display: flex;	justify-content: center;	align-items: center;">
+					<img id="selectedImage" src="" alt="" style="width: 100%">
+				</div>
+
+				<script>
+					const options = document.getElementById("options");
+					const imageContainer = document.getElementById("imageContainer");
+					const selectedImage = document.getElementById("selectedImage");
+
+					options.addEventListener("change", function () {
+						switch (options.value) {
+							case "opcion_1":
+								selectedImage.src = "./imagenes/viga_subreforzada.PNG";
+								break;
+							case "opcion_2":
+								selectedImage.src = "./imagenes/viga_sobrereforzada.PNG";
+								break;
+
+							default:
+								selectedImage.src = "./imagenes/viga_subreforzada.PNG";
+								break;
+						}
+					});
+				</script>
 
 				<div class="card mt-2" style="width: 100%; display: flex;	justify-content: center;	align-items: center;">
 					<div class="card-body" style="text-align: center;">
@@ -114,11 +155,11 @@
 						<canvas id="myChart" style="width: 200px;height: 100px;"></canvas>
 
 						<script>
-							const fallaDuctilCarga = [0, 10.0, 37.5, 42.5, 17.5, 0]; // [kN]
-							const fallaDuctilDeflexion = [0, 2.5, 9.0, 40.0, 43.5, 36.0];	// [mm]							
+							const fallaDuctilCarga = [0, 10.0, 37.5, 48.5, 17.5, 0]; // [kN]
+							const fallaDuctilDeflexion = [0, 2.5, 9.0, 20.0, 23.5, 20.0];	// [mm]							
 
 							const fallaFragilCarga = [0, 20.0, 40.0, 60.0, 90.0, 70.0, 18.0, 0]; // [kN]
-							const fallaFragilDeflexion = [0, 2.5, 5.0, 8.0, 15.0, 16.0, 22.0, 12.5];	// [mm]
+							const fallaFragilDeflexion = [0, 2.5, 5.0, 8.0, 15.0, 16.0, 22.0, 20.5];	// [mm]
 
 							let data = [];
 							let datosExcel = [];
